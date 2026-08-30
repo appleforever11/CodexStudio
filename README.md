@@ -42,13 +42,15 @@ The release app bundles the complete `Resources/ThemePacks` directory. On first 
 
 Codex Studio also checks the local WallBuddy app bundle and its adjacent `dist/assets` directory for image assets. The current WallBuddy bundle contains no wallpaper catalog, so the app treats that source as optional and falls back to the managed Codex library.
 
-The release app also bundles the Codex theme runtime and installs it at first launch only when the managed runtime is not already present:
+The release app also bundles the Codex theme runtime and installs it at first launch, upgrading an older managed runtime atomically when the bundled runtime version is newer:
 
 ```text
 ~/.codex/codex-dream-skin-studio/scripts/switch-theme-macos.sh
 ```
 
 The app only reports success after the runtime state confirms the requested theme id. Existing runtime state is never overwritten by the bootstrapper. If Codex is not installed or the runtime cannot verify the live renderer, the UI says so.
+
+For DockDoor Pro users, the same release bootstrap installs or upgrades a portable `Codex Themed.app` helper. Launching that helper starts the official signed Codex app through the managed theme engine and keeps the helper alive while Codex is open, so DockDoor preserves the themed pin. If a Codex updater launches the stock app without the theme debug endpoint, the helper waits briefly and relaunches it through the verified engine.
 
 ## Release artifacts
 

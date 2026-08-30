@@ -3,6 +3,31 @@
     <channel>
         <title>CodexStudio</title>
         <item>
+            <title>0.1.2</title>
+            <pubDate>Sun, 30 Aug 2026 13:29:07 -0400</pubDate>
+            <link>https://github.com/appleforever11/CodexStudio</link>
+            <sparkle:version>1002</sparkle:version>
+            <sparkle:shortVersionString>0.1.2</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.2
+
+## DockDoor update recovery
+
+- Bundles the DockDoor-compatible `Codex Themed.app` launcher and the Codex Studio icon.
+- Installs or upgrades the launcher without replacing an unrelated app with the same display name.
+- Starts the official signed Codex app through the managed theme engine, keeps the helper alive for DockDoor, and repairs a stock Codex launch after an app update.
+- Refreshes an existing theme persistence monitor after a runtime migration so it uses the updated repair logic.
+
+## Sparkle migration
+
+- Upgrades an older managed theme runtime atomically when the bundled runtime version is newer, while preserving a newer local runtime.
+- Carries the launcher and runtime migration to existing installations through the Sparkle update path.
+- Continues to ship the complete bundled theme library and apply-and-verify flow.
+]]></description>
+            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.2/CodexStudio-0.1.2-arm64.zip" length="91638294" type="application/octet-stream" sparkle:edSignature="MagoMPPrpdP6+1zYl4ma3Ve19zkHen1hUt7M15LRaoP4x8b2eTbnaS52KsX9hjPLKs5bmR+mY3bvir8FRFkYDg=="/>
+        </item>
+        <item>
             <title>0.1.1</title>
             <pubDate>Sun, 30 Aug 2026 12:31:52 -0400</pubDate>
             <link>https://github.com/appleforever11/CodexStudio</link>

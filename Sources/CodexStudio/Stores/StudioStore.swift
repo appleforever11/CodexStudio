@@ -171,11 +171,12 @@ final class StudioStore: ObservableObject {
     }
 
     func openCodex() {
-        let appURL = URL(fileURLWithPath: "/Applications/ChatGPT.app")
+        let appURL = ThemeLibraryService.installedDockDoorLauncherURL
+            ?? URL(fileURLWithPath: "/Applications/ChatGPT.app")
         if !NSWorkspace.shared.open(appURL) {
-            showNotice("ChatGPT.app was not found in /Applications.")
+            showNotice("The themed Codex launcher could not be opened. Check that Codex is installed.")
         } else {
-            showNotice("Opened Codex.")
+            showNotice("Opened themed Codex.")
         }
     }
 

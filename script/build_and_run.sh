@@ -28,6 +28,7 @@ INFO_PLIST="$APP_CONTENTS/Info.plist"
 ICON_FILE="$ROOT_DIR/Resources/CodexStudio.icns"
 THEME_PACKS_DIR="$ROOT_DIR/Resources/ThemePacks"
 DREAM_SKIN_RUNTIME_DIR="$ROOT_DIR/Resources/DreamSkinRuntime"
+DOCKDOOR_LAUNCHER_DIR="$ROOT_DIR/Resources/CodexThemedLauncherTemplate"
 FRAMEWORKS_DIR="$APP_CONTENTS/Frameworks"
 
 if [[ -z "$SIGNING_IDENTITY" ]]; then
@@ -66,6 +67,10 @@ if [[ ! -d "$DREAM_SKIN_RUNTIME_DIR/scripts" ]]; then
   echo "Bundled Codex theme runtime was not found at $DREAM_SKIN_RUNTIME_DIR." >&2
   exit 1
 fi
+if [[ ! -f "$DOCKDOOR_LAUNCHER_DIR/Contents/Info.plist" || ! -f "$DOCKDOOR_LAUNCHER_DIR/Contents/MacOS/CodexThemedLauncher" ]]; then
+  echo "Bundled DockDoor launcher was not found at $DOCKDOOR_LAUNCHER_DIR." >&2
+  exit 1
+fi
 
 rm -rf "$APP_BUNDLE"
 mkdir -p "$APP_MACOS" "$APP_RESOURCES" "$FRAMEWORKS_DIR"
@@ -74,6 +79,10 @@ COPYFILE_DISABLE=1 ditto --norsrc --noextattr --noqtn "$ICON_FILE" "$APP_RESOURC
 COPYFILE_DISABLE=1 ditto --norsrc --noextattr --noqtn "$THEME_PACKS_DIR" "$APP_RESOURCES/ThemePacks"
 COPYFILE_DISABLE=1 ditto --norsrc --noextattr --noqtn "$DREAM_SKIN_RUNTIME_DIR" "$APP_RESOURCES/DreamSkinRuntime"
 COPYFILE_DISABLE=1 ditto --norsrc --noextattr --noqtn "$SPARKLE_FRAMEWORK" "$FRAMEWORKS_DIR/Sparkle.framework"
+COPYFILE_DISABLE=1 ditto --norsrc --noextattr --noqtn "$DOCKDOOR_LAUNCHER_DIR" "$APP_RESOURCES/CodexThemedLauncherTemplate"
+mkdir -p "$APP_RESOURCES/CodexThemedLauncherTemplate/Contents/Resources"
+COPYFILE_DISABLE=1 ditto --norsrc --noextattr --noqtn "$ICON_FILE" "$APP_RESOURCES/CodexThemedLauncherTemplate/Contents/Resources/CodexStudio.icns"
+chmod +x "$APP_RESOURCES/CodexThemedLauncherTemplate/Contents/MacOS/CodexThemedLauncher"
 chmod +x "$APP_BINARY"
 
 install_name_tool \
@@ -120,6 +129,11 @@ cat >"$INFO_PLIST" <<PLIST
 </plist>
 PLIST
 
+/usr/bin/plutil -replace CFBundleShortVersionString -string "$APP_VERSION" \
+  "$APP_RESOURCES/CodexThemedLauncherTemplate/Contents/Info.plist"
+/usr/bin/plutil -replace CFBundleVersion -string "$BUILD_NUMBER" \
+  "$APP_RESOURCES/CodexThemedLauncherTemplate/Contents/Info.plist"
+
 # File-provider locations can restore Finder metadata while a bundle is being
 # assembled. Those attributes are not part of the shipped app and make
 # codesign reject Sparkle's nested nibs and helper apps as resource forks.
@@ -130,14 +144,17 @@ xattr -dr 'com.apple.fileprovider.fpfs#P' "$APP_BUNDLE" 2>/dev/null || true
 # File Provider-backed workspaces; clear the root too before signing.
 xattr -c "$APP_BUNDLE" 2>/dev/null || true
 while IFS= read -r -d '' bundle_path; do
-  xattr -d com.apple.FinderInfo "$bundle_path" 2>/dev/null || true
-  xattr -d 'com.apple.fileprovider.fpfs#P' "$bundle_path" 2>/dev/null || true
-done < <(find "$APP_BUNDLE" -print0)
+  # Clear the complete attribute set on every node. Sparkle contains nested
+  # helper bundles whose Finder/File Provider metadata can otherwise make the
+  # outer signature invalid even after a targeted delete.
+  xattr -c "$bundle_path" 2>/dev/null || true
+done < <(find "$APP_BUNDLE" -depth -print0)
 
 if [[ "$SIGNING_IDENTITY" == "-" ]]; then
   if [[ "$BUILD_CONFIGURATION" == "release" ]]; then
     echo "Warning: release bundle is ad-hoc signed; set CODEX_STUDIO_SIGNING_IDENTITY for distribution." >&2
   fi
+  codesign --force --sign - "$APP_RESOURCES/CodexThemedLauncherTemplate"
   codesign --force --deep --sign - "$FRAMEWORKS_DIR/Sparkle.framework"
   codesign --force --deep --sign - "$APP_BUNDLE"
 else
@@ -146,6 +163,7 @@ else
   else
     TIMESTAMP_ARGUMENT="--timestamp=none"
   fi
+  codesign --force --options runtime "$TIMESTAMP_ARGUMENT" --sign "$SIGNING_IDENTITY" "$APP_RESOURCES/CodexThemedLauncherTemplate"
   codesign --force --deep --options runtime "$TIMESTAMP_ARGUMENT" --sign "$SIGNING_IDENTITY" "$FRAMEWORKS_DIR/Sparkle.framework"
   codesign --force --deep --options runtime "$TIMESTAMP_ARGUMENT" --sign "$SIGNING_IDENTITY" "$APP_BUNDLE"
 fi

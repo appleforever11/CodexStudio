@@ -1,0 +1,146 @@
+#!/bin/zsh
+# Codex Studio DockDoor launcher
+#
+# DockDoor identifies the running helper app rather than the official Codex
+# bundle that the theme engine launches. Keeping this helper alive preserves a
+# themed DockDoor pin and gives a newly updated stock Codex process a chance to
+# be restarted with the verified loopback theme endpoint.
+set -u
+
+home="${HOME:-}"
+if [ -z "$home" ]; then
+  print -u2 "Codex Studio launcher could not resolve the user's home directory."
+  exit 1
+fi
+
+runtime_root="${CODEX_STUDIO_RUNTIME_ROOT:-$home/.codex/codex-dream-skin-studio}"
+engine="${CODEX_STUDIO_ENGINE_PATH:-$runtime_root/scripts/start-dream-skin-macos.sh}"
+state_root="${CODEX_STUDIO_STATE_ROOT:-$home/Library/Application Support/CodexDreamSkinStudio}"
+log_file="$state_root/dock-launch.log"
+engine_lock="$state_root/theme-engine.lock"
+
+/bin/mkdir -p "$state_root"
+if [ ! -x "$engine" ]; then
+  print -u2 "Codex Studio theme runtime is missing: $engine"
+  exit 1
+fi
+
+port="${CODEX_STUDIO_CDP_PORT:-}"
+if [ -z "$port" ] && [ -f "$state_root/theme-persistence.plist" ]; then
+  port="$(/usr/bin/plutil -extract port raw -o - "$state_root/theme-persistence.plist" 2>/dev/null || true)"
+fi
+case "$port" in
+  ''|*[!0-9]*) port=9341 ;;
+esac
+
+cdp_url="http://127.0.0.1:${port}/json/version"
+codex_executable=""
+
+log_line() {
+  print -r -- "$(/bin/date -u '+%Y-%m-%dT%H:%M:%SZ') $*" >>"$log_file"
+}
+
+discover_codex_executable() {
+  local candidate identifier executable_name configured
+  configured="${CODEX_APP_BUNDLE:-}"
+  for candidate in "$configured" \
+    "/Applications/ChatGPT.app" "$home/Applications/ChatGPT.app" \
+    "/Applications/Codex.app" "$home/Applications/Codex.app"; do
+    [ -n "$candidate" ] || continue
+    [ -f "$candidate/Contents/Info.plist" ] || continue
+    identifier="$(/usr/bin/plutil -extract CFBundleIdentifier raw -o - "$candidate/Contents/Info.plist" 2>/dev/null || true)"
+    [ "$identifier" = "com.openai.codex" ] || continue
+    executable_name="$(/usr/bin/plutil -extract CFBundleExecutable raw -o - "$candidate/Contents/Info.plist" 2>/dev/null || true)"
+    if [ -x "$candidate/Contents/MacOS/$executable_name" ]; then
+      codex_executable="$candidate/Contents/MacOS/$executable_name"
+      return 0
+    fi
+  done
+
+  candidate="$(/usr/bin/mdfind 'kMDItemCFBundleIdentifier == "com.openai.codex"' | /usr/bin/head -n 1)"
+  if [ -f "$candidate/Contents/Info.plist" ]; then
+    identifier="$(/usr/bin/plutil -extract CFBundleIdentifier raw -o - "$candidate/Contents/Info.plist" 2>/dev/null || true)"
+    executable_name="$(/usr/bin/plutil -extract CFBundleExecutable raw -o - "$candidate/Contents/Info.plist" 2>/dev/null || true)"
+    if [ "$identifier" = "com.openai.codex" ] && [ -x "$candidate/Contents/MacOS/$executable_name" ]; then
+      codex_executable="$candidate/Contents/MacOS/$executable_name"
+      return 0
+    fi
+  fi
+  return 1
+}
+
+find_codex_pid() {
+  [ -n "$codex_executable" ] || discover_codex_executable || true
+  [ -n "$codex_executable" ] || return 0
+  while read -r pid command_line; do
+    case "$pid" in ''|*[!0-9]*) continue ;; esac
+    case "$command_line" in
+      "$codex_executable"|"$codex_executable "*)
+        print -r -- "$pid"
+        return 0
+        ;;
+    esac
+  done < <(/bin/ps -axo pid=,command=)
+}
+
+cdp_ready() {
+  /usr/bin/curl --noproxy '*' --silent --show-error --fail --max-time 1 "$cdp_url" >/dev/null 2>&1
+}
+
+run_engine() {
+  local engine_status=0
+  local lock_held="false"
+  while ! /usr/bin/shlock -p "$$" -f "$engine_lock"; do
+    cdp_ready && return 0
+    /bin/sleep 1
+  done
+  lock_held="true"
+
+  log_line "Starting the Codex Studio theme engine on port $port."
+  /usr/bin/arch -arm64 /bin/bash "$engine" --port "$port" --restart-existing \
+    >>"$log_file" 2>&1 || engine_status=$?
+
+  if [ "$lock_held" = "true" ]; then
+    /bin/rm -f "$engine_lock"
+  fi
+  return "$engine_status"
+}
+
+engine_status=0
+run_engine || engine_status=$?
+if [ "$engine_status" -ne 0 ]; then
+  log_line "The Codex Studio theme engine failed with status $engine_status."
+  exit "$engine_status"
+fi
+
+# A successful engine run leaves the official app running with the active
+# theme. Stay alive until that app exits so DockDoor continues to track this
+# launcher instead of normalizing the pin to ChatGPT.app.
+while true; do
+  codex_pid="$(find_codex_pid)"
+  if [ -z "$codex_pid" ]; then
+    exit 0
+  fi
+
+  if cdp_ready; then
+    /bin/sleep 2
+    continue
+  fi
+
+  # Give a newly spawned renderer a short startup window. If the official
+  # updater launched it without the debug endpoint, restart it through the
+  # same verified engine path used by Apply to Codex.
+  /bin/sleep 2
+  [ -n "$(find_codex_pid)" ] || exit 0
+  if cdp_ready; then
+    continue
+  fi
+
+  log_line "Codex pid $codex_pid has no theme endpoint; repairing the launch."
+  engine_status=0
+  run_engine || engine_status=$?
+  if [ "$engine_status" -ne 0 ]; then
+    log_line "The Codex Studio repair failed with status $engine_status."
+    exit "$engine_status"
+  fi
+done
