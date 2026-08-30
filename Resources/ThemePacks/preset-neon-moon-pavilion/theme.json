@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "preset-neon-moon-pavilion",
+  "name": "Neon Moon Pavilion",
+  "brandSubtitle": "CODEX DREAM SKIN",
+  "tagline": "Moonlight over the sea, a quiet pavilion for focused coding nights.",
+  "projectPrefix": "Choose project · ",
+  "projectLabel": "◇  Choose project",
+  "statusText": "NEON MOON ONLINE",
+  "quote": "CODE BENEATH THE NEON MOON",
+  "image": "background.jpg",
+  "colors": {
+    "background": "#090b22",
+    "panel": "#111432",
+    "panelAlt": "#1a1a42",
+    "accent": "#f05a9d",
+    "accentAlt": "#d94eaa",
+    "secondary": "#7866bd",
+    "highlight": "#ff9bd3",
+    "text": "#f7eaf7",
+    "muted": "#b9acd0",
+    "line": "rgba(240, 90, 157, .24)"
+  },
+  "promoTitle": "Write inspiration beneath the neon moon",
+  "promoSub": "CodexThemes.app",
+  "promoUrl": "https://codexthemes.app",
+  "author": "admin",
+  "version": "1.0.0",
+  "description": "A dark cinematic theme woven from deep indigo, luminous rose, moonlit clouds, and a tranquil pavilion above the sea.",
+  "appearance": "dark",
+  "art": {
+    "focusX": 0.72,
+    "focusY": 0.5,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  }
+}

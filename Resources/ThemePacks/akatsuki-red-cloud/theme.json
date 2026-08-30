@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "akatsuki-red-cloud",
+  "name": "晓·红云月夜",
+  "brandSubtitle": "AKATSUKI // RED CLOUD",
+  "tagline": "黎明之前，红云已至",
+  "projectPrefix": "选择任务 · ",
+  "projectLabel": "MISSION / 选择任务",
+  "statusText": "RED CLOUD ONLINE",
+  "quote": "DAWN IN SILENCE",
+  "image": "background.jpg",
+  "pet": "pet.png",
+  "foreground": "foreground.png",
+  "preview": "preview.jpg",
+  "builtin": true,
+  "order": 160,
+  "presentation": {
+    "tone": "dark",
+    "copyAlign": "left",
+    "copyWidth": 44,
+    "heroPosition": "right 63%",
+    "foregroundX": 100,
+    "foregroundY": 63,
+    "pagePosition": "center 50%",
+    "previewPosition": "center 50%"
+  },
+  "colors": {
+    "background": "#080709",
+    "panel": "#151015",
+    "panelAlt": "rgba(25, 17, 22, .98)",
+    "accent": "#d71932",
+    "accentAlt": "#ff5964",
+    "secondary": "#735966",
+    "highlight": "#920d24",
+    "text": "#f5eef1",
+    "muted": "#b9a7ae",
+    "line": "rgba(230, 72, 91, .20)"
+  }
+}

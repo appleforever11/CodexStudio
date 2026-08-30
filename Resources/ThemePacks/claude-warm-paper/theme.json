@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "claude-warm-paper",
+  "name": "Claude 原生",
+  "brandSubtitle": "CLAUDE NATIVE",
+  "tagline": "安静思考，清晰表达。",
+  "projectPrefix": "选择项目：",
+  "projectLabel": "选择项目",
+  "statusText": "CALM FOCUS",
+  "quote": "THINK CLEARLY.",
+  "image": "background.jpg",
+  "preview": "preview-claude-ui.jpg",
+  "builtin": false,
+  "order": 210,
+  "presentation": {
+    "tone": "light",
+    "copyAlign": "left",
+    "copyWidth": 55.0,
+    "heroPosition": "center center",
+    "pagePosition": "center center",
+    "previewPosition": "center center"
+  },
+  "colors": {
+    "background": "#F5F4EE",
+    "panel": "#F8F7F2",
+    "panelAlt": "rgba(239, 237, 229, .96)",
+    "accent": "#DA7756",
+    "accentAlt": "#E89576",
+    "secondary": "#A49E92",
+    "highlight": "#C76749",
+    "text": "#141413",
+    "muted": "#6B6963",
+    "line": "rgba(101, 86, 74, .16)"
+  }
+}

@@ -19,7 +19,7 @@ Codex Studio also includes Sparkle 2.9.6 for signed, GitHub-hosted updates. Use 
 The first milestone is built around three ideas:
 
 - a fast, explicit apply-and-verify path for switching themes;
-- a large local library that can discover the existing managed Codex themes without copying them into this repository;
+- a large, bundled library that seeds every packaged Codex theme into the user library on first launch;
 - a live, inspectable Codex canvas for shaping a theme before applying it.
 
 ## Run
@@ -32,21 +32,23 @@ The same script is wired into the Codex app Run action through `.codex/environme
 
 ## Theme sources
 
-Codex Studio looks for themes in:
+Codex Studio installs bundled themes into and then reads the managed library at:
 
 ```text
 ~/Library/Application Support/CodexDreamSkinStudio/themes
 ```
 
-It also checks the local WallBuddy app bundle and its adjacent `dist/assets` directory for image assets. The current WallBuddy bundle contains no wallpaper catalog, so the app treats that source as optional and falls back to the managed Codex library.
+The release app bundles the complete `Resources/ThemePacks` directory. On first launch it copies any missing package into the managed library using an atomic staging move, preserving existing local packages. New themes added to `Resources/ThemePacks` are included automatically in the next build and release.
 
-Applying a managed theme uses the existing local runtime entry point when available:
+Codex Studio also checks the local WallBuddy app bundle and its adjacent `dist/assets` directory for image assets. The current WallBuddy bundle contains no wallpaper catalog, so the app treats that source as optional and falls back to the managed Codex library.
+
+The release app also bundles the Codex theme runtime and installs it at first launch only when the managed runtime is not already present:
 
 ```text
 ~/.codex/codex-dream-skin-studio/scripts/switch-theme-macos.sh
 ```
 
-The app only reports success after the runtime state confirms the requested theme id. If the runtime is missing or the theme is only a visual preview, the UI says so.
+The app only reports success after the runtime state confirms the requested theme id. Existing runtime state is never overwritten by the bootstrapper. If Codex is not installed or the runtime cannot verify the live renderer, the UI says so.
 
 ## Release artifacts
 
@@ -66,6 +68,6 @@ Sources/CodexStudio/
 
 Codex Studio is not an OpenAI product and does not modify the official Codex app bundle, `app.asar`, or its code signature.
 
-The implementation in this repository is new code and does not copy the previous Codex Themes application. The local Codex theme runtime and discovered theme artwork remain external to this repository; their creators and licenses should be preserved independently if those assets are redistributed.
+The implementation in this repository is new code and does not copy the previous Codex Themes application. The bundled theme packages and runtime are vendored release inputs with provenance and licensing notes in [ATTRIBUTIONS.md](ATTRIBUTIONS.md), and package-level metadata must remain intact when themes are added or redistributed.
 
 See [ATTRIBUTIONS.md](ATTRIBUTIONS.md) for the project provenance and third-party notice policy.

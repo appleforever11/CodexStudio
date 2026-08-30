@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "cat-and-me",
+  "name": "猫咪与我",
+  "brandSubtitle": "CAT & ME // QUIET IMAGINATION",
+  "tagline": "在安静的光里，和灵感并肩阅读。",
+  "projectPrefix": "翻开一页 · ",
+  "projectLabel": "STORY / 选择任务",
+  "statusText": "IMAGINATION ONLINE",
+  "quote": "READ WITH WONDER",
+  "image": "background.jpg",
+  "pet": "pet.png",
+  "preview": "preview.jpg",
+  "builtin": false,
+  "order": 506,
+  "presentation": {
+    "tone": "dark",
+    "copyAlign": "left",
+    "copyWidth": 44.0,
+    "heroPosition": "right 70%",
+    "pagePosition": "right 70%",
+    "previewPosition": "right 70%",
+    "foregroundX": 100.0,
+    "foregroundY": 70.0
+  },
+  "colors": {
+    "background": "#061b4f",
+    "panel": "#082b68",
+    "panelAlt": "rgba(8, 43, 104, .96)",
+    "accent": "#ffae42",
+    "accentAlt": "#ffd27a",
+    "secondary": "#33b8e9",
+    "highlight": "#f6fbff",
+    "text": "#f3f9ff",
+    "muted": "#abc9ea",
+    "line": "rgba(88, 194, 242, .24)"
+  },
+  "foreground": "foreground.png"
+}

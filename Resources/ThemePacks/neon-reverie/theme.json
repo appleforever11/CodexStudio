@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "neon-reverie",
+  "name": "霓虹仰望",
+  "brandSubtitle": "NEON ASCENT // CODEX",
+  "tagline": "向光而行，让想法越过边界。",
+  "projectPrefix": "选择任务 · ",
+  "projectLabel": "MISSION / 选择任务",
+  "statusText": "NEON SIGNAL ONLINE",
+  "quote": "LOOK BEYOND THE FRAME",
+  "image": "background.jpg",
+  "preview": "preview.jpg",
+  "builtin": false,
+  "order": 580,
+  "presentation": {
+    "tone": "dark",
+    "copyAlign": "left",
+    "copyWidth": 44.0,
+    "heroPosition": "right 100%",
+    "pagePosition": "right 70%",
+    "previewPosition": "right 50%",
+    "foregroundX": 100.0,
+    "foregroundY": 100.0
+  },
+  "colors": {
+    "background": "#07051b",
+    "panel": "#120c2b",
+    "panelAlt": "rgba(23, 13, 43, .98)",
+    "accent": "#ff3f86",
+    "accentAlt": "#ff6845",
+    "secondary": "#31d7ff",
+    "highlight": "#7b35ff",
+    "text": "#f7efff",
+    "muted": "#bbaed0",
+    "line": "rgba(255, 63, 134, .24)"
+  },
+  "foreground": "foreground.png"
+}

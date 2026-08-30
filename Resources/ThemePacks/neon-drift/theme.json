@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "neon-drift",
+  "name": "霓虹镜驰",
+  "brandSubtitle": "CODEX // NEON DRIFT",
+  "tagline": "在雨夜里，把想法开出边界。",
+  "projectPrefix": "选择任务 · ",
+  "projectLabel": "DRIVE / 选择任务",
+  "statusText": "NIGHT DRIVE ONLINE",
+  "quote": "MIRROR THE LIMITS",
+  "image": "background.jpg",
+  "pet": "pet.png",
+  "preview": "preview.jpg",
+  "builtin": false,
+  "order": 560,
+  "presentation": {
+    "tone": "dark",
+    "copyAlign": "left",
+    "copyWidth": 44.0,
+    "heroPosition": "right 63%",
+    "pagePosition": "center 50%",
+    "previewPosition": "center 50%",
+    "foregroundX": 100.0,
+    "foregroundY": 63.0
+  },
+  "colors": {
+    "background": "#050b12",
+    "panel": "#0b1520",
+    "panelAlt": "rgba(9, 17, 28, .96)",
+    "accent": "#ff245f",
+    "accentAlt": "#24d8ff",
+    "secondary": "#d3a62e",
+    "highlight": "#a90f4b",
+    "text": "#eef9ff",
+    "muted": "#93aec0",
+    "line": "rgba(36, 216, 255, .24)"
+  },
+  "foreground": "foreground.png",
+  "pageImage": "page-background.jpg"
+}

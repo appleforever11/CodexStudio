@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "moonblade-codex",
+  "name": "月下三刀流",
+  "brandSubtitle": "CODEX // MOONBLADE",
+  "tagline": "把复杂问题，一刀切开。",
+  "projectPrefix": "选择任务 · ",
+  "projectLabel": "MISSION / 选择任务",
+  "statusText": "MOONBLADE ONLINE",
+  "quote": "CUT THROUGH THE COMPLEX",
+  "image": "background.jpg",
+  "pet": "pet.png",
+  "preview": "preview.jpg",
+  "builtin": false,
+  "order": 420,
+  "presentation": {
+    "tone": "dark",
+    "copyAlign": "left",
+    "copyWidth": 44.0,
+    "heroPosition": "right 63%",
+    "pagePosition": "right 50%",
+    "previewPosition": "right 50%",
+    "foregroundX": 100.0,
+    "foregroundY": 63.0
+  },
+  "colors": {
+    "background": "#07111c",
+    "panel": "#0b1724",
+    "panelAlt": "rgba(13, 29, 44, .97)",
+    "accent": "#8fdcff",
+    "accentAlt": "#d6f4ff",
+    "secondary": "#496d66",
+    "highlight": "#f0f8ff",
+    "text": "#f5fbff",
+    "muted": "#9fb2c2",
+    "line": "rgba(143, 220, 255, .20)"
+  },
+  "foreground": "foreground.png"
+}

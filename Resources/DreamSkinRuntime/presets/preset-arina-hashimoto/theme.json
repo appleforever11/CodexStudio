@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "preset-arina-hashimoto",
+  "name": "Arina Soft Studio",
+  "author": "Codex Themes",
+  "version": "1.0.0",
+  "description": "A soft rose-lit studio with a portrait-safe layout and calm neutral surfaces.",
+  "category": "Cinematic",
+  "brandSubtitle": "CODEX DREAM SKIN",
+  "tagline": "Bring soft light and rose tones into today's workspace.",
+  "projectPrefix": "Project · ",
+  "projectLabel": "Choose project",
+  "statusText": "DREAM SKIN ONLINE",
+  "quote": "MAKE SOMETHING WONDERFUL",
+  "image": "background.jpg",
+  "appearance": "auto",
+  "art": {
+    "focusX": 0.72,
+    "focusY": 0.45,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  }
+}

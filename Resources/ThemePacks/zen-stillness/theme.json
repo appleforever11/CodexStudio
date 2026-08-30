@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "zen-stillness",
+  "name": "禅静",
+  "brandSubtitle": "ZEN // STILLNESS",
+  "tagline": "心静，则万物自明",
+  "projectPrefix": "静观任务 · ",
+  "projectLabel": "FOCUS / 选择任务",
+  "statusText": "ZEN MODE",
+  "quote": "BREATHE. FOCUS. CREATE.",
+  "image": "background.jpg",
+  "pet": "pet.png",
+  "preview": "preview.jpg",
+  "builtin": false,
+  "order": 520,
+  "presentation": {
+    "tone": "light",
+    "copyAlign": "left",
+    "copyWidth": 44.0,
+    "heroPosition": "center 90%",
+    "pagePosition": "center 52%",
+    "previewPosition": "center 90%",
+    "foregroundX": 50.0,
+    "foregroundY": 90.0
+  },
+  "colors": {
+    "background": "#f1e3e6",
+    "panel": "#f7e5e9",
+    "panelAlt": "rgba(242, 216, 222, .98)",
+    "accent": "#5c91aa",
+    "accentAlt": "#d8a2aa",
+    "secondary": "#8aa6b5",
+    "highlight": "#315f78",
+    "text": "#32424a",
+    "muted": "#776b70",
+    "line": "rgba(176, 115, 128, .22)"
+  },
+  "foreground": "foreground.png"
+}

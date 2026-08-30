@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "preset-digital-melody",
+  "name": "Digital Melody",
+  "author": "Codex Themes",
+  "version": "1.0.0",
+  "description": "A bright cyan-and-pink interface inspired by digital rhythm and spectral light.",
+  "category": "Neon",
+  "brandSubtitle": "CODEX DREAM SKIN",
+  "tagline": "Turn cyan rhythm and pink spectrum light into inspired code.",
+  "projectPrefix": "Project · ",
+  "projectLabel": "Choose project",
+  "statusText": "DIGITAL MELODY ONLINE",
+  "quote": "CODE IN RHYTHM, CREATE IN COLOR",
+  "image": "background.jpg",
+  "colors": {
+    "background": "#edf9fd",
+    "panel": "#f9fcff",
+    "panelAlt": "#e4f3fa",
+    "accent": "#28bfc8",
+    "accentAlt": "#64dce0",
+    "secondary": "#e98ac8",
+    "highlight": "#9feaf5",
+    "text": "#17495f",
+    "muted": "#567887",
+    "line": "rgba(40, 191, 200, .24)"
+  },
+  "promoTitle": "Give every coding session its own rhythm",
+  "promoSub": "CodexThemes.app",
+  "promoUrl": "https://codexthemes.app"
+}

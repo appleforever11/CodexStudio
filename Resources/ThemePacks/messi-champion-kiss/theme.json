@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "messi-champion-kiss",
+  "name": "梅西·冠军之吻",
+  "brandSubtitle": "MESSI // CAMPEÓN DEL MUNDO",
+  "tagline": "从罗萨里奥，到世界之巅",
+  "projectPrefix": "冠军模式 · ",
+  "projectLabel": "MATCHDAY / 选择任务",
+  "statusText": "CHAMPION MODE",
+  "quote": "THE DREAM IS REAL",
+  "image": "background.jpg",
+  "pet": "pet.png",
+  "preview": "preview.jpg",
+  "builtin": false,
+  "order": 170,
+  "presentation": {
+    "tone": "dark",
+    "copyAlign": "left",
+    "copyWidth": 44.0,
+    "heroPosition": "right 57%",
+    "pagePosition": "right center",
+    "previewPosition": "center center",
+    "foregroundX": 100.0,
+    "foregroundY": 57.0
+  },
+  "colors": {
+    "background": "#050a14",
+    "panel": "#081421",
+    "panelAlt": "rgba(10, 25, 41, .98)",
+    "accent": "#69c8f2",
+    "accentAlt": "#e8f7ff",
+    "secondary": "#d6a83b",
+    "highlight": "#8a6417",
+    "text": "#f4fbff",
+    "muted": "#9fb6c7",
+    "line": "rgba(105, 200, 242, .28)"
+  },
+  "foreground": "foreground.png",
+  "pageImage": "page-background.jpg"
+}

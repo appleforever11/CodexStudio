@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "fortune-god-money-star",
+  "name": "潮财神 · MONEY",
+  "brandSubtitle": "FORTUNE MODE // MONEY ENERGY",
+  "tagline": "财气出框，灵感开张。",
+  "projectPrefix": "开张一局 · ",
+  "projectLabel": "FORTUNE / 选择任务",
+  "statusText": "FORTUNE ONLINE",
+  "quote": "MAKE IDEAS PAY",
+  "image": "background.jpg",
+  "pet": "pet.png",
+  "preview": "preview.jpg",
+  "builtin": false,
+  "order": 510,
+  "presentation": {
+    "tone": "dark",
+    "copyAlign": "left",
+    "copyWidth": 44.0,
+    "heroPosition": "right 35%",
+    "pagePosition": "right 50%",
+    "previewPosition": "right 35%",
+    "foregroundX": 100.0,
+    "foregroundY": 35.0
+  },
+  "colors": {
+    "background": "#2b0004",
+    "panel": "#4a090d",
+    "panelAlt": "rgba(74, 9, 13, .94)",
+    "accent": "#e6ad1e",
+    "accentAlt": "#ffd85a",
+    "secondary": "#a9151f",
+    "highlight": "#f6c453",
+    "text": "#fff5ea",
+    "muted": "#e0b0a4",
+    "line": "rgba(239, 180, 56, .30)"
+  },
+  "foreground": "foreground.png",
+  "pageImage": "page-background.jpg"
+}

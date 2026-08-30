@@ -15,6 +15,20 @@ struct ThemeLibraryService {
             .appendingPathComponent("themes", isDirectory: true)
     }
 
+    static var bundledThemesDirectory: URL? {
+        Bundle.main.resourceURL?.appendingPathComponent("ThemePacks", isDirectory: true)
+    }
+
+    static var bundledRuntimeDirectory: URL? {
+        Bundle.main.resourceURL?.appendingPathComponent("DreamSkinRuntime", isDirectory: true)
+    }
+
+    private static var installedRuntimeDirectory: URL {
+        homeDirectory
+            .appendingPathComponent(".codex", isDirectory: true)
+            .appendingPathComponent("codex-dream-skin-studio", isDirectory: true)
+    }
+
     static var wallBuddyBundle: URL {
         homeDirectory
             .appendingPathComponent("Codex Projects Restored", isDirectory: true)
@@ -24,6 +38,9 @@ struct ThemeLibraryService {
     }
 
     static func loadSynchronously() -> ThemeLibraryResult {
+        _ = installBundledRuntimeIfNeeded()
+        _ = seedBundledThemesIfNeeded()
+
         let localThemes = scanManagedThemes()
         var themeByID = Dictionary(uniqueKeysWithValues: localThemes.map { ($0.id, $0) })
 
@@ -66,6 +83,130 @@ struct ThemeLibraryService {
             wallBuddyPath: wallBuddyPath,
             message: message
         )
+    }
+
+    @discardableResult
+    static func installBundledRuntimeIfNeeded() -> Bool {
+        let fileManager = FileManager.default
+        guard let bundledRuntimeDirectory,
+              fileManager.fileExists(atPath: bundledRuntimeDirectory.appendingPathComponent("scripts/switch-theme-macos.sh").path),
+              !fileManager.fileExists(atPath: installedRuntimeDirectory.path)
+        else {
+            return false
+        }
+
+        let codexDirectory = installedRuntimeDirectory.deletingLastPathComponent()
+        let stagingDirectory = codexDirectory.appendingPathComponent(
+            ".codex-dream-skin-studio.installing-\(UUID().uuidString)",
+            isDirectory: true
+        )
+
+        do {
+            try fileManager.createDirectory(
+                at: codexDirectory,
+                withIntermediateDirectories: true,
+                attributes: [.posixPermissions: 0o700]
+            )
+            try fileManager.copyItem(at: bundledRuntimeDirectory, to: stagingDirectory)
+            let stagedScript = stagingDirectory.appendingPathComponent("scripts/switch-theme-macos.sh")
+            guard fileManager.isReadableFile(atPath: stagedScript.path) else {
+                try? fileManager.removeItem(at: stagingDirectory)
+                return false
+            }
+            guard !fileManager.fileExists(atPath: installedRuntimeDirectory.path) else {
+                try? fileManager.removeItem(at: stagingDirectory)
+                return false
+            }
+            try fileManager.moveItem(at: stagingDirectory, to: installedRuntimeDirectory)
+            normalizeRuntimePermissions(at: installedRuntimeDirectory)
+            return true
+        } catch {
+            try? fileManager.removeItem(at: stagingDirectory)
+            return false
+        }
+    }
+
+    @discardableResult
+    static func seedBundledThemesIfNeeded() -> Int {
+        let fileManager = FileManager.default
+        guard let bundledThemesDirectory,
+              let entries = try? fileManager.contentsOfDirectory(
+                at: bundledThemesDirectory,
+                includingPropertiesForKeys: [.isDirectoryKey],
+                options: [.skipsHiddenFiles]
+              )
+        else {
+            return 0
+        }
+
+        do {
+            try fileManager.createDirectory(
+                at: managedThemesDirectory,
+                withIntermediateDirectories: true,
+                attributes: [.posixPermissions: 0o700]
+            )
+            try fileManager.setAttributes([.posixPermissions: 0o700], ofItemAtPath: managedThemesDirectory.path)
+        } catch {
+            return 0
+        }
+
+        var seededCount = 0
+        for source in entries.sorted(by: { $0.lastPathComponent < $1.lastPathComponent }) {
+            guard (try? source.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) == true else { continue }
+            let id = source.lastPathComponent
+            guard isSafeThemeID(id) else { continue }
+            let manifestURL = source.appendingPathComponent("theme.json")
+            guard let manifestData = try? Data(contentsOf: manifestURL),
+                  manifestData.count <= 256 * 1024,
+                  let manifest = try? JSONSerialization.jsonObject(with: manifestData) as? [String: Any],
+                  stringValue(manifest, key: "id") == id,
+                  numberValue(manifest, key: "schemaVersion") == 1
+            else {
+                continue
+            }
+
+            let destination = managedThemesDirectory.appendingPathComponent(id, isDirectory: true)
+            guard !fileManager.fileExists(atPath: destination.path) else { continue }
+
+            let stagingDirectory = managedThemesDirectory.appendingPathComponent(
+                ".\(id).bundled-\(UUID().uuidString)",
+                isDirectory: true
+            )
+            do {
+                try fileManager.copyItem(at: source, to: stagingDirectory)
+                guard parseThemeDirectory(stagingDirectory, origin: .local) != nil else {
+                    try? fileManager.removeItem(at: stagingDirectory)
+                    continue
+                }
+                guard !fileManager.fileExists(atPath: destination.path) else {
+                    try? fileManager.removeItem(at: stagingDirectory)
+                    continue
+                }
+                try fileManager.moveItem(at: stagingDirectory, to: destination)
+                seededCount += 1
+            } catch {
+                try? fileManager.removeItem(at: stagingDirectory)
+            }
+        }
+        return seededCount
+    }
+
+    private static func normalizeRuntimePermissions(at root: URL) {
+        let fileManager = FileManager.default
+        try? fileManager.setAttributes([.posixPermissions: 0o700], ofItemAtPath: root.path)
+        guard let enumerator = fileManager.enumerator(
+            at: root,
+            includingPropertiesForKeys: [.isDirectoryKey],
+            options: [.skipsHiddenFiles]
+        ) else {
+            return
+        }
+
+        for case let url as URL in enumerator {
+            let isDirectory = (try? url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) == true
+            let permissions = isDirectory || url.pathExtension.lowercased() == "sh" ? 0o700 : 0o600
+            try? fileManager.setAttributes([.posixPermissions: permissions], ofItemAtPath: url.path)
+        }
     }
 
     static func importTheme(from source: URL) throws -> String {

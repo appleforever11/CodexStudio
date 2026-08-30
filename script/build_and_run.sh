@@ -26,6 +26,8 @@ APP_RESOURCES="$APP_CONTENTS/Resources"
 APP_BINARY="$APP_MACOS/$APP_NAME"
 INFO_PLIST="$APP_CONTENTS/Info.plist"
 ICON_FILE="$ROOT_DIR/Resources/CodexStudio.icns"
+THEME_PACKS_DIR="$ROOT_DIR/Resources/ThemePacks"
+DREAM_SKIN_RUNTIME_DIR="$ROOT_DIR/Resources/DreamSkinRuntime"
 FRAMEWORKS_DIR="$APP_CONTENTS/Frameworks"
 
 if [[ -z "$SIGNING_IDENTITY" ]]; then
@@ -51,11 +53,27 @@ if [[ ! -d "$SPARKLE_FRAMEWORK" ]]; then
   exit 1
 fi
 
+if [[ ! -d "$THEME_PACKS_DIR" ]]; then
+  echo "Bundled theme packs were not found at $THEME_PACKS_DIR." >&2
+  exit 1
+fi
+THEME_PACK_COUNT="$(find "$THEME_PACKS_DIR" -mindepth 1 -maxdepth 1 -type d -print | wc -l | tr -d '[:space:]')"
+if [[ "$THEME_PACK_COUNT" -eq 0 ]]; then
+  echo "No bundled theme packs were found at $THEME_PACKS_DIR." >&2
+  exit 1
+fi
+if [[ ! -d "$DREAM_SKIN_RUNTIME_DIR/scripts" ]]; then
+  echo "Bundled Codex theme runtime was not found at $DREAM_SKIN_RUNTIME_DIR." >&2
+  exit 1
+fi
+
 rm -rf "$APP_BUNDLE"
 mkdir -p "$APP_MACOS" "$APP_RESOURCES" "$FRAMEWORKS_DIR"
 cp "$BUILD_BINARY" "$APP_BINARY"
-ditto --norsrc --noextattr --noqtn "$ICON_FILE" "$APP_RESOURCES/CodexStudio.icns"
-ditto --norsrc --noextattr --noqtn "$SPARKLE_FRAMEWORK" "$FRAMEWORKS_DIR/Sparkle.framework"
+COPYFILE_DISABLE=1 ditto --norsrc --noextattr --noqtn "$ICON_FILE" "$APP_RESOURCES/CodexStudio.icns"
+COPYFILE_DISABLE=1 ditto --norsrc --noextattr --noqtn "$THEME_PACKS_DIR" "$APP_RESOURCES/ThemePacks"
+COPYFILE_DISABLE=1 ditto --norsrc --noextattr --noqtn "$DREAM_SKIN_RUNTIME_DIR" "$APP_RESOURCES/DreamSkinRuntime"
+COPYFILE_DISABLE=1 ditto --norsrc --noextattr --noqtn "$SPARKLE_FRAMEWORK" "$FRAMEWORKS_DIR/Sparkle.framework"
 chmod +x "$APP_BINARY"
 
 install_name_tool \
@@ -108,6 +126,13 @@ PLIST
 xattr -cr "$APP_BUNDLE" 2>/dev/null || true
 xattr -dr com.apple.FinderInfo "$APP_BUNDLE" 2>/dev/null || true
 xattr -dr 'com.apple.fileprovider.fpfs#P' "$APP_BUNDLE" 2>/dev/null || true
+# Recursive xattr removal does not clear the bundle directory itself on some
+# File Provider-backed workspaces; clear the root too before signing.
+xattr -c "$APP_BUNDLE" 2>/dev/null || true
+while IFS= read -r -d '' bundle_path; do
+  xattr -d com.apple.FinderInfo "$bundle_path" 2>/dev/null || true
+  xattr -d 'com.apple.fileprovider.fpfs#P' "$bundle_path" 2>/dev/null || true
+done < <(find "$APP_BUNDLE" -print0)
 
 if [[ "$SIGNING_IDENTITY" == "-" ]]; then
   if [[ "$BUILD_CONFIGURATION" == "release" ]]; then

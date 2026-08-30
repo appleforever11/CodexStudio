@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "easter-islands",
+  "name": "Easter Islands · 仰望星河",
+  "brandSubtitle": "EASTER ISLANDS // STARGAZER",
+  "tagline": "仰望星河，守望未知",
+  "projectPrefix": "星海任务 · ",
+  "projectLabel": "VOYAGE / 选择任务",
+  "statusText": "STARGAZER ONLINE",
+  "quote": "WE LOOK BEYOND",
+  "image": "background.jpg",
+  "pet": "pet.png",
+  "preview": "preview.jpg",
+  "builtin": false,
+  "order": 180,
+  "presentation": {
+    "tone": "dark",
+    "copyAlign": "left",
+    "copyWidth": 44.0,
+    "heroPosition": "right 100%",
+    "pagePosition": "center 58%",
+    "previewPosition": "right center",
+    "foregroundX": 100.0,
+    "foregroundY": 100.0
+  },
+  "colors": {
+    "background": "#060B18",
+    "panel": "#0B1425",
+    "panelAlt": "rgba(14, 26, 45, .98)",
+    "accent": "#EF8B9A",
+    "accentAlt": "#FFD4DE",
+    "secondary": "#83B6D9",
+    "highlight": "#603F72",
+    "text": "#F2F5FB",
+    "muted": "#99ABC3",
+    "line": "rgba(131, 182, 217, .25)"
+  },
+  "foreground": "foreground.png",
+  "pageImage": "page-background.jpg"
+}

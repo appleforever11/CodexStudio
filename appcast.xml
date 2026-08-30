@@ -3,6 +3,35 @@
     <channel>
         <title>CodexStudio</title>
         <item>
+            <title>0.1.1</title>
+            <pubDate>Sun, 30 Aug 2026 12:31:52 -0400</pubDate>
+            <link>https://github.com/appleforever11/CodexStudio</link>
+            <sparkle:version>1001</sparkle:version>
+            <sparkle:shortVersionString>0.1.1</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.1
+
+## Bundled theme library
+
+- Ships all 130 theme packages from the managed Codex library inside the app bundle.
+- Seeds missing bundled packages into `~/Library/Application Support/CodexDreamSkinStudio/themes` on first launch while preserving existing local themes.
+- Future packages added under `Resources/ThemePacks` are included automatically in the next release build.
+
+## Apply reliability
+
+- Ships the Codex Dream Skin apply runtime inside the app bundle.
+- Installs the bundled runtime only when a managed runtime is not already present.
+- Keeps the existing apply-and-verify flow and avoids reporting success until Codex confirms the requested theme.
+
+## Packaging
+
+- Updated the app bundle assembly to include the complete theme library and runtime.
+- Retained provenance and licensing guidance for bundled theme packages and the upstream runtime in `ATTRIBUTIONS.md`.
+]]></description>
+            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.1/CodexStudio-0.1.1-arm64.zip" length="88557938" type="application/octet-stream" sparkle:edSignature="rLdPHpsYPXMNHVryaqEBWePI1j1vYqJvay9OMLl9cjxogxfSGqzQj+MkxECzH+VDXJv0/asB56v49vBsCvCQAQ=="/>
+        </item>
+        <item>
             <title>0.1.0</title>
             <pubDate>Sun, 30 Aug 2026 11:47:48 -0400</pubDate>
             <link>https://github.com/appleforever11/CodexStudio</link>

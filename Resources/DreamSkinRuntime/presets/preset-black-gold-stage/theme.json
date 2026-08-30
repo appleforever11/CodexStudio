@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "preset-black-gold-stage",
+  "name": "Black Gold Stage",
+  "author": "Codex Themes",
+  "version": "1.0.0",
+  "description": "A dramatic black-and-gold stage with warm highlights for focused late-night work.",
+  "category": "Cinematic",
+  "brandSubtitle": "CODEX DREAM SKIN",
+  "tagline": "Quiet black and gold with warm stage light for focused late-night creation.",
+  "projectPrefix": "Project · ",
+  "projectLabel": "Choose project",
+  "statusText": "MIDNIGHT STAGE ONLINE",
+  "quote": "CREATE WITH QUIET CONFIDENCE",
+  "image": "background.jpg",
+  "colors": {
+    "background": "#0d0f0e",
+    "panel": "#171816",
+    "panelAlt": "#24221e",
+    "accent": "#c6a66e",
+    "accentAlt": "#dfc58f",
+    "secondary": "#75444a",
+    "highlight": "#f0d9aa",
+    "text": "#f3ead9",
+    "muted": "#b9aa91",
+    "line": "rgba(198, 166, 110, .24)"
+  },
+  "promoTitle": "Bring late-night ideas into the spotlight",
+  "promoSub": "CodexThemes.app",
+  "promoUrl": "https://codexthemes.app"
+}

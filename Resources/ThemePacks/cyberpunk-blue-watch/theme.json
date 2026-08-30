@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "cyberpunk-blue-watch",
+  "name": "赛博朋克·蓝夜守望",
+  "brandSubtitle": "CYBERPUNK // BLUE WATCH",
+  "tagline": "在霓虹尽头，编译下一行未来",
+  "projectPrefix": "选择任务 · ",
+  "projectLabel": "MISSION / 选择任务",
+  "statusText": "NIGHT CITY ONLINE",
+  "quote": "CODE THE NIGHT",
+  "image": "background.jpg",
+  "preview": "preview.jpg",
+  "builtin": false,
+  "order": 620,
+  "presentation": {
+    "tone": "dark",
+    "copyAlign": "left",
+    "copyWidth": 44.0,
+    "heroPosition": "center 63%",
+    "pagePosition": "76% center",
+    "previewPosition": "center 50%",
+    "foregroundX": 50.0,
+    "foregroundY": 63.0
+  },
+  "colors": {
+    "background": "#050d2b",
+    "panel": "#0a1640",
+    "panelAlt": "rgba(10, 22, 64, .96)",
+    "accent": "#4f75ff",
+    "accentAlt": "#a85cff",
+    "secondary": "#6279b8",
+    "highlight": "#e14cff",
+    "text": "#f2f5ff",
+    "muted": "#aebbe5",
+    "line": "rgba(104, 126, 255, .24)"
+  },
+  "foreground": "foreground.png"
+}

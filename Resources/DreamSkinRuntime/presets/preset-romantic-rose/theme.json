@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "preset-romantic-rose",
+  "name": "Romantic Rose",
+  "author": "Codex Themes",
+  "version": "1.0.0",
+  "description": "A romantic rose-toned workspace with soft light and a balanced portrait-safe composition.",
+  "category": "Cinematic",
+  "brandSubtitle": "CODEX DREAM SKIN",
+  "tagline": "Bring soft light and romantic rose tones into today's workspace.",
+  "projectPrefix": "Project · ",
+  "projectLabel": "Choose project",
+  "statusText": "DREAM SKIN ONLINE",
+  "quote": "MAKE SOMETHING WONDERFUL",
+  "image": "background.jpg",
+  "appearance": "auto",
+  "art": {
+    "focusX": 0.72,
+    "focusY": 0.45,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  }
+}

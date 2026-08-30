@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "singularity-black-hole",
+  "name": "奇点 · 黑洞之眼",
+  "brandSubtitle": "SINGULARITY // DEEP SPACE",
+  "tagline": "在引力尽头，专注坍缩成光。",
+  "projectPrefix": "进入任务 · ",
+  "projectLabel": "MISSION / 穿越事件视界",
+  "statusText": "SINGULARITY ONLINE",
+  "quote": "BEYOND THE EVENT HORIZON",
+  "image": "background.jpg",
+  "pet": "pet.png",
+  "preview": "preview.jpg",
+  "builtin": false,
+  "order": 504,
+  "presentation": {
+    "tone": "dark",
+    "copyAlign": "left",
+    "copyWidth": 44.0,
+    "heroPosition": "right 50%",
+    "pagePosition": "right 50%",
+    "previewPosition": "right 50%",
+    "foregroundX": 100.0,
+    "foregroundY": 50.0
+  },
+  "colors": {
+    "background": "#02040a",
+    "panel": "#080d17",
+    "panelAlt": "rgba(8, 13, 23, .96)",
+    "accent": "#b8d9ff",
+    "accentAlt": "#edf6ff",
+    "secondary": "#657ba8",
+    "highlight": "#9185dc",
+    "text": "#f3f7ff",
+    "muted": "#9caac2",
+    "line": "rgba(159, 194, 255, .22)"
+  },
+  "foreground": "foreground.png"
+}

@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "she-noir",
+  "name": "SHE · 银夜花域",
+  "brandSubtitle": "SHE // SILVER NOIR",
+  "tagline": "越过边界，保持锋利。",
+  "projectPrefix": "接入任务 · ",
+  "projectLabel": "MISSION / 选择任务",
+  "statusText": "SILVER SIGNAL ONLINE",
+  "quote": "STEP BEYOND THE FRAME",
+  "image": "background.jpg",
+  "pet": "pet.png",
+  "preview": "preview.jpg",
+  "builtin": false,
+  "order": 509,
+  "presentation": {
+    "tone": "dark",
+    "copyAlign": "left",
+    "copyWidth": 44.0,
+    "heroPosition": "right 78%",
+    "pagePosition": "right 78%",
+    "previewPosition": "right 78%",
+    "foregroundX": 100.0,
+    "foregroundY": 78.0
+  },
+  "colors": {
+    "background": "#030303",
+    "panel": "#111114",
+    "panelAlt": "rgba(17, 17, 20, .97)",
+    "accent": "#9f263c",
+    "accentAlt": "#d7d1d4",
+    "secondary": "#565159",
+    "highlight": "#f3eef0",
+    "text": "#f5f1f3",
+    "muted": "#aaa2a7",
+    "line": "rgba(221, 213, 217, .18)"
+  },
+  "foreground": "foreground.png"
+}

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "ink-mountains",
+  "name": "一笔千山",
+  "brandSubtitle": "INK MOUNTAINS",
+  "tagline": "一笔入山河，留白见万象。",
+  "projectPrefix": "选择项目 · ",
+  "projectLabel": "WORKSPACE / 选择项目",
+  "statusText": "INK FLOWING",
+  "quote": "千山入墨，万象归静",
+  "image": "background.jpg",
+  "foreground": "foreground.png",
+  "preview": "preview.jpg",
+  "builtin": false,
+  "order": 180,
+  "presentation": {
+    "tone": "light",
+    "copyAlign": "left",
+    "copyWidth": 55.0,
+    "heroPosition": "right 58%",
+    "foregroundX": 100.0,
+    "foregroundY": 58.0,
+    "pagePosition": "right center",
+    "previewPosition": "center center"
+  },
+  "colors": {
+    "background": "#EEF1F3",
+    "panel": "#F8FAFA",
+    "panelAlt": "rgba(241, 246, 248, .96)",
+    "accent": "#174D73",
+    "accentAlt": "#397CA3",
+    "secondary": "#7D9FAF",
+    "highlight": "#254760",
+    "text": "#1F2C33",
+    "muted": "#61727C",
+    "line": "rgba(36, 75, 101, .16)"
+  }
+}

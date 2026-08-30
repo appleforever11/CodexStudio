@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "fortune-god",
+  "name": "财神驾到",
+  "brandSubtitle": "FORTUNE // ONLINE",
+  "tagline": "好运正在编译。",
+  "projectPrefix": "接好运 · ",
+  "projectLabel": "FORTUNE / 选择任务",
+  "statusText": "财神就位",
+  "quote": "MAY FORTUNE FIND YOU",
+  "image": "background.jpg",
+  "pet": "pet.png",
+  "preview": "preview.jpg",
+  "builtin": false,
+  "order": 630,
+  "presentation": {
+    "tone": "dark",
+    "copyAlign": "left",
+    "copyWidth": 44.0,
+    "heroPosition": "right 80%",
+    "pagePosition": "right 80%",
+    "previewPosition": "right 80%",
+    "foregroundX": 100.0,
+    "foregroundY": 80.0
+  },
+  "colors": {
+    "background": "rgba(138, 7, 16, .58)",
+    "panel": "rgba(91, 8, 13, .68)",
+    "panelAlt": "rgba(91, 8, 13, .94)",
+    "accent": "#f4c34f",
+    "accentAlt": "#ffe08a",
+    "secondary": "#c84a32",
+    "highlight": "#20a879",
+    "text": "#fff4db",
+    "muted": "#e4b9a4",
+    "line": "rgba(244, 195, 79, .24)"
+  },
+  "foreground": "foreground.png"
+}

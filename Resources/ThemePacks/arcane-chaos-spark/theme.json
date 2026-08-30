@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "arcane-chaos-spark",
+  "name": "混沌火花",
+  "brandSubtitle": "ARCANE // CHAOS SPARK",
+  "tagline": "让灵感先笑，代码随后点燃。",
+  "projectPrefix": "引爆任务 · ",
+  "projectLabel": "MISSION / 选择任务",
+  "statusText": "SPARK ONLINE",
+  "quote": "CHAOS BECOMES CREATION",
+  "image": "background.jpg",
+  "pet": "pet.png",
+  "preview": "preview.jpg",
+  "builtin": false,
+  "order": 510,
+  "presentation": {
+    "tone": "dark",
+    "copyAlign": "left",
+    "copyWidth": 44.0,
+    "heroPosition": "right 42%",
+    "pagePosition": "right 50%",
+    "previewPosition": "right 42%",
+    "foregroundX": 100.0,
+    "foregroundY": 42.0
+  },
+  "colors": {
+    "background": "#07111e",
+    "panel": "#0d1928",
+    "panelAlt": "rgba(13, 25, 40, .97)",
+    "accent": "#248bd1",
+    "accentAlt": "#e45aa9",
+    "secondary": "#52677d",
+    "highlight": "#8d3b83",
+    "text": "#f7efe7",
+    "muted": "#b8c2cc",
+    "line": "rgba(36, 139, 209, .22)"
+  },
+  "foreground": "foreground.png"
+}

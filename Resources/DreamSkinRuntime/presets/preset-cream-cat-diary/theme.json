@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "preset-cream-cat-diary",
+  "name": "Cream Cat Diary",
+  "author": "Codex Themes",
+  "version": "1.0.0",
+  "description": "A warm cream-and-rose workspace with a playful illustrated cat atmosphere.",
+  "category": "Illustration",
+  "brandSubtitle": "CODEX DREAM SKIN",
+  "tagline": "A calm cat companion for steady thoughts and beautiful code.",
+  "projectPrefix": "Project · ",
+  "projectLabel": "Choose project",
+  "statusText": "CREAM CAT ONLINE",
+  "quote": "CODE GENTLY, CREATE WONDERFULLY",
+  "image": "background.jpg",
+  "colors": {
+    "background": "#fffaf3",
+    "panel": "#fffdf9",
+    "panelAlt": "#f8eee3",
+    "accent": "#d77d7f",
+    "accentAlt": "#eca09b",
+    "secondary": "#d9aa76",
+    "highlight": "#f4c7aa",
+    "text": "#4b382e",
+    "muted": "#9b7f70",
+    "line": "rgba(215, 125, 127, .24)"
+  },
+  "promoTitle": "Write code with the cream cat",
+  "promoSub": "CodexThemes.app",
+  "promoUrl": "https://codexthemes.app"
+}

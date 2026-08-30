@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "cyber-oracle",
+  "name": "赛博越界",
+  "brandSubtitle": "CYBER ORACLE // NEON DISTRICT",
+  "tagline": "把夜色编译成下一步。",
+  "projectPrefix": "接入任务 · ",
+  "projectLabel": "MISSION / 选择任务",
+  "statusText": "NEURAL LINK ONLINE",
+  "quote": "CODE BEYOND THE FRAME",
+  "image": "background.jpg",
+  "pet": "pet.png",
+  "preview": "preview.jpg",
+  "builtin": false,
+  "order": 506,
+  "presentation": {
+    "tone": "dark",
+    "copyAlign": "left",
+    "copyWidth": 44.0,
+    "heroPosition": "right 100%",
+    "pagePosition": "right 70%",
+    "previewPosition": "right 72%",
+    "foregroundX": 100.0,
+    "foregroundY": 100.0
+  },
+  "colors": {
+    "background": "#030812",
+    "panel": "#071322",
+    "panelAlt": "rgba(7, 19, 34, .97)",
+    "accent": "#19e6ff",
+    "accentAlt": "#8c6cff",
+    "secondary": "#3e7fa8",
+    "highlight": "#a53bff",
+    "text": "#eefaff",
+    "muted": "#92aec2",
+    "line": "rgba(25, 230, 255, .22)"
+  },
+  "foreground": "foreground.png"
+}
