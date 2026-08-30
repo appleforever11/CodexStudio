@@ -171,6 +171,7 @@ final class StudioStore: ObservableObject {
     }
 
     func openCodex() {
+        _ = DockDoorIntegrationService.repairIfNeeded()
         let appURL = ThemeLibraryService.installedDockDoorLauncherURL
             ?? URL(fileURLWithPath: "/Applications/ChatGPT.app")
         if !NSWorkspace.shared.open(appURL) {

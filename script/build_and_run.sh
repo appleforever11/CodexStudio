@@ -26,6 +26,7 @@ APP_RESOURCES="$APP_CONTENTS/Resources"
 APP_BINARY="$APP_MACOS/$APP_NAME"
 INFO_PLIST="$APP_CONTENTS/Info.plist"
 ICON_FILE="$ROOT_DIR/Resources/CodexStudio.icns"
+DOCKDOOR_ICON_FILE="$ROOT_DIR/Resources/CodexDark.icns"
 THEME_PACKS_DIR="$ROOT_DIR/Resources/ThemePacks"
 DREAM_SKIN_RUNTIME_DIR="$ROOT_DIR/Resources/DreamSkinRuntime"
 DOCKDOOR_LAUNCHER_DIR="$ROOT_DIR/Resources/CodexThemedLauncherTemplate"
@@ -71,6 +72,10 @@ if [[ ! -f "$DOCKDOOR_LAUNCHER_DIR/Contents/Info.plist" || ! -f "$DOCKDOOR_LAUNC
   echo "Bundled DockDoor launcher was not found at $DOCKDOOR_LAUNCHER_DIR." >&2
   exit 1
 fi
+if [[ ! -f "$DOCKDOOR_ICON_FILE" ]]; then
+  echo "The stock Codex dark-mode icon was not found at $DOCKDOOR_ICON_FILE." >&2
+  exit 1
+fi
 
 rm -rf "$APP_BUNDLE"
 mkdir -p "$APP_MACOS" "$APP_RESOURCES" "$FRAMEWORKS_DIR"
@@ -81,7 +86,7 @@ COPYFILE_DISABLE=1 ditto --norsrc --noextattr --noqtn "$DREAM_SKIN_RUNTIME_DIR" 
 COPYFILE_DISABLE=1 ditto --norsrc --noextattr --noqtn "$SPARKLE_FRAMEWORK" "$FRAMEWORKS_DIR/Sparkle.framework"
 COPYFILE_DISABLE=1 ditto --norsrc --noextattr --noqtn "$DOCKDOOR_LAUNCHER_DIR" "$APP_RESOURCES/CodexThemedLauncherTemplate"
 mkdir -p "$APP_RESOURCES/CodexThemedLauncherTemplate/Contents/Resources"
-COPYFILE_DISABLE=1 ditto --norsrc --noextattr --noqtn "$ICON_FILE" "$APP_RESOURCES/CodexThemedLauncherTemplate/Contents/Resources/CodexStudio.icns"
+COPYFILE_DISABLE=1 ditto --norsrc --noextattr --noqtn "$DOCKDOOR_ICON_FILE" "$APP_RESOURCES/CodexThemedLauncherTemplate/Contents/Resources/CodexDark.icns"
 chmod +x "$APP_RESOURCES/CodexThemedLauncherTemplate/Contents/MacOS/CodexThemedLauncher"
 chmod +x "$APP_BINARY"
 

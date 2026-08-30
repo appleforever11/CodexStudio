@@ -126,6 +126,14 @@ struct ThemeLibraryService {
             changed = true
         }
 
+        // DockDoor can re-identify the helper as the official Codex process
+        // after a shortcut is removed and re-pinned. Repair that mapping while
+        // the bundled helper is being installed so the fix carries through
+        // Sparkle updates to every Mac using DockDoor Pro.
+        if DockDoorIntegrationService.repairIfNeeded() {
+            changed = true
+        }
+
         if changed {
             refreshInstalledPersistenceMonitor()
         }
