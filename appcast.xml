@@ -1,0 +1,35 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>CodexStudio</title>
+        <item>
+            <title>0.1.0</title>
+            <pubDate>Sun, 30 Aug 2026 11:47:48 -0400</pubDate>
+            <link>https://github.com/appleforever11/CodexStudio</link>
+            <sparkle:version>1000</sparkle:version>
+            <sparkle:shortVersionString>0.1.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.0
+
+Codex Studio is a new native macOS theme studio for shaping and applying an art-directed Codex workspace.
+
+## Highlights
+
+- Adds the responsive Codex Studio shell with Canvas, Themes, Library, Settings, and Live Editor workspaces.
+- Adds a curated visual library plus discovery of the local managed Codex theme collection.
+- Adds a live emulated Codex canvas with surface selection, palette controls, opacity, softness, and corner-radius tuning.
+- Keeps theme application explicit and verifies the requested runtime state after the switch completes.
+- Adds the original Codex Studio glass-aperture app icon.
+- Adds Sparkle 2.9.6 with signed GitHub release-feed support.
+
+## Compatibility
+
+- Apple Silicon.
+- macOS 14 or later.
+- Existing local Codex theme runtime installation required for applying managed themes.
+]]></description>
+            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.0/CodexStudio-0.1.0-arm64.zip" length="4685112" type="application/octet-stream" sparkle:edSignature="kAsmN/rAB6E64dzj8i0uDA+mxVyHfZdFvMb1RmVTEqh4m99r98KrdEjY3kQF6CR1TQvADZS970Ip5rIrWaYrAA=="/>
+        </item>
+    </channel>
+</rss>
