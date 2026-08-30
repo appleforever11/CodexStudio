@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="Resources/CodexStudioIcon.png" alt="Codex Studio app icon" width="160">
+</p>
+
 # Codex Studio
 
 Codex Studio is a standalone native macOS theme studio for Codex. It is intentionally a fresh implementation rather than a fork of the previous Codex Themes desktop UI.
