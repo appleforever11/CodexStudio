@@ -150,12 +150,26 @@ while IFS= read -r -d '' bundle_path; do
   xattr -c "$bundle_path" 2>/dev/null || true
 done < <(find "$APP_BUNDLE" -depth -print0)
 
+# File Provider can reattach these two attributes to bundle directories while
+# the recursive clear is walking the tree. Remove them once more, node by
+# node, immediately before codesign. com.apple.provenance is system-managed
+# and is harmless here; FinderInfo and fpfs metadata are not.
+clear_signature_invalid_xattrs() {
+  while IFS= read -r -d '' bundle_path; do
+    xattr -d com.apple.FinderInfo "$bundle_path" 2>/dev/null || true
+    xattr -d 'com.apple.fileprovider.fpfs#P' "$bundle_path" 2>/dev/null || true
+  done < <(find "$APP_BUNDLE" -depth -print0)
+}
+
+clear_signature_invalid_xattrs
+
 if [[ "$SIGNING_IDENTITY" == "-" ]]; then
   if [[ "$BUILD_CONFIGURATION" == "release" ]]; then
     echo "Warning: release bundle is ad-hoc signed; set CODEX_STUDIO_SIGNING_IDENTITY for distribution." >&2
   fi
   codesign --force --sign - "$APP_RESOURCES/CodexThemedLauncherTemplate"
   codesign --force --deep --sign - "$FRAMEWORKS_DIR/Sparkle.framework"
+  clear_signature_invalid_xattrs
   codesign --force --deep --sign - "$APP_BUNDLE"
 else
   if [[ "$BUILD_CONFIGURATION" == "release" || "$SIGNING_IDENTITY" == Developer\ ID\ Application:* ]]; then
@@ -165,6 +179,7 @@ else
   fi
   codesign --force --options runtime "$TIMESTAMP_ARGUMENT" --sign "$SIGNING_IDENTITY" "$APP_RESOURCES/CodexThemedLauncherTemplate"
   codesign --force --deep --options runtime "$TIMESTAMP_ARGUMENT" --sign "$SIGNING_IDENTITY" "$FRAMEWORKS_DIR/Sparkle.framework"
+  clear_signature_invalid_xattrs
   codesign --force --deep --options runtime "$TIMESTAMP_ARGUMENT" --sign "$SIGNING_IDENTITY" "$APP_BUNDLE"
 fi
 

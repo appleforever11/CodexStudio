@@ -75,6 +75,13 @@ if [ "$RESTORE_BASE_THEME" = "true" ]; then
   "$NODE" "$SCRIPT_DIR/theme-config.mjs" restore "$CONFIG_PATH" "$THEME_BACKUP_PATH"
 fi
 
+# Restoring the original appearance also turns off the automatic repair path.
+# Otherwise a later stock Codex launch would reapply the last managed theme.
+if [ -x "$SCRIPT_DIR/set-theme-persistence-macos.sh" ]; then
+  "$SCRIPT_DIR/set-theme-persistence-macos.sh" --enabled false --port "$PORT" --theme-id "" \
+    >/dev/null 2>&1 || true
+fi
+
 if [ "$RESTART_CODEX" = "true" ]; then
   [ "$CODEX_RUNNING" = "true" ] && stop_codex true
   launch_codex_normally

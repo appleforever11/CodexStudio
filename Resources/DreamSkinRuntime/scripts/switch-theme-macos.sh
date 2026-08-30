@@ -105,6 +105,20 @@ progress() {
   notify_user "$*"
 }
 
+enable_theme_persistence() {
+  local persistence_script="$SCRIPT_DIR/set-theme-persistence-macos.sh"
+  [ -x "$persistence_script" ] || {
+    printf 'Warning: the relaunch monitor is missing; this theme will not be restored after a stock Codex launch.\n' >&2
+    return 0
+  }
+  if ! "$persistence_script" --enabled true --port "$PORT" --theme-id "$THEME_ID" >/dev/null 2>&1; then
+    ensure_state_root >/dev/null 2>&1 || true
+    printf '%s Persistence monitor could not be enabled after applying the theme.\n' \
+      "$(/bin/date -u '+%Y-%m-%dT%H:%M:%SZ')" >> "$THEME_PERSISTENCE_LOG" 2>/dev/null || true
+    printf 'Warning: the theme is active, but automatic restoration after a stock Codex launch could not be enabled.\n' >&2
+  fi
+}
+
 progress "$(dreamskin_text validating_theme_content)"
 
 stage="$(/usr/bin/mktemp -d "$STATE_ROOT/.theme-switch.XXXXXX")"
@@ -175,6 +189,7 @@ if hot_reapply_theme "$PORT" 8000 "$OPERATION_TOKEN"; then
   progress "$(dreamskin_text verifying_rendered_theme)"
   "$NODE" "$INJECTOR" --verify --port "$PORT" --theme-dir "$THEME_DIR" --timeout-ms 10000 >/dev/null \
     || fail "Theme injection completed but the visible renderer did not verify the exact active theme."
+  enable_theme_persistence
   progress "$(dreamskin_text skin_applied): ${THEME_NAME}"
   exit 0
 fi
@@ -182,6 +197,7 @@ fi
 # Cold path only when debug port is missing
 progress "$(dreamskin_text restarting_chatgpt_for_apply)"
 if "$SCRIPT_DIR/start-dream-skin-macos.sh" --port "$PORT" --restart-existing; then
+  enable_theme_persistence
   progress "$(dreamskin_text skin_applied): ${THEME_NAME}"
   exit 0
 fi

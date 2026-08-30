@@ -18,6 +18,7 @@ engine="${CODEX_STUDIO_ENGINE_PATH:-$runtime_root/scripts/start-dream-skin-macos
 state_root="${CODEX_STUDIO_STATE_ROOT:-$home/Library/Application Support/CodexDreamSkinStudio}"
 log_file="$state_root/dock-launch.log"
 engine_lock="$state_root/theme-engine.lock"
+state_file="$state_root/state.json"
 
 /bin/mkdir -p "$state_root"
 if [ ! -x "$engine" ]; then
@@ -38,6 +39,21 @@ codex_executable=""
 
 log_line() {
   print -r -- "$(/bin/date -u '+%Y-%m-%dT%H:%M:%SZ') $*" >>"$log_file"
+}
+
+refresh_port() {
+  local saved_port
+  [ -f "$state_file" ] || return 0
+  saved_port="$(/usr/bin/plutil -extract port raw -o - "$state_file" 2>/dev/null || true)"
+  case "$saved_port" in
+    ''|*[!0-9]*) return 0 ;;
+  esac
+  [ "$saved_port" -ge 1024 ] && [ "$saved_port" -le 65535 ] || return 0
+  if [ "$saved_port" != "$port" ]; then
+    port="$saved_port"
+    cdp_url="http://127.0.0.1:${port}/json/version"
+    log_line "Following the theme engine to verified port $port."
+  fi
 }
 
 discover_codex_executable() {
@@ -91,6 +107,7 @@ run_engine() {
   local engine_status=0
   local lock_held="false"
   while ! /usr/bin/shlock -p "$$" -f "$engine_lock"; do
+    refresh_port
     cdp_ready && return 0
     /bin/sleep 1
   done
@@ -103,9 +120,11 @@ run_engine() {
   if [ "$lock_held" = "true" ]; then
     /bin/rm -f "$engine_lock"
   fi
+  refresh_port
   return "$engine_status"
 }
 
+refresh_port
 engine_status=0
 run_engine || engine_status=$?
 if [ "$engine_status" -ne 0 ]; then
@@ -117,6 +136,7 @@ fi
 # theme. Stay alive until that app exits so DockDoor continues to track this
 # launcher instead of normalizing the pin to ChatGPT.app.
 while true; do
+  refresh_port
   codex_pid="$(find_codex_pid)"
   if [ -z "$codex_pid" ]; then
     exit 0

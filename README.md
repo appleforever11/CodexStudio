@@ -52,6 +52,8 @@ The app only reports success after the runtime state confirms the requested them
 
 For DockDoor Pro users, the same release bootstrap installs or upgrades a portable `Codex Themed.app` helper. Launching that helper starts the official signed Codex app through the managed theme engine and keeps the helper alive while Codex is open, so DockDoor preserves the themed pin. If a Codex updater launches the stock app without the theme debug endpoint, the helper waits briefly and relaunches it through the verified engine.
 
+Applying a theme also enables a per-user launch monitor. This covers the normal stock Codex Dock icon after `⌘Q`: the monitor detects an unthemed launch and restarts that same signed Codex bundle through the verified theme engine. Choosing **Restore original appearance** disables the monitor.
+
 ## Release artifacts
 
 The release scripts create an Apple Silicon app bundle, signed ZIP, signed DMG, and Sparkle `appcast.xml`. Distribution builds require a Developer ID Application identity and an Apple notarytool credential profile on the build machine. The GitHub Actions workflow uses repository secrets for those credentials and never commits them.
