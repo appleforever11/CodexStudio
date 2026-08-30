@@ -107,11 +107,27 @@ progress() {
 
 enable_theme_persistence() {
   local persistence_script="$SCRIPT_DIR/set-theme-persistence-macos.sh"
+  local persistence_port="$PORT"
+  local saved_persistence_port=""
   [ -x "$persistence_script" ] || {
     printf 'Warning: the relaunch monitor is missing; this theme will not be restored after a stock Codex launch.\n' >&2
     return 0
   }
-  if ! "$persistence_script" --enabled true --port "$PORT" --theme-id "$THEME_ID" >/dev/null 2>&1; then
+  # A cold start may move to the next available port after the old Codex
+  # process is stopped. Persist the port that start-dream-skin actually wrote,
+  # not the preferred port that this switch began with.
+  if [ -f "$STATE_PATH" ]; then
+    saved_persistence_port="$(state_field port 2>/dev/null || true)"
+    case "$saved_persistence_port" in
+      ''|*[!0-9]*) ;;
+      *)
+        if [ "$saved_persistence_port" -ge 1024 ] && [ "$saved_persistence_port" -le 65535 ]; then
+          persistence_port="$saved_persistence_port"
+        fi
+        ;;
+    esac
+  fi
+  if ! "$persistence_script" --enabled true --port "$persistence_port" --theme-id "$THEME_ID" >/dev/null 2>&1; then
     ensure_state_root >/dev/null 2>&1 || true
     printf '%s Persistence monitor could not be enabled after applying the theme.\n' \
       "$(/bin/date -u '+%Y-%m-%dT%H:%M:%SZ')" >> "$THEME_PERSISTENCE_LOG" 2>/dev/null || true

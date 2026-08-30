@@ -50,7 +50,7 @@ The release app also bundles the Codex theme runtime and installs it at first la
 
 The app only reports success after the runtime state confirms the requested theme id. Existing runtime state is never overwritten by the bootstrapper. If Codex is not installed or the runtime cannot verify the live renderer, the UI says so.
 
-For DockDoor Pro users, the same release bootstrap installs or upgrades a portable `Codex Themed.app` helper. Launching that helper starts the official signed Codex app through the managed theme engine and keeps the helper alive while Codex is open, so DockDoor preserves the themed pin. If a Codex updater launches the stock app without the theme debug endpoint, the helper waits briefly and relaunches it through the verified engine.
+For DockDoor Pro users, the same release bootstrap installs or upgrades a portable `Codex Themed.app` helper, displayed by macOS as `Codex Studio (Themed)` so it is distinguishable from the stock Codex pin. Launching that helper starts the official signed Codex app through the managed theme engine and keeps the helper alive while Codex is open, so DockDoor preserves the themed pin. The helper also repairs a missing per-user persistence monitor before launch, and if a Codex updater launches the stock app without the theme debug endpoint, it waits briefly and relaunches it through the verified engine.
 
 Applying a theme also enables a per-user launch monitor. This covers the normal stock Codex Dock icon after `⌘Q`: the monitor detects an unthemed launch and restarts that same signed Codex bundle through the verified theme engine. Choosing **Restore original appearance** disables the monitor.
 

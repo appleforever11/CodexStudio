@@ -17,7 +17,7 @@ done
 [ "$ENABLED" = "true" ] || [ "$ENABLED" = "false" ] || fail "Persistence enabled value must be true or false."
 case "$PORT" in ''|*[!0-9]*) fail "Invalid persistence port: $PORT" ;; esac
 [ "$PORT" -ge 1024 ] && [ "$PORT" -le 65535 ] || fail "Persistence port must be between 1024 and 65535."
-case "$THEME_ID" in ''|*[!A-Za-z0-9_-]*) [ -z "$THEME_ID" ] || fail "Invalid persistence theme id." ;; esac
+case "$THEME_ID" in ''|*[!A-Za-z0-9._-]*) [ -z "$THEME_ID" ] || fail "Invalid persistence theme id." ;; esac
 [ "${#THEME_ID}" -le 80 ] || fail "Persistence theme id is too long."
 
 ensure_state_root
@@ -55,14 +55,18 @@ if [ "$ENABLED" = "true" ]; then
   /usr/bin/plutil -insert RunAtLoad -bool true "$AGENT_TEMP"
   /usr/bin/plutil -insert KeepAlive -bool true "$AGENT_TEMP"
   /usr/bin/plutil -insert ProcessType -string Background "$AGENT_TEMP"
+  /usr/bin/plutil -insert ThrottleInterval -integer 5 "$AGENT_TEMP"
   /usr/bin/plutil -insert StandardOutPath -string "$THEME_PERSISTENCE_LOG" "$AGENT_TEMP"
   /usr/bin/plutil -insert StandardErrorPath -string "$THEME_PERSISTENCE_LOG" "$AGENT_TEMP"
   /bin/chmod 600 "$AGENT_TEMP"
   /usr/bin/plutil -lint "$AGENT_TEMP" >/dev/null
   /bin/mv -f "$AGENT_TEMP" "$THEME_PERSISTENCE_AGENT"
-  /bin/launchctl bootstrap "$USER_DOMAIN" "$THEME_PERSISTENCE_AGENT"
+  /bin/launchctl bootstrap "$USER_DOMAIN" "$THEME_PERSISTENCE_AGENT" \
+    || fail "Could not load the Codex theme persistence monitor into the logged-in user session."
   /bin/launchctl enable "$USER_DOMAIN/$THEME_PERSISTENCE_JOB_LABEL" >/dev/null 2>&1 || true
   /bin/launchctl kickstart -k "$USER_DOMAIN/$THEME_PERSISTENCE_JOB_LABEL" >/dev/null 2>&1 || true
+  /bin/launchctl print "$USER_DOMAIN/$THEME_PERSISTENCE_JOB_LABEL" >/dev/null 2>&1 \
+    || fail "The Codex theme persistence monitor did not remain loaded after installation."
 else
   if [ -f "$THEME_PERSISTENCE_AGENT" ] && [ ! -L "$THEME_PERSISTENCE_AGENT" ]; then
     CURRENT_LABEL="$(/usr/bin/plutil -extract Label raw -o - "$THEME_PERSISTENCE_AGENT" 2>/dev/null || true)"

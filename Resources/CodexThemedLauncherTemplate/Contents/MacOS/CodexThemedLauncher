@@ -19,6 +19,8 @@ state_root="${CODEX_STUDIO_STATE_ROOT:-$home/Library/Application Support/CodexDr
 log_file="$state_root/dock-launch.log"
 engine_lock="$state_root/theme-engine.lock"
 state_file="$state_root/state.json"
+persistence_file="$state_root/theme-persistence.plist"
+persistence_script="$runtime_root/scripts/set-theme-persistence-macos.sh"
 
 /bin/mkdir -p "$state_root"
 if [ ! -x "$engine" ]; then
@@ -53,6 +55,35 @@ refresh_port() {
     port="$saved_port"
     cdp_url="http://127.0.0.1:${port}/json/version"
     log_line "Following the theme engine to verified port $port."
+  fi
+}
+
+ensure_theme_persistence() {
+  [ -x "$persistence_script" ] || return 0
+
+  local enabled=""
+  local session=""
+  local theme_id=""
+  local monitor_domain="gui/$(/usr/bin/id -u)"
+  enabled="$(/usr/bin/plutil -extract enabled raw -o - "$persistence_file" 2>/dev/null || true)"
+  if [ "$enabled" = "true" ] && /bin/launchctl print "$monitor_domain/com.codexthemes.theme-monitor" >/dev/null 2>&1; then
+    return 0
+  fi
+
+  # Older 0.1.x installations could apply a theme before the persistence
+  # agent existed. The helper is the one place we can repair that state even
+  # when DockDoor is launching the helper directly instead of Studio.
+  session="$(/usr/bin/plutil -extract session raw -o - "$state_file" 2>/dev/null || true)"
+  [ "$session" = "active" ] || return 0
+  theme_id="$(/usr/bin/plutil -extract appliedThemeId raw -o - "$state_file" 2>/dev/null || true)"
+  case "$theme_id" in
+    ''|*[!A-Za-z0-9._-]*) return 0 ;;
+  esac
+  [ -f "$state_root/theme/theme.json" ] || return 0
+
+  log_line "Repairing the missing Codex theme persistence monitor for $theme_id."
+  if ! "$persistence_script" --enabled true --port "$port" --theme-id "$theme_id" >>"$log_file" 2>&1; then
+    log_line "Could not repair the Codex theme persistence monitor."
   fi
 }
 
@@ -125,6 +156,7 @@ run_engine() {
 }
 
 refresh_port
+ensure_theme_persistence
 engine_status=0
 run_engine || engine_status=$?
 if [ "$engine_status" -ne 0 ]; then
