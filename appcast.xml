@@ -29,7 +29,7 @@ Codex Studio is a new native macOS theme studio for shaping and applying an art-
 - macOS 14 or later.
 - Existing local Codex theme runtime installation required for applying managed themes.
 ]]></description>
-            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.0/CodexStudio-0.1.0-arm64.zip" length="4685112" type="application/octet-stream" sparkle:edSignature="kAsmN/rAB6E64dzj8i0uDA+mxVyHfZdFvMb1RmVTEqh4m99r98KrdEjY3kQF6CR1TQvADZS970Ip5rIrWaYrAA=="/>
+            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.0/CodexStudio-0.1.0-arm64.zip" length="4686650" type="application/octet-stream" sparkle:edSignature="IkpRjaOHZtt++f+/dU3beJV7Ax0PN/TWxpfFFDXFX8cd/dcp6nJcW0Lbta3YHkhStoFOfnKrS4+pr2fuI0OdBA=="/>
         </item>
     </channel>
 </rss>
