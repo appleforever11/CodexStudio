@@ -14,6 +14,8 @@ struct CodexStudioApp: App {
         }
         .defaultSize(width: 1280, height: 760)
         .windowResizability(.automatic)
+        .windowStyle(.titleBar)
+        .windowToolbarStyle(.unified)
         .commands {
             CommandGroup(after: .appSettings) {
                 Button("Check for Updates…") {

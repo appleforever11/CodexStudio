@@ -2,69 +2,82 @@ import SwiftUI
 
 struct StudioSidebar: View {
     @EnvironmentObject private var store: StudioStore
+    private let brandHeaderHeight: CGFloat = 54
+    // macOS 26 can report a split-view column a little taller than its
+    // visible client area. Keep a deliberate lower buffer so the connection
+    // row and launch button remain fully visible instead of being clipped by
+    // the window edge.
+    private let sidebarFooterHeight: CGFloat = 120
 
     var body: some View {
-        VStack(spacing: 0) {
-            ScrollView(.vertical) {
-                VStack(alignment: .leading, spacing: 0) {
-                    brand
-                        .padding(.horizontal, 18)
-                        // WindowGroup content can begin underneath the native
-                        // titlebar on macOS. Keep the brand clear of traffic
-                        // lights and the titlebar's drag region.
-                        .padding(.top, 72)
-                        .padding(.bottom, 8)
+        GeometryReader { proxy in
+            VStack(spacing: 0) {
+                // WindowGroup already reserves the native macOS titlebar. Keep
+                // this brand row in the document area so it aligns with the
+                // command bar instead of adding a second, artificial titlebar
+                // gap below the traffic lights.
+                brand
+                    .padding(.horizontal, 18)
+                    .frame(height: brandHeaderHeight)
+                    .background(.thinMaterial)
+                    .overlay(alignment: .bottom) {
+                        Rectangle()
+                            .fill(StudioColor.line)
+                            .frame(height: 1)
+                    }
 
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Workspace")
-                            .font(.system(size: 11, weight: .semibold))
-                            .foregroundStyle(StudioColor.textFaint)
-                            .padding(.horizontal, 18)
-                            .padding(.bottom, 4)
+                ScrollView(.vertical) {
+                    VStack(alignment: .leading, spacing: 0) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Workspace")
+                                .font(.system(size: 11, weight: .semibold))
+                                .foregroundStyle(StudioColor.textFaint)
+                                .padding(.horizontal, 18)
+                                .padding(.bottom, 4)
 
-                        ForEach(StudioSection.allCases) { section in
-                            Button {
-                                store.selectSection(section)
-                            } label: {
-                                StudioNavigationRow(
-                                    section: section,
-                                    count: section == .themes ? store.themes.count : nil,
-                                    isSelected: store.section == section
-                                )
+                            ForEach(StudioSection.allCases) { section in
+                                Button {
+                                    store.selectSection(section)
+                                } label: {
+                                    StudioNavigationRow(
+                                        section: section,
+                                        count: section == .themes ? store.themes.count : nil,
+                                        isSelected: store.section == section
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                                .padding(.horizontal, 9)
                             }
-                            .buttonStyle(.plain)
-                            .padding(.horizontal, 9)
+                        }
+
+                        if let selectedTheme = store.selectedTheme {
+                            SidebarFocusCard(theme: selectedTheme)
+                                .padding(.horizontal, 12)
+                                .padding(.top, 14)
                         }
                     }
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                    .padding(.bottom, 20)
+                }
+                .scrollIndicators(.hidden)
+                .frame(
+                    width: proxy.size.width,
+                    height: max(0, proxy.size.height - brandHeaderHeight - sidebarFooterHeight),
+                    alignment: .topLeading
+                )
 
-                    if let selectedTheme = store.selectedTheme {
-                        SidebarFocusCard(theme: selectedTheme)
-                            .padding(.horizontal, 12)
-                            .padding(.top, 14)
+                sidebarFooter
+                    .padding(.horizontal, 14)
+                    .padding(.top, 11)
+                    .padding(.bottom, 14)
+                    .frame(width: proxy.size.width, height: sidebarFooterHeight, alignment: .topLeading)
+                    .background(.regularMaterial)
+                    .overlay(alignment: .top) {
+                        Rectangle()
+                            .fill(StudioColor.line)
+                            .frame(height: 1)
                     }
-                }
-                .frame(maxWidth: .infinity, alignment: .topLeading)
-                .padding(.bottom, 20)
             }
-            .scrollIndicators(.hidden)
-            // The parent split view is constrained to the window viewport;
-            // let the scrollable region absorb only the space left after the
-            // natural-height footer.
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-
-            sidebarFooter
-                .padding(.horizontal, 14)
-                .padding(.top, 11)
-                .padding(.bottom, 14)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .fixedSize(horizontal: false, vertical: true)
-                .layoutPriority(1)
-                .background(.regularMaterial)
-                .overlay(alignment: .top) {
-                    Rectangle()
-                        .fill(StudioColor.line)
-                        .frame(height: 1)
-                }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(.regularMaterial)

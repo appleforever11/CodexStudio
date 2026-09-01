@@ -18,12 +18,15 @@ struct ContentView: View {
                     mainSurface
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 }
-                // The native titlebar overlays the first content band on a
-                // WindowGroup. Keep the command row in the document area with
-                // enough breathing room to remain visible on every launch.
-                .padding(.top, 76)
             }
             .navigationSplitViewStyle(.balanced)
+            // Reserve the native titlebar inside the split view's layout
+            // rather than adding outside padding that can push its footer
+            // below the window edge on macOS 26.
+            .safeAreaInset(edge: .top, spacing: 0) {
+                Color.clear
+                    .frame(height: 54)
+            }
             .background(.clear)
             .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
             .overlay {
@@ -32,9 +35,6 @@ struct ContentView: View {
                     .allowsHitTesting(false)
             }
             .shadow(color: .black.opacity(0.30), radius: 30, y: 14)
-            // Keep the split view tied to the window viewport. Without an
-            // explicit finite height, a vertical ScrollView can make the
-            // sidebar's layout extend past the visible window on macOS 26.
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .padding(10)

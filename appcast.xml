@@ -3,6 +3,22 @@
     <channel>
         <title>CodexStudio</title>
         <item>
+            <title>0.1.8</title>
+            <pubDate>Tue, 01 Sep 2026 10:54:11 -0400</pubDate>
+            <link>https://github.com/appleforever11/CodexStudio</link>
+            <sparkle:version>1008000</sparkle:version>
+            <sparkle:shortVersionString>0.1.8</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[## Native titlebar and sidebar layout repair
+
+- Separates the Codex Studio content surface from the macOS titlebar on macOS 26 so the sidebar brand and Canvas command bar no longer draw underneath the traffic lights or titlebar.
+- Gives the split view a stable vertical viewport and pins the sidebar footer so the connection status and “Open themed Codex” action remain fully visible at compact window sizes.
+- Keeps the existing theme application, local Apple wallpaper shelves, DockDoor launcher, and Sparkle update behavior unchanged.
+]]></description>
+            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.8/CodexStudio-0.1.8-arm64.zip" length="389167597" type="application/octet-stream" sparkle:edSignature="kUNfPRQW46rBB3ShU+WIEMrVqaum/JmXK+thEBRFSlvqMpECdn4m8XUHPFev39rQobJWiDyDXe3UP0AFBK1qBg=="/>
+        </item>
+        <item>
             <title>0.1.7</title>
             <pubDate>Tue, 01 Sep 2026 00:08:02 -0400</pubDate>
             <link>https://github.com/appleforever11/CodexStudio</link>
@@ -48,22 +64,6 @@
 - Keeps the internal Sparkle build number monotonic with the existing release feed so 0.1.6 is offered normally by Check for Updates.
 ]]></description>
             <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.6/CodexStudio-0.1.6-arm64.zip" length="389166436" type="application/octet-stream" sparkle:edSignature="N5S49yMUi//cURba+xy3kt9snqeNnZY5g9/3iFy5DwiuA9s8KLnt0gpm9r01faB2uoDW8Q2kvD1cgRd4arVRCw=="/>
-        </item>
-        <item>
-            <title>0.1.5</title>
-            <pubDate>Sun, 30 Aug 2026 16:03:36 -0400</pubDate>
-            <link>https://github.com/appleforever11/CodexStudio</link>
-            <sparkle:version>1005000</sparkle:version>
-            <sparkle:shortVersionString>0.1.5</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[## DockDoor identity repair
-
-- Uses the stock Codex dark-mode icon for the themed helper shortcut.
-- Repairs a helper pin that DockDoor has re-associated with the official `com.openai.codex` process.
-- Hides the official process from DockDoor's unpinned running-app row when the managed helper pin is present, preventing a second swirl-branded Codex item.
-]]></description>
-            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.5/CodexStudio-0.1.5-arm64.zip" length="89630989" type="application/octet-stream" sparkle:edSignature="TFKLfqSt8JXymusp91NPgQwAXbGc8NRheHN5rKLK5ayDq8KrW6YJfhbIefdNuN0Uxh7TpQsqlg4Mr7A85gEHCw=="/>
         </item>
     </channel>
 </rss>
