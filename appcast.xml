@@ -3,6 +3,22 @@
     <channel>
         <title>CodexStudio</title>
         <item>
+            <title>0.1.11</title>
+            <pubDate>Tue, 01 Sep 2026 17:53:52 -0400</pubDate>
+            <link>https://github.com/appleforever11/CodexStudio</link>
+            <sparkle:version>1011000</sparkle:version>
+            <sparkle:shortVersionString>0.1.11</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[## Full-window surface alignment
+
+- Removes the remaining vertical inset around the two-pane Studio surface so the sidebar and Canvas reach the native window's top and bottom content boundaries cleanly.
+- Keeps the finite viewport layout that prevents macOS 26 from vertically centering or clipping the sidebar header, connection footer, and Canvas content.
+- Preserves the existing theme application, bundled theme library, DockDoor launcher, and Sparkle update behavior.
+]]></description>
+            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.11/CodexStudio-0.1.11-arm64.zip" length="9114386" type="application/octet-stream" sparkle:edSignature="D9z52hOQ+NOyOuw+eKA7fatHRhRAdIG3gjmi5qadTf8i+4mN5Eb2t9dwM6MsCHzZCoDIZabEDxP4vT/ol/RSDw=="/>
+        </item>
+        <item>
             <title>0.1.9</title>
             <pubDate>Tue, 01 Sep 2026 11:30:33 -0400</pubDate>
             <link>https://github.com/appleforever11/CodexStudio</link>
@@ -33,23 +49,6 @@
 - Keeps the existing theme application, local Apple wallpaper shelves, DockDoor launcher, and Sparkle update behavior unchanged.
 ]]></description>
             <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.8/CodexStudio-0.1.8-arm64.zip" length="389167597" type="application/octet-stream" sparkle:edSignature="kUNfPRQW46rBB3ShU+WIEMrVqaum/JmXK+thEBRFSlvqMpECdn4m8XUHPFev39rQobJWiDyDXe3UP0AFBK1qBg=="/>
-        </item>
-        <item>
-            <title>0.1.7</title>
-            <pubDate>Tue, 01 Sep 2026 00:08:02 -0400</pubDate>
-            <link>https://github.com/appleforever11/CodexStudio</link>
-            <sparkle:version>1007000</sparkle:version>
-            <sparkle:shortVersionString>0.1.7</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[## Canvas and sidebar layout repair
-
-- Fixes the Canvas hero overlay so the selected theme title, description, actions, and metadata stay inside the artwork card on macOS 26.
-- Constrains the split-view shell to the window viewport so vertical scrolling cannot push the sidebar below the visible window.
-- Keeps the sidebar's connection status and themed-Codex action visible with a natural-height footer at compact and tall window sizes.
-- Preserves the existing theme application, local Apple wallpaper shelves, DockDoor launcher, and Sparkle update behavior.
-]]></description>
-            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.7/CodexStudio-0.1.7-arm64.zip" length="389165595" type="application/octet-stream" sparkle:edSignature="2ewcovyM65au+HbUEX1hnQRvaH4tDgl3/LukjLrluYpojWieFr6H/EBBkFW9a2i2Z3Z/yu94bqf/5et2NdbzDQ=="/>
         </item>
     </channel>
 </rss>

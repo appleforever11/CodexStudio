@@ -4,41 +4,47 @@ struct ContentView: View {
     @EnvironmentObject private var store: StudioStore
 
     var body: some View {
-        ZStack {
-            StudioBackdrop(theme: store.selectedTheme)
+        GeometryReader { viewport in
+            ZStack(alignment: .topLeading) {
+                StudioBackdrop(theme: store.selectedTheme)
 
-            HStack(spacing: 0) {
-                StudioSidebar()
-                    .frame(width: 248)
+                // Pin the split to the finite window viewport. A vertical
+                // ScrollView can otherwise make the HStack taller than the
+                // visible client area on macOS 26, which vertically centers
+                // and clips both the sidebar header/footer and the page header.
+                HStack(spacing: 0) {
+                    StudioSidebar()
+                        .frame(width: 248)
 
-                Rectangle()
-                    .fill(StudioColor.line)
-                    .frame(width: 1)
+                    Rectangle()
+                        .fill(StudioColor.line)
+                        .frame(width: 1)
 
-                mainSurface
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    mainSurface
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                }
+                .frame(
+                    width: viewport.size.width,
+                    height: viewport.size.height,
+                    alignment: .topLeading
+                )
+                .background(.clear)
+                .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .strokeBorder(StudioColor.lineStrong, lineWidth: 1)
+                        .allowsHitTesting(false)
+                }
+                .shadow(color: .black.opacity(0.30), radius: 30, y: 14)
             }
-            // The titlebar is transparent over the window content on recent
-            // macOS releases. Reserve only its actual compact height so the
-            // sidebar and detail pane begin on the same baseline.
-            .safeAreaInset(edge: .top, spacing: 0) {
-                Color.clear
-                    .frame(height: 26)
-            }
-            .background(.clear)
-            .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-            .overlay {
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .strokeBorder(StudioColor.lineStrong, lineWidth: 1)
-                    .allowsHitTesting(false)
-            }
-            .shadow(color: .black.opacity(0.30), radius: 30, y: 14)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .frame(
+                width: viewport.size.width,
+                height: viewport.size.height,
+                alignment: .topLeading
+            )
         }
-        // Let the two-pane surface reach the window's left and right edges;
-        // keep only the vertical breathing room around the native chrome.
-        .padding(.vertical, 10)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        // Let the two-pane surface reach both content edges of the window.
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .frame(minWidth: 1120, minHeight: 700)
         .task {
             await store.bootstrap()
