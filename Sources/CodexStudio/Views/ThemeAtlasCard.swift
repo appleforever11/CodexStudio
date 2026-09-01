@@ -103,7 +103,8 @@ struct ThemeAtlasCard: View {
                         .frame(width: 24, height: 24)
                         .background(.black.opacity(0.28), in: Circle())
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(StudioPressableButtonStyle())
+                .accessibilityLabel(theme.isFavorite ? "Remove \(theme.name) from favorites" : "Add \(theme.name) to favorites")
             }
             .padding(10)
         }
@@ -147,9 +148,10 @@ struct ThemeAtlasCard: View {
                             Circle().strokeBorder(themeAccent.opacity(0.24), lineWidth: 1)
                         }
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(StudioPressableButtonStyle())
                 .disabled(store.isApplying)
                 .help("Apply \(theme.name)")
+                .accessibilityLabel("Apply \(theme.name)")
             }
         }
         .padding(14)
@@ -182,5 +184,32 @@ struct ThemeAtlasEmptyState: View {
         .padding(28)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .studioPanel(radius: 18, fill: Color.white.opacity(0.025))
+    }
+}
+
+struct ThemeAtlasLoadingState: View {
+    let title: String
+    let detail: String
+
+    var body: some View {
+        VStack(spacing: 12) {
+            ProgressView()
+                .controlSize(.regular)
+                .tint(StudioColor.cyan)
+                .frame(width: 54, height: 54)
+                .background(StudioColor.cyan.opacity(0.10), in: Circle())
+            Text(title)
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(StudioColor.text)
+            Text(detail)
+                .font(.system(size: 11, weight: .regular))
+                .foregroundStyle(StudioColor.textMuted)
+                .multilineTextAlignment(.center)
+        }
+        .padding(28)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .studioPanel(radius: 18, fill: Color.white.opacity(0.025))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(title). \(detail)")
     }
 }

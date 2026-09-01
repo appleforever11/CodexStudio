@@ -29,10 +29,12 @@ struct StudioSidebar: View {
                 ScrollView(.vertical) {
                     VStack(alignment: .leading, spacing: 0) {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Workspace")
-                                .font(.system(size: 11, weight: .semibold))
+                            Text("WORKSPACE")
+                                .font(.system(size: 10, weight: .bold, design: .rounded))
+                                .tracking(1.1)
                                 .foregroundStyle(StudioColor.textFaint)
                                 .padding(.horizontal, 18)
+                                .padding(.top, 5)
                                 .padding(.bottom, 4)
 
                             ForEach(StudioSection.allCases) { section in
@@ -45,7 +47,7 @@ struct StudioSidebar: View {
                                         isSelected: store.section == section
                                     )
                                 }
-                                .buttonStyle(.plain)
+                                .buttonStyle(StudioPressableButtonStyle())
                                 .padding(.horizontal, 9)
                             }
                         }
@@ -134,8 +136,9 @@ struct StudioSidebar: View {
                         .foregroundStyle(StudioColor.textMuted)
                         .frame(width: 26, height: 26)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(StudioPressableButtonStyle())
                 .help("Refresh Codex status")
+                .accessibilityLabel("Refresh Codex status")
             }
 
             Button {
@@ -179,7 +182,10 @@ private struct StudioNavigationRow: View {
         } icon: {
             Image(systemName: section.systemImage)
                 .font(.system(size: 13, weight: .medium))
-                .frame(width: 18)
+                // Match the brand mark's 34-point slot so every title begins
+                // on the same vertical guide while the smaller symbol stays
+                // optically centered within it.
+                .frame(width: 34)
         }
         .labelStyle(.titleAndIcon)
         .foregroundStyle(isSelected ? StudioColor.text : StudioColor.textMuted)

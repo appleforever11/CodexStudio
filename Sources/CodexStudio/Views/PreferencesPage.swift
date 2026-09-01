@@ -45,7 +45,7 @@ struct PreferencesPage: View {
                                     .strokeBorder(StudioColor.line, lineWidth: 1)
                             }
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(StudioPressableButtonStyle())
                 }
 
                 ViewThatFits(in: .horizontal) {
@@ -121,7 +121,7 @@ struct PreferencesPage: View {
                     .font(.system(size: 11, weight: .semibold))
                     .foregroundStyle(StudioColor.cyan)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(StudioPressableButtonStyle())
         }
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -171,7 +171,7 @@ struct PreferencesPage: View {
                     .padding(.vertical, 10)
                     .background(Color.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
             }
-            .buttonStyle(.plain)
+            .buttonStyle(StudioPressableButtonStyle())
             .disabled(store.isApplying)
 
             Button {
@@ -181,7 +181,7 @@ struct PreferencesPage: View {
                     .font(.system(size: 11, weight: .semibold))
                     .foregroundStyle(StudioColor.textMuted)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(StudioPressableButtonStyle())
         }
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)

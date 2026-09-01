@@ -7,20 +7,23 @@ struct ContentView: View {
         ZStack {
             StudioBackdrop(theme: store.selectedTheme)
 
-            NavigationSplitView {
+            HStack(spacing: 0) {
                 StudioSidebar()
-                    .navigationSplitViewColumnWidth(min: 220, ideal: 248, max: 290)
-            } detail: {
+                    .frame(width: 248)
+
+                Rectangle()
+                    .fill(StudioColor.line)
+                    .frame(width: 1)
+
                 mainSurface
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
-            .navigationSplitViewStyle(.balanced)
-            // Reserve the native titlebar inside the split view's layout
-            // rather than adding outside padding that can push its footer
-            // below the window edge on macOS 26.
+            // The titlebar is transparent over the window content on recent
+            // macOS releases. Reserve only its actual compact height so the
+            // sidebar and detail pane begin on the same baseline.
             .safeAreaInset(edge: .top, spacing: 0) {
                 Color.clear
-                    .frame(height: 54)
+                    .frame(height: 26)
             }
             .background(.clear)
             .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
@@ -32,10 +35,11 @@ struct ContentView: View {
             .shadow(color: .black.opacity(0.30), radius: 30, y: 14)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .padding(10)
+        // Let the two-pane surface reach the window's left and right edges;
+        // keep only the vertical breathing room around the native chrome.
+        .padding(.vertical, 10)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .frame(minWidth: 1120, minHeight: 700)
-        .preferredColorScheme(.dark)
         .task {
             await store.bootstrap()
         }

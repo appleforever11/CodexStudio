@@ -47,6 +47,10 @@ if [ -d "$INSTALL_ROOT" ] && [ "$PROJECT_ROOT" != "$INSTALL_ROOT" ]; then
       /bin/chmod 755 "$INSTALL_ROOT/scripts/$name"
     fi
   done
+  if [ -d "$PROJECT_ROOT/scripts/common" ]; then
+    /bin/mkdir -p "$INSTALL_ROOT/scripts/common"
+    /usr/bin/rsync -a "$PROJECT_ROOT/scripts/common/" "$INSTALL_ROOT/scripts/common/"
+  fi
 fi
 
 /bin/chmod 755 \

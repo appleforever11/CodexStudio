@@ -1,0 +1,177 @@
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) div:has(> .horizontal-scroll-fade-mask .group\/project-selector) {
+  position: relative;
+  padding-top: 28px !important;
+  border: 1px solid rgb(var(--ds-muted-rgb) / .16);
+  border-bottom: 0;
+  background: rgb(var(--ds-panel-rgb) / .92) !important;
+}
+
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) div:has(> .horizontal-scroll-fade-mask .group\/project-selector)::before {
+  content: var(--dream-skin-project-label, "Choose project");
+  position: absolute;
+  left: 13px;
+  top: 6px;
+  z-index: 2;
+  color: var(--ds-muted);
+  font-size: 12px;
+  font-weight: 720;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+/* Codex 26.825 exposes the Home utility bar through a stable data attribute.
+   Keep the project cap and prompt body on the same width track; older rules
+   could leave the cap inset while the body stretched to the full footer. */
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"])
+  :is([data-codex-composer-root][data-composer-placement="home"], [data-composer-home-utility-bar-position]) {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"])
+  [data-composer-home-utility-bar-position] {
+  align-self: stretch !important;
+  margin-inline: 0 !important;
+}
+
+/* In current Codex builds the home project picker lives inside an above rail
+   that carries a native 13px side inset. Remove that inset so the picker cap
+   and the prompt body share one continuous left and right edge. */
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"])
+  [data-codex-composer-root][data-composer-placement="home"]
+  [data-composer-rail][data-composer-rail-placement="above"] {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin-inline: 0 !important;
+}
+
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"])
+  [data-codex-composer-root][data-composer-placement="home"]
+  [data-composer-rail][data-composer-rail-placement="above"]
+  :is([class*="_ComposerHomeUtilityBar_"], [class*="_homeUtilityBar_"]) {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin-inline: 0 !important;
+}
+
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) .group\/project-selector > button {
+  border-color: rgb(var(--ds-accent-rgb) / .22) !important;
+  background: rgb(var(--ds-accent-rgb) / .08) !important;
+  color: var(--ds-text) !important;
+  box-shadow: 0 3px 12px rgb(var(--ds-bg-rgb) / .12) !important;
+}
+
+/* Codex 26.825 identifies the Home project control by navigation target.
+   Keep its outer edge on the same 12px content track as the prompt text and
+   give it a compact, readable theme button instead of the native ghost style. */
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"])
+  [data-codex-composer-root][data-composer-placement="home"]
+  [data-composer-rail][data-composer-rail-placement="above"]
+  :is([class*="_ComposerHomeUtilityBar_"], [class*="_homeUtilityBar_"]) {
+  padding-left: 12px !important;
+  padding-right: 18px !important;
+}
+
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"])
+  [data-codex-composer-root][data-composer-placement="home"]
+  button[data-composer-navigation-target="workspace-project"] {
+  align-self: center !important;
+  justify-self: start !important;
+  height: 30px !important;
+  min-height: 30px !important;
+  margin: 0 !important;
+  padding: 0 8px !important;
+  border: 1px solid rgb(var(--ds-accent-rgb) / .28) !important;
+  border-radius: 12px !important;
+  background: rgb(var(--ds-accent-rgb) / .10) !important;
+  color: var(--ds-text) !important;
+  box-shadow: 0 3px 12px rgb(var(--ds-bg-rgb) / .12) !important;
+}
+
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"])
+  [data-codex-composer-root][data-composer-placement="home"]
+  button[data-composer-navigation-target="workspace-project"] svg {
+  color: var(--ds-accent) !important;
+}
+
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"])
+  [data-codex-composer-root][data-composer-placement="home"]
+  button[data-composer-navigation-target="workspace-project"]:hover {
+  border-color: rgb(var(--ds-accent-rgb) / .50) !important;
+  background: rgb(var(--ds-accent-rgb) / .18) !important;
+  color: var(--ds-text) !important;
+}
+
+/* Home project control: keep the pill just inside the rail's rounded clip while
+   preserving its rounded shape and original vertical placement. */
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"])
+  [data-codex-composer-root][data-composer-placement="home"]
+  [data-composer-rail][data-composer-rail-placement="above"]
+  button[data-composer-navigation-target="workspace-project"] {
+  margin-left: -3px !important;
+  border-radius: 12px !important;
+}
+
+html[data-dream-skin="active"] .ProseMirror {
+  color: var(--ds-text) !important;
+  caret-color: var(--ds-accent) !important;
+}
+
+html[data-dream-skin="active"] button[class~="bg-token-foreground"] {
+  background: var(--ds-accent) !important;
+  color: var(--ds-on-accent) !important;
+  box-shadow: 0 5px 14px rgb(var(--ds-accent-rgb) / .20) !important;
+}
+
+/* Current send, stop, and voice actions do not consistently retain the old
+   foreground utility. Keep their icons on the computed accent foreground. */
+html[data-dream-skin="active"] :is(.composer-surface-chrome, [class*="_ComposerLayoutRoot_"], [data-composer-surface-variant][data-composer-radius-variant])
+  :is(button[class~="bg-primary-solid"], button[aria-label*="send" i], button[aria-label*="stop" i], button[aria-label*="voice" i], button[aria-label*="speak" i], button[aria-label*="audio" i]) {
+  border-color: rgb(var(--ds-text-rgb) / .46) !important;
+  background: var(--ds-accent) !important;
+  color: var(--ds-on-accent) !important;
+  box-shadow:
+    0 5px 16px rgb(var(--ds-bg-rgb) / .24),
+    inset 0 1px rgb(var(--ds-text-rgb) / .42) !important;
+}
+
+html[data-dream-skin="active"] :is(.composer-surface-chrome, [class*="_ComposerLayoutRoot_"], [data-composer-surface-variant][data-composer-radius-variant])
+  :is(button[class~="bg-primary-solid"], button[aria-label*="send" i], button[aria-label*="stop" i], button[aria-label*="voice" i], button[aria-label*="speak" i], button[aria-label*="audio" i]) * {
+  color: currentColor !important;
+  opacity: 1 !important;
+}
+
+html[data-dream-skin="active"] article,
+html[data-dream-skin="active"] [data-ds-part="message"] { border-radius: 16px; }
+
+@media (max-width: 1120px) {
+  html[data-dream-skin="active"]
+    main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):has([role="main"])::after { content: none; }
+  html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) { --thread-content-max-width: min(940px, calc(100cqw - 30px)) !important; }
+  html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child > div:first-child { width: calc(100% - 28px) !important; }
+}
+
+@media (max-width: 900px) {
+  html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child {
+    flex-basis: 408px !important;
+    min-height: 408px !important;
+  }
+  html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child > div:first-child {
+    height: 232px !important;
+    min-height: 232px !important;
+  }
+  html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child > div:first-child > div:first-child { padding: 0 26px; }
+  html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child > div:first-child > div:first-child > div:first-child {
+    width: min(58%, 460px) !important;
+  }
+  html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) [data-feature="game-source"] { font-size: 18px !important; }
+  html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) [data-feature="game-source"]::before { margin-bottom: 7px; font-size: 10px; }
+  html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) [data-feature="game-source"]::after { margin-top: 9px; font-size: 11px; }
+  html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) .group\/home-suggestions button { min-height: 112px !important; font-size: 12px !important; }
+}

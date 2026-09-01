@@ -1,17 +1,21 @@
+import AppKit
 import SwiftUI
 
 /// A restrained, system-adjacent palette for the Studio shell. Theme artwork
 /// supplies the personality; this chrome stays quiet enough to keep controls
 /// legible over any of the bundled worlds.
 enum StudioColor {
+    // Keep the shell responsive to the user's macOS appearance while the
+    // accent colors remain part of Studio's visual identity.
+    static let canvas = Color(nsColor: .windowBackgroundColor)
     static let ink = Color(hex: "#0A0B10")
-    static let inkRaised = Color(hex: "#15171E")
-    static let inkSoft = Color(hex: "#20232C")
-    static let text = Color(hex: "#F5F5F7")
-    static let textMuted = Color(hex: "#B4B7C0")
-    static let textFaint = Color(hex: "#858994")
-    static let line = Color.white.opacity(0.11)
-    static let lineStrong = Color.white.opacity(0.20)
+    static let inkRaised = Color(nsColor: .controlBackgroundColor)
+    static let inkSoft = Color(nsColor: .underPageBackgroundColor)
+    static let text = Color(nsColor: .labelColor)
+    static let textMuted = Color(nsColor: .secondaryLabelColor)
+    static let textFaint = Color(nsColor: .tertiaryLabelColor)
+    static let line = Color(nsColor: .separatorColor).opacity(0.52)
+    static let lineStrong = Color(nsColor: .separatorColor)
     static let cyan = Color(hex: "#9CC7FF")
     static let violet = Color(hex: "#BCA8FF")
     static let orchid = Color(hex: "#E9A9D6")
@@ -40,6 +44,22 @@ struct StudioPanelModifier: ViewModifier {
                     .strokeBorder(StudioColor.line, lineWidth: 1)
                     .allowsHitTesting(false)
             }
+    }
+}
+
+/// Adds a small, consistent pressed state to custom Studio controls while
+/// leaving native bordered controls to use their platform-provided treatment.
+struct StudioPressableButtonStyle: ButtonStyle {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .opacity(configuration.isPressed ? 0.76 : 1)
+            .scaleEffect(reduceMotion ? 1 : (configuration.isPressed ? 0.97 : 1))
+            .animation(
+                reduceMotion ? nil : .easeOut(duration: 0.12),
+                value: configuration.isPressed
+            )
     }
 }
 
@@ -73,7 +93,7 @@ struct StudioIconButton: View {
                         .strokeBorder(StudioColor.line, lineWidth: 1)
                 }
         }
-        .buttonStyle(.plain)
+        .buttonStyle(StudioPressableButtonStyle())
         .help(help)
     }
 }
@@ -107,6 +127,7 @@ struct StudioPill: View {
 struct StatusDot: View {
     let color: Color
     var isPulsing = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var isExpanded = false
 
     var body: some View {
@@ -115,7 +136,7 @@ struct StatusDot: View {
             .frame(width: 7, height: 7)
             .shadow(color: color.opacity(0.70), radius: isExpanded ? 7 : 3)
             .onAppear {
-                guard isPulsing else { return }
+                guard isPulsing && !reduceMotion else { return }
                 withAnimation(.easeInOut(duration: 1.25).repeatForever(autoreverses: true)) {
                     isExpanded = true
                 }

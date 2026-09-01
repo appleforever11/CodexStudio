@@ -121,6 +121,11 @@ for name in "${RUNTIME_SCRIPTS[@]}"; do
   [ -f "$ROOT/scripts/$name" ] || { printf 'Runtime script missing: %s\n' "$name" >&2; exit 1; }
   /bin/cp "$ROOT/scripts/$name" "$ENGINE/scripts/$name"
 done
+[ -d "$ROOT/scripts/common" ] || { printf 'Runtime script module directory missing: common\n' >&2; exit 1; }
+/bin/mkdir -p "$ENGINE/scripts/common"
+/usr/bin/rsync -a "$ROOT/scripts/common/" "$ENGINE/scripts/common/"
+[ -z "$(find "$ENGINE/scripts/common" -type f ! -name '*.sh' -print -quit)" ] \
+  || { printf 'Unexpected non-shell file in common runtime modules.\n' >&2; exit 1; }
 [ -d "$ROOT/assets" ] || { printf 'Engine directory missing: assets\n' >&2; exit 1; }
 /usr/bin/rsync -a "$ROOT/assets/" "$ENGINE/assets/"
 PUBLIC_PRESET="preset-gothic-void-crusade"

@@ -74,7 +74,13 @@ struct ThemesPage: View {
                         .foregroundStyle(StudioColor.textFaint)
                 }
 
-                if store.filteredThemes.isEmpty {
+                if store.isLoading {
+                    ThemeAtlasLoadingState(
+                        title: "Loading local worlds",
+                        detail: "Reading bundled and installed themes…"
+                    )
+                    .frame(maxWidth: .infinity, minHeight: 300)
+                } else if store.filteredThemes.isEmpty {
                     ThemeAtlasEmptyState(
                         title: "No worlds found",
                         detail: "Try another category, filter, or search phrase."
@@ -151,7 +157,7 @@ struct LibraryPage: View {
                                 .font(.system(size: 10.5, weight: .semibold))
                                 .foregroundStyle(StudioColor.textMuted)
                         }
-                        .buttonStyle(.plain)
+                        .buttonStyle(StudioPressableButtonStyle())
                     }
 
                     VStack(alignment: .leading, spacing: 10) {
@@ -175,7 +181,13 @@ struct LibraryPage: View {
                         .foregroundStyle(StudioColor.textFaint)
                 }
 
-                if localThemes.isEmpty {
+                if store.isLoading {
+                    ThemeAtlasLoadingState(
+                        title: "Loading installed worlds",
+                        detail: "Checking the local theme library…"
+                    )
+                    .frame(maxWidth: .infinity, minHeight: 280)
+                } else if localThemes.isEmpty {
                     ThemeAtlasEmptyState(
                         title: "Nothing matches this view",
                         detail: "Clear the search or choose another category."
@@ -222,7 +234,7 @@ private extension LibraryPage {
                 .frame(height: 38)
                 .background(StudioColor.spectrum, in: RoundedRectangle(cornerRadius: 11, style: .continuous))
         }
-        .buttonStyle(.plain)
+        .buttonStyle(StudioPressableButtonStyle())
     }
 }
 

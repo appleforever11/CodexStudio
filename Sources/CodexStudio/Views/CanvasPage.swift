@@ -231,7 +231,7 @@ struct CanvasPage: View {
             }
             .font(.system(size: 11, weight: .semibold))
             .foregroundStyle(StudioColor.cyan)
-            .buttonStyle(.plain)
+            .buttonStyle(StudioPressableButtonStyle())
         }
         .padding(14)
         .studioPanel(radius: 15, fill: Color.white.opacity(0.035))
@@ -304,7 +304,7 @@ private struct FeaturedThemeCard: View {
                     .strokeBorder(isSelected ? StudioColor.cyan.opacity(0.48) : StudioColor.line, lineWidth: 1)
             }
         }
-        .buttonStyle(.plain)
+        .buttonStyle(StudioPressableButtonStyle())
     }
 }
 
@@ -322,7 +322,7 @@ private struct QuickSwitchCard: View {
                     .frame(width: 48, height: 48)
                     .clipShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
             }
-            .buttonStyle(.plain)
+            .buttonStyle(StudioPressableButtonStyle())
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(theme.name)
@@ -349,7 +349,7 @@ private struct QuickSwitchCard: View {
                         Circle().strokeBorder(StudioColor.line, lineWidth: 1)
                     }
             }
-            .buttonStyle(.plain)
+            .buttonStyle(StudioPressableButtonStyle())
             .help("Apply \(theme.name)")
         }
         .padding(10)

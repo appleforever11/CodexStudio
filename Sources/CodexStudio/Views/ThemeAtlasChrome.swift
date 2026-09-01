@@ -164,7 +164,7 @@ struct ThemeSpotlight: View {
             .frame(height: 38)
             .background(StudioColor.spectrum, in: RoundedRectangle(cornerRadius: 11, style: .continuous))
         }
-        .buttonStyle(.plain)
+        .buttonStyle(StudioPressableButtonStyle())
         .disabled(!theme.isInstalled || store.isApplying)
         .opacity(theme.isInstalled ? 1 : 0.46)
     }
@@ -182,7 +182,7 @@ struct ThemeSpotlight: View {
                 .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 11, style: .continuous))
                 .overlay(RoundedRectangle(cornerRadius: 11, style: .continuous).stroke(Color.white.opacity(0.18), lineWidth: 1))
         }
-        .buttonStyle(.plain)
+        .buttonStyle(StudioPressableButtonStyle())
     }
 
     private var favoriteButton: some View {
@@ -196,7 +196,7 @@ struct ThemeSpotlight: View {
                 .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 11, style: .continuous))
                 .overlay(RoundedRectangle(cornerRadius: 11, style: .continuous).stroke(Color.white.opacity(0.18), lineWidth: 1))
         }
-        .buttonStyle(.plain)
+        .buttonStyle(StudioPressableButtonStyle())
     }
 
     @ViewBuilder
@@ -211,7 +211,7 @@ struct ThemeSpotlight: View {
                     .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 11, style: .continuous))
                     .overlay(RoundedRectangle(cornerRadius: 11, style: .continuous).stroke(Color.white.opacity(0.18), lineWidth: 1))
             }
-            .buttonStyle(.plain)
+            .buttonStyle(StudioPressableButtonStyle())
         }
     }
 
@@ -293,7 +293,7 @@ struct ThemeAtlasControls: View {
                         .strokeBorder(StudioColor.line, lineWidth: 1)
                 }
         }
-        .buttonStyle(.plain)
+        .buttonStyle(StudioPressableButtonStyle())
         .help("Open installed library")
     }
 }
@@ -317,7 +317,7 @@ struct AtlasSearchField: View {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundStyle(StudioColor.textFaint)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(StudioPressableButtonStyle())
             }
         }
         .padding(.horizontal, 11)
@@ -360,7 +360,7 @@ struct ThemeCategoryRail: View {
                                 .strokeBorder(store.selectedThemeCategory == category ? Color.white.opacity(0.20) : StudioColor.line, lineWidth: 1)
                         }
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(StudioPressableButtonStyle())
                 }
             }
             .padding(.vertical, 1)
@@ -388,7 +388,7 @@ private struct ThemeFilterDeck: View {
                             in: RoundedRectangle(cornerRadius: 8, style: .continuous)
                         )
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(StudioPressableButtonStyle())
             }
         }
         .padding(3)

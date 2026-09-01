@@ -1,0 +1,175 @@
+@layer dreamskin-accessibility {
+  @media (prefers-reduced-motion: reduce) {
+    html[data-dream-skin="active"] *,
+    html[data-dream-skin="active"] *::before,
+    html[data-dream-skin="active"] *::after {
+      scroll-behavior: auto !important;
+      transition-duration: .01ms !important;
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+    }
+  }
+}
+
+/* Theme Studio semantic layer. Keep these rules last so editor-authored
+   tokens can tune Codex surfaces without replacing the hardened selector
+   contract above. */
+html[data-dream-skin="active"] {
+  font-size: calc(16px * var(--dream-studio-font-scale, 1)) !important;
+}
+
+html[data-dream-skin="active"] body {
+  background: var(--dream-studio-app-background, var(--ds-bg)) !important;
+  color: var(--dream-studio-text, var(--ds-text)) !important;
+}
+
+html[data-dream-skin="active"] [data-ds-part="sidebar"] {
+  background: var(--dream-studio-sidebar-background, var(--ds-panel)) !important;
+  border-color: var(--dream-studio-border, var(--ds-line)) !important;
+  color: var(--dream-studio-text, var(--ds-text)) !important;
+  /* Keep native resize transitions from painting navigation controls over
+     the main surface while the inner navigation minimum width catches up. */
+  overflow-x: clip !important;
+}
+
+/* The native mode switch keeps its current mode in aria-label but renders the
+   generic "New chat" copy in the visible label. Mirror the accessible state
+   visually so the sidebar identifies the active ChatGPT or Codex mode. */
+html[data-dream-skin="active"] aside.app-shell-left-panel
+  button[aria-label*="current mode: ChatGPT" i],
+html[data-dream-skin="active"] aside.app-shell-left-panel
+  button[aria-label*="current mode: Codex" i] {
+  font-size: 0 !important;
+  white-space: nowrap !important;
+}
+
+html[data-dream-skin="active"] aside.app-shell-left-panel
+  button[aria-label*="current mode: ChatGPT" i]::before {
+  content: "ChatGPT";
+}
+
+html[data-dream-skin="active"] aside.app-shell-left-panel
+  button[aria-label*="current mode: Codex" i]::before {
+  content: "Codex";
+}
+
+html[data-dream-skin="active"] aside.app-shell-left-panel
+  button[aria-label*="current mode:" i]::before {
+  display: inline-block;
+  color: var(--ds-accent) !important;
+  font: inherit !important;
+  font-size: 19px !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+}
+
+html[data-dream-skin="active"] aside.app-shell-left-panel
+  button[aria-label*="current mode:" i] > span[class~="truncate"] {
+  display: none !important;
+}
+
+html[data-dream-skin="active"] aside.app-shell-left-panel
+  button[aria-label*="current mode:" i]::after {
+  font-size: 19px !important;
+}
+
+/* Codex owns the sidebar's live width while the user drags its resize rail.
+   Native builds expose that width as an inline style; overriding it with the
+   editor's fixed design token leaves the inner navigation header wider than
+   the outer panel, so Search and Notifications spill into the main surface.
+   Keep the editor value as a fallback for shells without native geometry, but
+   never fight a native width during resize. */
+html[data-dream-skin="active"] [data-ds-part="sidebar"]:not([style*="width"]) {
+  width: calc(var(--dream-studio-sidebar-width, 212) * 1px) !important;
+}
+
+html[data-dream-skin="active"] [data-ds-part="sidebar"] :is(button, a) {
+  color: var(--dream-studio-text, var(--ds-text)) !important;
+}
+
+html[data-dream-skin="active"] [data-ds-part="sidebar"] :is(button, a):hover {
+  background: var(--dream-studio-surface-hover, var(--ds-panel-2)) !important;
+}
+
+html[data-dream-skin="active"] [data-ds-part="sidebar"] :is([aria-current="page"], [class~="bg-token-list-hover-background"]) {
+  background: var(--dream-studio-surface-selected, var(--ds-panel-2)) !important;
+  border-color: var(--dream-studio-accent, var(--ds-accent)) !important;
+}
+
+html[data-dream-skin="active"] :is([data-ds-part="main"], [data-ds-part="home"], [data-ds-part="thread"]) {
+  border-color: var(--dream-studio-border, var(--ds-line)) !important;
+  color: var(--dream-studio-text, var(--ds-text)) !important;
+}
+
+html[data-dream-skin="active"] [data-ds-part="header"] {
+  background: var(--dream-studio-surface, var(--ds-panel)) !important;
+  border-color: var(--dream-studio-border, var(--ds-line)) !important;
+  color: var(--dream-studio-text, var(--ds-text)) !important;
+  backdrop-filter: blur(calc(var(--dream-studio-backdrop-blur, 14) * 1px)) saturate(108%) !important;
+}
+
+html[data-dream-skin="active"] [data-ds-part="home"] .group\/home-suggestions button {
+  background: var(--dream-studio-surface, var(--ds-panel)) !important;
+  border-color: var(--dream-studio-border, var(--ds-line)) !important;
+  border-radius: calc(var(--dream-studio-radius-md, 16) * 1px) !important;
+  color: var(--dream-studio-text, var(--ds-text)) !important;
+}
+
+html[data-dream-skin="active"] [data-ds-part="home"] .group\/home-suggestions button:hover {
+  background: var(--dream-studio-surface-hover, var(--ds-panel-2)) !important;
+  border-color: var(--dream-studio-accent, var(--ds-accent)) !important;
+}
+
+html[data-dream-skin="active"] [data-ds-part="composer"] {
+  background: var(--dream-studio-composer-background, var(--ds-panel-2)) !important;
+  border-color: var(--dream-studio-composer-border, var(--ds-line)) !important;
+  border-radius: calc(var(--dream-studio-radius-lg, 26) * 1px) !important;
+  color: var(--dream-studio-text, var(--ds-text)) !important;
+  backdrop-filter: blur(calc(var(--dream-studio-backdrop-blur, 14) * 1px)) saturate(108%) !important;
+}
+
+html[data-dream-skin="active"] [data-ds-part="project-list"] > button {
+  background: var(--dream-studio-surface-elevated, var(--ds-panel-2)) !important;
+  border-color: var(--dream-studio-composer-border, var(--ds-line)) !important;
+  border-radius: calc(var(--dream-studio-radius-sm, 9) * 1px) !important;
+  color: var(--dream-studio-text, var(--ds-text)) !important;
+}
+
+html[data-dream-skin="active"] [data-ds-part="composer"] :is(.ProseMirror, [contenteditable="true"]) {
+  color: var(--dream-studio-text, var(--ds-text)) !important;
+  caret-color: var(--dream-studio-accent, var(--ds-accent)) !important;
+}
+
+html[data-dream-skin="active"] [data-ds-part="message"][data-message-author-role="user"] {
+  background: var(--dream-studio-user-bubble, var(--ds-panel-2)) !important;
+  border: 1px solid var(--dream-studio-border, var(--ds-line)) !important;
+  border-radius: calc(var(--dream-studio-radius-md, 16) * 1px) !important;
+  color: var(--dream-studio-text, var(--ds-text)) !important;
+}
+
+html[data-dream-skin="active"] [data-ds-part="message"][data-message-author-role="assistant"] {
+  background: var(--dream-studio-assistant-bubble, var(--ds-panel)) !important;
+  border: 1px solid var(--dream-studio-border, var(--ds-line)) !important;
+  border-radius: calc(var(--dream-studio-radius-md, 16) * 1px) !important;
+  color: var(--dream-studio-text, var(--ds-text)) !important;
+}
+
+html[data-dream-skin="active"] [data-ds-part="main"] pre {
+  background: var(--dream-studio-code-background, var(--ds-bg)) !important;
+  border: 1px solid var(--dream-studio-border, var(--ds-line)) !important;
+  border-radius: calc(var(--dream-studio-radius-sm, 9) * 1px) !important;
+  color: var(--dream-studio-text, var(--ds-text)) !important;
+}
+
+html[data-dream-skin="active"] :is([data-ds-part="dialog"], [role="menu"]) {
+  background: var(--dream-studio-surface-elevated, var(--ds-panel-2)) !important;
+  border-color: var(--dream-studio-border, var(--ds-line)) !important;
+  color: var(--dream-studio-text, var(--ds-text)) !important;
+}
+
+html[data-dream-skin="active"][data-dream-studio-density="compact"] :is(
+  [data-ds-part="composer"],
+  [data-ds-part="home"] .group\/home-suggestions button
+) {
+  padding-block: .65rem !important;
+}

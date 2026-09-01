@@ -8,17 +8,19 @@ struct ThemeArtworkView: View {
 
     @State private var localImage: NSImage?
     @State private var hasAppeared = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
+        let shouldAnimate = animated && !reduceMotion
         ZStack {
             if let localImage {
                 Image(nsImage: localImage)
                     .resizable()
                     .scaledToFill()
-                    .scaleEffect(animated && hasAppeared ? 1.035 : 1.0)
+                    .scaleEffect(shouldAnimate && hasAppeared ? 1.035 : 1.0)
                     .animation(.easeInOut(duration: 12).repeatForever(autoreverses: true), value: hasAppeared)
             } else {
-                ThemeGradientArtwork(theme: theme, animated: animated, hasAppeared: hasAppeared)
+                ThemeGradientArtwork(theme: theme, animated: shouldAnimate, hasAppeared: hasAppeared)
             }
 
             if showOverlay {
@@ -39,7 +41,7 @@ struct ThemeArtworkView: View {
             if let path = theme.previewPath ?? theme.imagePath {
                 localImage = NSImage(contentsOfFile: path)
             }
-            guard animated else { return }
+            guard shouldAnimate else { return }
             withAnimation(.easeInOut(duration: 12).repeatForever(autoreverses: true)) {
                 hasAppeared = true
             }

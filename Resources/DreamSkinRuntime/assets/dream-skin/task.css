@@ -1,0 +1,325 @@
+/* A wide image can carry the home screen too. The native hero remains live,
+   but the artwork is painted once on the window instead of repeated in a card. */
+html[data-dream-skin="active"][data-dream-art-wide="true"]:has(main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]) [role="main"]) body {
+  background-image: var(--dream-skin-art) !important;
+  background-position: var(--ds-art-position) !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+}
+
+html[data-dream-skin="active"][data-dream-art-wide="true"]:has(main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]) [role="main"])
+  aside.app-shell-left-panel {
+  background: linear-gradient(90deg,
+    var(--ds-immersive-sidebar),
+    var(--ds-immersive-edge) 100%) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+html[data-dream-skin="active"][data-dream-art-wide="true"]:has(main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]) [role="main"])
+  aside.app-shell-left-panel::after {
+  background: transparent !important;
+}
+
+html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):has([role="main"]) {
+  background: linear-gradient(90deg,
+    var(--ds-immersive-edge),
+    var(--ds-immersive-mid) 64%,
+    var(--ds-immersive-far)) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):has([role="main"])
+  > header:is(.app-header-tint, [data-app-shell-header-edge-scroll], [class*="_Header_"]) {
+  background: transparent !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"])
+  > header:is(.app-header-tint, [data-app-shell-header-edge-scroll], [class*="_Header_"]) {
+  color: var(--ds-text) !important;
+  text-shadow:
+    0 1px 2px rgb(var(--ds-bg-rgb) / .86),
+    0 0 8px rgb(var(--ds-bg-rgb) / .52) !important;
+}
+
+html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"])
+  > header:is(.app-header-tint, [data-app-shell-header-edge-scroll], [class*="_Header_"]) svg {
+  color: rgb(var(--ds-muted-rgb) / .96) !important;
+  filter: drop-shadow(0 1px 2px rgb(var(--ds-bg-rgb) / .72));
+}
+
+/* Codex moves focus to this non-interactive route wrapper after Shift. Its
+   native outline can span the full content pane and an embedded webview. */
+html[data-dream-skin="active"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"])
+  [data-vscode-context][tabindex="0"]:focus-visible {
+  outline: none !important;
+}
+
+html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):has([role="main"])
+  [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child > div:first-child {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):has([role="main"])
+  [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child > div:first-child::before {
+  content: none !important;
+}
+
+html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):has([role="main"])
+  [role="main"]:has([data-testid="home-icon"]) .group\/home-suggestions button {
+  background: rgb(var(--ds-panel-rgb) / .56) !important;
+  box-shadow:
+    0 8px 22px rgb(var(--ds-bg-rgb) / .16),
+    inset 0 0 0 1px rgb(var(--ds-muted-rgb) / .20) !important;
+  backdrop-filter: blur(8px) saturate(104%) !important;
+}
+
+html[data-dream-skin="active"][data-dream-art-wide="true"] :is(.composer-surface-chrome, [class*="_ComposerLayoutRoot_"], [data-composer-surface-variant][data-composer-radius-variant]) {
+  background: var(--ds-immersive-composer-solid) !important;
+  border: 0 !important;
+  box-shadow:
+    0 10px 30px rgb(var(--ds-bg-rgb) / .20),
+    inset 0 0 0 1px var(--ds-immersive-line),
+    inset 0 1px rgb(var(--ds-text-rgb) / .12) !important;
+  backdrop-filter: none !important;
+}
+
+html[data-dream-skin="active"][data-dream-shell="light"][data-dream-art-wide="true"]
+  :is(.composer-surface-chrome, [class*="_ComposerLayoutRoot_"], [data-composer-surface-variant][data-composer-radius-variant]) {
+  box-shadow:
+    0 10px 28px rgb(var(--ds-bg-rgb) / .14),
+    inset 0 0 0 1px var(--ds-immersive-line),
+    inset 0 1px rgb(var(--ds-panel-rgb) / .72) !important;
+  backdrop-filter: blur(8px) saturate(102%) !important;
+}
+
+html[data-dream-skin="active"][data-dream-shell="light"]
+  :is(.composer-surface-chrome, [class*="_ComposerLayoutRoot_"], [data-composer-surface-variant][data-composer-radius-variant]) p.placeholder::after {
+  color: rgb(var(--ds-muted-rgb) / .78) !important;
+  opacity: 1 !important;
+}
+
+/* Current Codex builds render the home project picker as a separate opaque
+   cap above the composer. Join both native controls into one continuous
+   surface while leaving task and utility-route inputs untouched. */
+html[data-dream-skin="active"] :is([class*="_homeUtilityBar_"], [class*="_ComposerHomeUtilityBar_"], [data-composer-home-utility-bar-position]) {
+  position: relative;
+  z-index: 3;
+  top: 0 !important;
+  width: 100% !important;
+  margin-inline: 0 !important;
+  padding-inline: 18px !important;
+  border-radius: 22px 22px 0 0 !important;
+  background: rgb(var(--ds-panel-rgb) / .94) !important;
+  box-shadow:
+    inset 1px 0 rgb(var(--ds-muted-rgb) / .18),
+    inset -1px 0 rgb(var(--ds-muted-rgb) / .18),
+    inset 0 1px rgb(var(--ds-muted-rgb) / .18) !important;
+  backdrop-filter: blur(16px) saturate(108%) !important;
+}
+
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):has(:is([class*="_homeUtilityBar_"], [class*="_ComposerHomeUtilityBar_"], [data-composer-home-utility-bar-position]))
+  :is(.composer-surface-chrome, [class*="_ComposerLayoutRoot_"], [data-composer-surface-variant][data-composer-radius-variant]) {
+  border: 0 !important;
+  border-radius: 0 0 22px 22px !important;
+  box-shadow:
+    0 10px 28px rgb(var(--ds-bg-rgb) / .24),
+    inset 1px 0 rgb(var(--ds-muted-rgb) / .18),
+    inset -1px 0 rgb(var(--ds-muted-rgb) / .18),
+    inset 0 -1px rgb(var(--ds-muted-rgb) / .18) !important;
+}
+
+html[data-dream-skin="active"][data-dream-art-wide="true"] :is([class*="_homeUtilityBar_"], [class*="_ComposerHomeUtilityBar_"], [data-composer-home-utility-bar-position]) {
+  background: var(--ds-immersive-composer-solid) !important;
+  box-shadow:
+    inset 1px 0 var(--ds-immersive-line),
+    inset -1px 0 var(--ds-immersive-line),
+    inset 0 1px rgb(var(--ds-text-rgb) / .12) !important;
+  backdrop-filter: none !important;
+}
+
+html[data-dream-skin="active"][data-dream-art-wide="true"]
+  [role="main"]:has([data-testid="home-icon"]):has(:is([class*="_homeUtilityBar_"], [class*="_ComposerHomeUtilityBar_"], [data-composer-home-utility-bar-position])) :is(.composer-surface-chrome, [class*="_ComposerLayoutRoot_"], [data-composer-surface-variant][data-composer-radius-variant]) {
+  box-shadow:
+    0 10px 30px rgb(var(--ds-bg-rgb) / .20),
+    inset 1px 0 var(--ds-immersive-line),
+    inset -1px 0 var(--ds-immersive-line),
+    inset 0 -1px var(--ds-immersive-line) !important;
+}
+
+html[data-dream-skin="active"][data-dream-shell="light"][data-dream-art-wide="true"]
+  :is([class*="_homeUtilityBar_"], [class*="_ComposerHomeUtilityBar_"]) {
+  box-shadow:
+    inset 1px 0 var(--ds-immersive-line),
+    inset -1px 0 var(--ds-immersive-line),
+    inset 0 1px rgb(var(--ds-panel-rgb) / .72) !important;
+  backdrop-filter: blur(8px) saturate(102%) !important;
+}
+
+html[data-dream-skin="active"] :is([class*="_homeUtilityBar_"], [class*="_ComposerHomeUtilityBar_"], [data-composer-home-utility-bar-position]) button,
+html[data-dream-skin="active"] :is(.composer-surface-chrome, [class*="_ComposerLayoutRoot_"], [data-composer-surface-variant][data-composer-radius-variant]) button:not([class~="bg-token-foreground"]) {
+  color: var(--ds-muted) !important;
+}
+
+html[data-dream-skin="active"] :is([class*="_homeUtilityBar_"], [class*="_ComposerHomeUtilityBar_"], [data-composer-home-utility-bar-position]) button svg,
+html[data-dream-skin="active"] :is(.composer-surface-chrome, [class*="_ComposerLayoutRoot_"], [data-composer-surface-variant][data-composer-radius-variant]) button svg {
+  color: currentColor !important;
+}
+
+html[data-dream-skin="active"] :is([class*="_homeUtilityBar_"], [class*="_ComposerHomeUtilityBar_"], [data-composer-home-utility-bar-position]) button *,
+html[data-dream-skin="active"] :is(.composer-surface-chrome, [class*="_ComposerLayoutRoot_"], [data-composer-surface-variant][data-composer-radius-variant]) button:not([class~="bg-token-foreground"]) * {
+  color: currentColor !important;
+}
+
+html[data-dream-skin="active"] :is([class*="_homeUtilityBar_"], [class*="_ComposerHomeUtilityBar_"], [data-composer-home-utility-bar-position]) button:hover,
+html[data-dream-skin="active"] :is(.composer-surface-chrome, [class*="_ComposerLayoutRoot_"], [data-composer-surface-variant][data-composer-radius-variant]) button:not([class~="bg-token-foreground"]):hover {
+  color: var(--ds-text) !important;
+  background: rgb(var(--ds-accent-rgb) / .10) !important;
+}
+
+html[data-dream-skin="active"] :is(.composer-surface-chrome, [class*="_ComposerLayoutRoot_"], [data-composer-surface-variant][data-composer-radius-variant]) p.placeholder::after {
+  color: rgb(var(--ds-muted-rgb) / .82) !important;
+  opacity: 1 !important;
+}
+
+/* Codex 26.818 places two opaque fades around the sticky thread composer.
+   Match their complete utility signatures inside non-Home main surfaces so
+   unrelated application gradients keep their native paint. */
+html[data-dream-skin="active"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):not(:has([role="main"]))
+  [class~="pointer-events-none"][class~="bottom-0"][class~="h-full"][class~="bg-gradient-to-t"][class~="from-surface"][class~="via-surface"],
+html[data-dream-skin="active"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):not(:has([role="main"]))
+  [class~="pointer-events-none"][class~="-bottom-1"][class~="h-7"][class~="bg-gradient-to-t"][class~="from-surface"][class~="to-transparent"] {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+/* Native wide blocks escape the prose column with negative inline margins.
+   Keep tables inside the themed message and delegate width overflow to the
+   existing horizontal scroller. */
+html[data-dream-skin="active"] [data-markdown-text-style] [data-markdown-table="true"] {
+  box-sizing: border-box;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  margin-inline: 0 !important;
+}
+
+html[data-dream-skin="active"] [data-markdown-text-style]
+  [data-markdown-table="true"] > [class~="horizontal-scroll-fade-mask"] {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+}
+
+/* Streaming reasoning is not yet inside the final assistant message. Give it
+   one readable surface, then remove the nested decoration after finalization. */
+html[data-dream-skin="active"] .thread-scroll-container
+  [data-response-annotation-conversation][data-response-annotation-target] {
+  box-sizing: border-box;
+  margin-block: 4px 10px !important;
+  padding: 14px 16px !important;
+  border: 1px solid rgb(var(--ds-muted-rgb) / .18) !important;
+  border-radius: 18px !important;
+  background:
+    linear-gradient(135deg, rgb(var(--ds-text-rgb) / .08), transparent 42%),
+    rgb(var(--ds-panel-rgb) / .46) !important;
+  color: var(--ds-text) !important;
+  box-shadow:
+    0 10px 28px rgb(var(--ds-bg-rgb) / .18),
+    inset 0 1px rgb(var(--ds-text-rgb) / .14) !important;
+  backdrop-filter: blur(20px) saturate(125%) brightness(104%) !important;
+}
+
+html[data-dream-skin="active"] .thread-scroll-container
+  [data-local-conversation-final-assistant]
+  [data-response-annotation-conversation][data-response-annotation-target] {
+  margin: 0 !important;
+  border-color: transparent !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Expanded command details are tool-result nodes rather than messages. */
+html[data-dream-skin="active"] .thread-scroll-container
+  [data-local-conversation-item-target-ids] {
+  box-sizing: border-box;
+  padding: 10px 12px !important;
+  border: 1px solid rgb(var(--ds-muted-rgb) / .16) !important;
+  border-radius: 14px !important;
+  background:
+    linear-gradient(135deg, rgb(var(--ds-text-rgb) / .06), transparent 46%),
+    rgb(var(--ds-panel-rgb) / .52) !important;
+  color: rgb(var(--ds-text-rgb) / .94) !important;
+  box-shadow:
+    0 8px 22px rgb(var(--ds-bg-rgb) / .16),
+    inset 0 1px rgb(var(--ds-text-rgb) / .12) !important;
+  backdrop-filter: blur(18px) saturate(120%) brightness(102%) !important;
+}
+
+html[data-dream-skin="active"] .thread-scroll-container
+  [data-local-conversation-item-target-ids] :is(p, pre, code, samp, kbd, span) {
+  opacity: 1 !important;
+}
+
+/* Search routes ship an opaque sticky band and input surface. Keep the
+   control legible while allowing the selected image to remain continuous. */
+html[data-dream-skin="active"]:is([data-dream-task-mode="ambient"], [data-dream-art-task-mode="ambient"])[data-dream-art-wide="true"]
+  main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):not(:has([role="main"])) div.sticky:has(input[type="text"]) {
+  background: transparent !important;
+}
+
+html[data-dream-skin="active"]:is([data-dream-task-mode="ambient"], [data-dream-art-task-mode="ambient"])[data-dream-art-wide="true"]
+  main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):not(:has([role="main"])) div.sticky:has(input[type="text"])::after {
+  background: transparent !important;
+}
+
+html[data-dream-skin="active"]:is([data-dream-task-mode="ambient"], [data-dream-art-task-mode="ambient"])[data-dream-art-wide="true"]
+  main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):not(:has([role="main"])) div.no-drag:has(> input[type="text"]) {
+  background: var(--ds-immersive-composer) !important;
+  border: 0 !important;
+  box-shadow:
+    0 8px 22px rgb(var(--ds-bg-rgb) / .16),
+    inset 0 0 0 1px var(--ds-immersive-line) !important;
+  backdrop-filter: none !important;
+}
+
+/* Pull Requests and similar utility routes wrap their content in a native
+   full-size opaque surface. Only clear full-window wrappers, not cards. */
+html[data-dream-skin="active"]:is([data-dream-task-mode="ambient"], [data-dream-art-task-mode="ambient"])[data-dream-art-wide="true"]
+  main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):not(:has([role="main"]))
+  [class~="bg-token-main-surface-primary"][class~="h-full"][class~="w-full"] {
+  background: transparent !important;
+}
+
+html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"])
+  .app-shell-main-content-frame {
+  border-top: 0 !important;
+}
+
+html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"])
+  :is(.app-shell-main-content-top-fade, [data-app-shell-main-content-top-fade], [class*="_MainContentTopFade_"]) {
+  display: none !important;
+  background: transparent !important;
+}
+
+/* Codex paints a second opaque fade behind the sticky composer. The composer
+   already owns its readable surface, so retaining this layer creates a false
+   bottom panel and makes the control look duplicated. */
+html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"])
+  .thread-scroll-container .bg-gradient-to-t.from-token-main-surface-primary {
+  background: transparent !important;
+}
