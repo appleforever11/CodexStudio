@@ -3,6 +3,22 @@
     <channel>
         <title>CodexStudio</title>
         <item>
+            <title>0.1.9</title>
+            <pubDate>Tue, 01 Sep 2026 11:30:33 -0400</pubDate>
+            <link>https://github.com/appleforever11/CodexStudio</link>
+            <sparkle:version>1009000</sparkle:version>
+            <sparkle:shortVersionString>0.1.9</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[## Single titlebar hierarchy
+
+- Removes the redundant in-app command band beneath the macOS titlebar so Canvas and Themes begin directly below one consistent native window chrome.
+- Keeps the repaired split-view sizing and pinned sidebar footer from 0.1.8, including the fully visible connection status and “Open themed Codex” action at compact window sizes.
+- Preserves the existing theme application, local Apple wallpaper shelves, DockDoor launcher, and Sparkle update behavior.
+]]></description>
+            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.9/CodexStudio-0.1.9-arm64.zip" length="389154438" type="application/octet-stream" sparkle:edSignature="oy+EkJ8mynA/Ww4Lv5hy3Oteo/mg51D9aDT2A0f9m9VOCh6YtTvNhvN9wfy//sZZ7xD7Hni9+QeV6mp73lLfCQ=="/>
+        </item>
+        <item>
             <title>0.1.8</title>
             <pubDate>Tue, 01 Sep 2026 10:54:11 -0400</pubDate>
             <link>https://github.com/appleforever11/CodexStudio</link>
@@ -34,36 +50,6 @@
 - Preserves the existing theme application, local Apple wallpaper shelves, DockDoor launcher, and Sparkle update behavior.
 ]]></description>
             <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.7/CodexStudio-0.1.7-arm64.zip" length="389165595" type="application/octet-stream" sparkle:edSignature="2ewcovyM65au+HbUEX1hnQRvaH4tDgl3/LukjLrluYpojWieFr6H/EBBkFW9a2i2Z3Z/yu94bqf/5et2NdbzDQ=="/>
-        </item>
-        <item>
-            <title>0.1.6</title>
-            <pubDate>Mon, 31 Aug 2026 22:57:41 -0400</pubDate>
-            <link>https://github.com/appleforever11/CodexStudio</link>
-            <sparkle:version>1006000</sparkle:version>
-            <sparkle:shortVersionString>0.1.6</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.6
-
-## Studio interface overhaul
-
-- Reworks the app shell with a calmer Apple-inspired split-view workspace.
-- Refreshes Canvas, Themes, Live Lab, Library, and Settings with native-feeling materials, controls, typography, and spacing.
-- Expands the local theme library presentation with wider cards, clearer categories, and more comfortable gallery density.
-- Includes the current official Apple macOS, iOS, and iPadOS wallpaper shelves in this user-directed offline release artifact; each pack retains its local-only provenance record and attribution.
-
-## Sidebar and window layout
-
-- Reserves the native titlebar area so the Studio brand never collides with traffic lights.
-- Separates scrollable navigation from the persistent runtime and themed-Codex actions.
-- Pins the connection status and launch action to the bottom of the sidebar at any window height.
-- Keeps the build launcher from replacing a live executable, preventing stale temporary-bundle signature races during rebuilds.
-
-## Update delivery
-
-- Keeps the internal Sparkle build number monotonic with the existing release feed so 0.1.6 is offered normally by Check for Updates.
-]]></description>
-            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.6/CodexStudio-0.1.6-arm64.zip" length="389166436" type="application/octet-stream" sparkle:edSignature="N5S49yMUi//cURba+xy3kt9snqeNnZY5g9/3iFy5DwiuA9s8KLnt0gpm9r01faB2uoDW8Q2kvD1cgRd4arVRCw=="/>
         </item>
     </channel>
 </rss>

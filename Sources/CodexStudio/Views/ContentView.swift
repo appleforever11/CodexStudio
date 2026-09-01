@@ -11,13 +11,8 @@ struct ContentView: View {
                 StudioSidebar()
                     .navigationSplitViewColumnWidth(min: 220, ideal: 248, max: 290)
             } detail: {
-                VStack(spacing: 0) {
-                    StudioCommandBar()
-                    Divider()
-                        .overlay(StudioColor.line)
-                    mainSurface
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                }
+                mainSurface
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             }
             .navigationSplitViewStyle(.balanced)
             // Reserve the native titlebar inside the split view's layout
