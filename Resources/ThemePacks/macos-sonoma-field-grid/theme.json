@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "macos-sonoma-field-grid",
+  "name": "Sonoma",
+  "author": "Apple Inc. / original wallpaper creators",
+  "description": "The official Apple wallpaper associated with Sonoma, presented as a local-only Codex direction.",
+  "category": "macOS Era",
+  "collection": "macOS · Sonoma 14",
+  "appearance": "dark",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.73,
+    "focusY": 0.46,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#130E1D",
+    "panel": "#241832",
+    "panelAlt": "#3B2850",
+    "accent": "#D98BB7",
+    "accentAlt": "#F8C5DA",
+    "secondary": "#6A588A",
+    "highlight": "#C6A8C8",
+    "text": "#FFF5FC",
+    "muted": "#C0AFC4",
+    "line": "rgba(217,139,183,0.31)"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "macos-mountain-lion-high-range",
+  "name": "Mountain Lion",
+  "author": "Apple Inc. / original wallpaper creators",
+  "description": "The official Apple wallpaper associated with Mountain Lion, presented as a local-only Codex direction.",
+  "category": "macOS Era",
+  "collection": "macOS · Mountain Lion 10.8",
+  "appearance": "dark",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.76,
+    "focusY": 0.42,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#0A1020",
+    "panel": "#151F35",
+    "panelAlt": "#263A5A",
+    "accent": "#8DA8FF",
+    "accentAlt": "#D0D9FF",
+    "secondary": "#536C9B",
+    "highlight": "#AFA3D1",
+    "text": "#F5F7FF",
+    "muted": "#AAB5CF",
+    "line": "rgba(141,168,255,0.32)"
+  }
+}

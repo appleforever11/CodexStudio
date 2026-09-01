@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "macos-catalina-night-island",
+  "name": "Catalina",
+  "author": "Apple Inc. / original wallpaper creators",
+  "description": "The official Apple wallpaper associated with Catalina, presented as a local-only Codex direction.",
+  "category": "macOS Era",
+  "collection": "macOS · Catalina 10.15",
+  "appearance": "dark",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.75,
+    "focusY": 0.42,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#0C0A1B",
+    "panel": "#181530",
+    "panelAlt": "#292652",
+    "accent": "#B39AFF",
+    "accentAlt": "#E4D8FF",
+    "secondary": "#5C5AA1",
+    "highlight": "#C3B4DF",
+    "text": "#F7F3FF",
+    "muted": "#B4ADCA",
+    "line": "rgba(179,154,255,0.32)"
+  }
+}

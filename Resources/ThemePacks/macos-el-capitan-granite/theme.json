@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "macos-el-capitan-granite",
+  "name": "El Capitan",
+  "author": "Apple Inc. / original wallpaper creators",
+  "description": "The official Apple wallpaper associated with El Capitan, presented as a local-only Codex direction.",
+  "category": "macOS Era",
+  "collection": "macOS · El Capitan 10.11",
+  "appearance": "dark",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.68,
+    "focusY": 0.46,
+    "safeArea": "left",
+    "taskMode": "off"
+  },
+  "colors": {
+    "background": "#101216",
+    "panel": "#1B2027",
+    "panelAlt": "#303944",
+    "accent": "#86CFF4",
+    "accentAlt": "#D7F3FF",
+    "secondary": "#647484",
+    "highlight": "#AFC0CA",
+    "text": "#F5F8FA",
+    "muted": "#AEB8C0",
+    "line": "rgba(134,207,244,0.31)"
+  }
+}

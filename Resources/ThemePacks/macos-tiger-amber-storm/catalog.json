@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "aiGenerated": false,
+  "localOnly": true,
+  "artist": "Apple Inc. / original wallpaper creators",
+  "artworkID": "apple-macos-10.4",
+  "artworkTitle": "Tiger Aqua bloom",
+  "category": "macOS Era",
+  "collection": "macOS Era · Tiger 10.4",
+  "institution": "Apple Inc. (archived by 512 Pixels)",
+  "rightsStatus": "Apple copyrighted — local-only",
+  "sourceURL": "https://512pixels.net/projects/default-mac-wallpapers-in-5k/",
+  "imageURL": "https://media.512pixels.net/downloads/macos-wallpapers-6k/10-4-6k.jpg",
+  "retrievedAt": "2026-08-31",
+  "summary": "The official Apple wallpaper associated with Tiger, archived by 512 Pixels and stored locally for personal use in Codex Studio.",
+  "transformation": "Deterministic downscale to 2400px, JPEG encoding, and interface palette mapping only.",
+  "distribution": "Not for redistribution without permission from Apple and any respective creators or owners."
+}

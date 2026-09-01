@@ -8,6 +8,8 @@ final class StudioStore: ObservableObject {
     @Published var themes: [Theme] = []
     @Published var selectedThemeID: String?
     @Published var themeFilter: ThemeFilter = .all
+    @Published var themeSortOrder: ThemeSortOrder = .featured
+    @Published var selectedThemeCategory = "All"
     @Published var searchText = ""
     @Published var previewMode: PreviewMode = .home
     @Published var selectedSurface: PreviewSurface = .composer
@@ -49,25 +51,54 @@ final class StudioStore: ObservableObject {
 
     var filteredThemes: [Theme] {
         let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        return themes.filter { theme in
+        let filtered = themes.filter { theme in
             let passesFilter: Bool
             switch themeFilter {
             case .all: passesFilter = true
             case .curated: passesFilter = theme.isCurated
-            case .local: passesFilter = theme.origin == .local || theme.origin == .wallBuddy
+            case .local: passesFilter = theme.isInstalled
             case .favorites: passesFilter = theme.isFavorite
             }
             guard passesFilter else { return false }
+            guard selectedThemeCategory == "All" || theme.category == selectedThemeCategory else { return false }
             guard !query.isEmpty else { return true }
-            return [theme.name, theme.author, theme.category, theme.description]
+            return [theme.name, theme.author, theme.category, theme.collection, theme.description]
                 .joined(separator: " ")
                 .lowercased()
                 .contains(query)
         }
+        switch themeSortOrder {
+        case .featured:
+            return filtered.sorted(by: isFeaturedBefore)
+        case .name:
+            return filtered.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+        case .category:
+            return filtered.sorted {
+                if $0.category != $1.category {
+                    return $0.category.localizedCaseInsensitiveCompare($1.category) == .orderedAscending
+                }
+                return $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
+            }
+        }
+    }
+
+    var themeCategories: [String] {
+        let visibleSource = themes.filter { theme in
+            switch themeFilter {
+            case .all: true
+            case .curated: theme.isCurated
+            case .local: theme.isInstalled
+            case .favorites: theme.isFavorite
+            }
+        }
+        let categories = Set(visibleSource.map(\.category).filter { !$0.isEmpty })
+        return ["All"] + categories.sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
     }
 
     var featuredThemes: [Theme] {
-        themes.filter(\.isCurated).prefix(8).map { $0 }
+        let curated = themes.filter(\.isCurated)
+        let candidates = curated.isEmpty ? themes.filter(\.isInstalled) : curated
+        return candidates.sorted(by: isFeaturedBefore).prefix(8).map { $0 }
     }
 
     var quickSwitchThemes: [Theme] {
@@ -86,6 +117,12 @@ final class StudioStore: ObservableObject {
         case .offline: .orange
         case .unavailable: StudioColor.textFaint
         }
+    }
+
+    private func isFeaturedBefore(_ lhs: Theme, _ rhs: Theme) -> Bool {
+        if lhs.isCurated != rhs.isCurated { return lhs.isCurated }
+        if lhs.isFavorite != rhs.isFavorite { return lhs.isFavorite }
+        return lhs.name.localizedCaseInsensitiveCompare(rhs.name) == .orderedAscending
     }
 
     func bootstrap(force: Bool = false) async {
@@ -168,6 +205,19 @@ final class StudioStore: ObservableObject {
             guard let self else { return }
             runtime = await runtimeClient.status()
         }
+    }
+
+    func openRuntimeLog() {
+        guard let path = runtime.diagnosticLogPath else {
+            showNotice("The recovery log is not available yet.")
+            return
+        }
+        let url = URL(fileURLWithPath: path)
+        guard FileManager.default.fileExists(atPath: url.path) else {
+            showNotice("No recovery attempts have been recorded yet.")
+            return
+        }
+        NSWorkspace.shared.open(url)
     }
 
     func openCodex() {

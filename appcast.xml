@@ -3,6 +3,36 @@
     <channel>
         <title>CodexStudio</title>
         <item>
+            <title>0.1.6</title>
+            <pubDate>Mon, 31 Aug 2026 22:57:41 -0400</pubDate>
+            <link>https://github.com/appleforever11/CodexStudio</link>
+            <sparkle:version>1006000</sparkle:version>
+            <sparkle:shortVersionString>0.1.6</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.6
+
+## Studio interface overhaul
+
+- Reworks the app shell with a calmer Apple-inspired split-view workspace.
+- Refreshes Canvas, Themes, Live Lab, Library, and Settings with native-feeling materials, controls, typography, and spacing.
+- Expands the local theme library presentation with wider cards, clearer categories, and more comfortable gallery density.
+- Includes the current official Apple macOS, iOS, and iPadOS wallpaper shelves in this user-directed offline release artifact; each pack retains its local-only provenance record and attribution.
+
+## Sidebar and window layout
+
+- Reserves the native titlebar area so the Studio brand never collides with traffic lights.
+- Separates scrollable navigation from the persistent runtime and themed-Codex actions.
+- Pins the connection status and launch action to the bottom of the sidebar at any window height.
+- Keeps the build launcher from replacing a live executable, preventing stale temporary-bundle signature races during rebuilds.
+
+## Update delivery
+
+- Keeps the internal Sparkle build number monotonic with the existing release feed so 0.1.6 is offered normally by Check for Updates.
+]]></description>
+            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.6/CodexStudio-0.1.6-arm64.zip" length="389166436" type="application/octet-stream" sparkle:edSignature="N5S49yMUi//cURba+xy3kt9snqeNnZY5g9/3iFy5DwiuA9s8KLnt0gpm9r01faB2uoDW8Q2kvD1cgRd4arVRCw=="/>
+        </item>
+        <item>
             <title>0.1.5</title>
             <pubDate>Sun, 30 Aug 2026 16:03:36 -0400</pubDate>
             <link>https://github.com/appleforever11/CodexStudio</link>
@@ -35,107 +65,6 @@
 - Keeps the bundled runtime version aligned with the release that installed it.
 ]]></description>
             <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.4/CodexStudio-0.1.4-arm64.zip" length="91639539" type="application/octet-stream" sparkle:edSignature="yoEtQ2n5PCJhyiPhgz7jIrYT0H8WYN3RuYyw1yFO1eTzNcNzuU61p8zcpezkMv+Z7ChSSwDH48Lzp1/rxopqDg=="/>
-        </item>
-        <item>
-            <title>0.1.3</title>
-            <pubDate>Sun, 30 Aug 2026 14:51:07 -0400</pubDate>
-            <link>https://github.com/appleforever11/CodexStudio</link>
-            <sparkle:version>1003000</sparkle:version>
-            <sparkle:shortVersionString>0.1.3</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.3
-
-## Reliable themed relaunches
-
-- Applying a theme now enables the managed per-user relaunch monitor, so launching the stock Codex app after `⌘Q` automatically restores the verified theme.
-- The DockDoor-compatible launcher follows the actual CDP port selected by the runtime after a restart instead of assuming port 9341.
-- Restoring the original Codex appearance disables the relaunch monitor.
-]]></description>
-            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.3/CodexStudio-0.1.3-arm64.zip" length="91638832" type="application/octet-stream" sparkle:edSignature="XQuStcawHzktthf3UATT2Wfo6Ut2EG4k6Oa82eoZh2JsKTAkm9LNZy8kAMFrrd+HBQBpQmqkAb7Dw1HJsDsKAA=="/>
-        </item>
-        <item>
-            <title>0.1.2</title>
-            <pubDate>Sun, 30 Aug 2026 13:29:07 -0400</pubDate>
-            <link>https://github.com/appleforever11/CodexStudio</link>
-            <sparkle:version>1002</sparkle:version>
-            <sparkle:shortVersionString>0.1.2</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.2
-
-## DockDoor update recovery
-
-- Bundles the DockDoor-compatible `Codex Themed.app` launcher and the Codex Studio icon.
-- Installs or upgrades the launcher without replacing an unrelated app with the same display name.
-- Starts the official signed Codex app through the managed theme engine, keeps the helper alive for DockDoor, and repairs a stock Codex launch after an app update.
-- Refreshes an existing theme persistence monitor after a runtime migration so it uses the updated repair logic.
-
-## Sparkle migration
-
-- Upgrades an older managed theme runtime atomically when the bundled runtime version is newer, while preserving a newer local runtime.
-- Carries the launcher and runtime migration to existing installations through the Sparkle update path.
-- Continues to ship the complete bundled theme library and apply-and-verify flow.
-]]></description>
-            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.2/CodexStudio-0.1.2-arm64.zip" length="91638294" type="application/octet-stream" sparkle:edSignature="MagoMPPrpdP6+1zYl4ma3Ve19zkHen1hUt7M15LRaoP4x8b2eTbnaS52KsX9hjPLKs5bmR+mY3bvir8FRFkYDg=="/>
-        </item>
-        <item>
-            <title>0.1.1</title>
-            <pubDate>Sun, 30 Aug 2026 12:31:52 -0400</pubDate>
-            <link>https://github.com/appleforever11/CodexStudio</link>
-            <sparkle:version>1001</sparkle:version>
-            <sparkle:shortVersionString>0.1.1</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.1
-
-## Bundled theme library
-
-- Ships all 130 theme packages from the managed Codex library inside the app bundle.
-- Seeds missing bundled packages into `~/Library/Application Support/CodexDreamSkinStudio/themes` on first launch while preserving existing local themes.
-- Future packages added under `Resources/ThemePacks` are included automatically in the next release build.
-
-## Apply reliability
-
-- Ships the Codex Dream Skin apply runtime inside the app bundle.
-- Installs the bundled runtime only when a managed runtime is not already present.
-- Keeps the existing apply-and-verify flow and avoids reporting success until Codex confirms the requested theme.
-
-## Packaging
-
-- Updated the app bundle assembly to include the complete theme library and runtime.
-- Retained provenance and licensing guidance for bundled theme packages and the upstream runtime in `ATTRIBUTIONS.md`.
-]]></description>
-            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.1/CodexStudio-0.1.1-arm64.zip" length="88557938" type="application/octet-stream" sparkle:edSignature="rLdPHpsYPXMNHVryaqEBWePI1j1vYqJvay9OMLl9cjxogxfSGqzQj+MkxECzH+VDXJv0/asB56v49vBsCvCQAQ=="/>
-        </item>
-        <item>
-            <title>0.1.0</title>
-            <pubDate>Sun, 30 Aug 2026 11:47:48 -0400</pubDate>
-            <link>https://github.com/appleforever11/CodexStudio</link>
-            <sparkle:version>1000</sparkle:version>
-            <sparkle:shortVersionString>0.1.0</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.0
-
-Codex Studio is a new native macOS theme studio for shaping and applying an art-directed Codex workspace.
-
-## Highlights
-
-- Adds the responsive Codex Studio shell with Canvas, Themes, Library, Settings, and Live Editor workspaces.
-- Adds a curated visual library plus discovery of the local managed Codex theme collection.
-- Adds a live emulated Codex canvas with surface selection, palette controls, opacity, softness, and corner-radius tuning.
-- Keeps theme application explicit and verifies the requested runtime state after the switch completes.
-- Adds the original Codex Studio glass-aperture app icon.
-- Adds Sparkle 2.9.6 with signed GitHub release-feed support.
-
-## Compatibility
-
-- Apple Silicon.
-- macOS 14 or later.
-- Existing local Codex theme runtime installation required for applying managed themes.
-]]></description>
-            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.0/CodexStudio-0.1.0-arm64.zip" length="4686650" type="application/octet-stream" sparkle:edSignature="IkpRjaOHZtt++f+/dU3beJV7Ax0PN/TWxpfFFDXFX8cd/dcp6nJcW0Lbta3YHkhStoFOfnKrS4+pr2fuI0OdBA=="/>
         </item>
     </channel>
 </rss>

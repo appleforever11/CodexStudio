@@ -4,3 +4,9 @@ dist/
 DerivedData/
 *.xcuserstate
 Resources/CodexStudio.iconset/
+
+# Apple release wallpapers are kept in the per-user local-only cache rather
+# than redistributed through this repository.
+Resources/ThemePacks/macos-*/background.jpg
+Resources/ThemePacks/ios-*/background.jpg
+Resources/ThemePacks/ipados-*/background.jpg

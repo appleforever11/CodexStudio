@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "ios-7505-starlight-d27-6594b5a3",
+  "name": "Starlight D27",
+  "author": "Apple Inc. and the respective wallpaper creators",
+  "description": "Official Apple iOS wallpaper artwork preserved in the SniperGER iOS-Wallpapers archive, adapted as a local-only Mac direction. First associated with iOS 16 on 6.1\" @3x.",
+  "category": "iOS",
+  "collection": "iOS · iOS 16",
+  "appearance": "light",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.5,
+    "focusY": 0.5,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#15110A",
+    "panel": "#292014",
+    "panelAlt": "#49351D",
+    "accent": "#F2B95D",
+    "accentAlt": "#FFE7A8",
+    "secondary": "#936A2F",
+    "highlight": "#F5CA82",
+    "text": "#FFF9ED",
+    "muted": "#C4B294",
+    "line": "rgba(242,185,93,0.32)"
+  }
+}

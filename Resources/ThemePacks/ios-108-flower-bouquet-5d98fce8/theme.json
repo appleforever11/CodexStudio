@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "ios-108-flower-bouquet-5d98fce8",
+  "name": "Flower Bouquet",
+  "author": "Apple Inc. and the respective wallpaper creators",
+  "description": "Official Apple iOS wallpaper artwork preserved in the SniperGER iOS-Wallpapers archive, adapted as a local-only Mac direction. First associated with iOS 8 on 4.0\".",
+  "category": "iOS",
+  "collection": "iOS · iOS 8",
+  "appearance": "auto",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.5,
+    "focusY": 0.5,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#07131D",
+    "panel": "#102432",
+    "panelAlt": "#173B4A",
+    "accent": "#58D5E8",
+    "accentAlt": "#B4F5F5",
+    "secondary": "#286277",
+    "highlight": "#8EE7EF",
+    "text": "#F2FCFF",
+    "muted": "#9DBCC6",
+    "line": "rgba(88,213,232,0.32)"
+  }
+}

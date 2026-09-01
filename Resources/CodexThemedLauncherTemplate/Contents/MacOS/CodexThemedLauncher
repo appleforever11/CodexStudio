@@ -134,12 +134,42 @@ cdp_ready() {
   /usr/bin/curl --noproxy '*' --silent --show-error --fail --max-time 1 "$cdp_url" >/dev/null 2>&1
 }
 
+theme_state_ready() {
+  local session active_id expected_id recorded_pid current_pid
+  [ -f "$state_file" ] || return 1
+  [ -f "$state_root/theme/theme.json" ] || return 1
+  session="$(/usr/bin/plutil -extract session raw -o - "$state_file" 2>/dev/null || true)"
+  active_id="$(/usr/bin/plutil -extract appliedThemeId raw -o - "$state_file" 2>/dev/null || true)"
+  expected_id="$(/usr/bin/plutil -extract id raw -o - "$state_root/theme/theme.json" 2>/dev/null || true)"
+  recorded_pid="$(/usr/bin/plutil -extract codexPid raw -o - "$state_file" 2>/dev/null || true)"
+  current_pid="$(find_codex_pid)"
+  [ "$session" = "active" ]
+  [ -n "$active_id" ] && [ "$active_id" = "$expected_id" ]
+  [ -n "$recorded_pid" ] && [ "$recorded_pid" = "$current_pid" ]
+}
+
+themed_runtime_ready() {
+  refresh_port
+  cdp_ready || return 1
+  theme_state_ready
+}
+
+wait_for_themed_runtime() {
+  local wait_seconds="${1:-20}"
+  local deadline=$((SECONDS + wait_seconds))
+  while [ "$SECONDS" -lt "$deadline" ]; do
+    themed_runtime_ready && return 0
+    /bin/sleep 0.35
+  done
+  return 1
+}
+
 run_engine() {
   local engine_status=0
   local lock_held="false"
   while ! /usr/bin/shlock -p "$$" -f "$engine_lock"; do
     refresh_port
-    cdp_ready && return 0
+    themed_runtime_ready && return 0
     /bin/sleep 1
   done
   lock_held="true"
@@ -155,13 +185,41 @@ run_engine() {
   return "$engine_status"
 }
 
+start_engine_with_retries() {
+  local attempt=1
+  local backoff=1
+  local engine_status=0
+  while [ "$attempt" -le 3 ]; do
+    if themed_runtime_ready; then
+      log_line "Verified the existing themed Codex runtime; no restart was needed."
+      return 0
+    fi
+
+    log_line "Theme runtime verification attempt $attempt of 3."
+    engine_status=0
+    run_engine || engine_status=$?
+    refresh_port
+    if [ "$engine_status" -eq 0 ] && wait_for_themed_runtime 20; then
+      log_line "Verified the themed Codex runtime on attempt $attempt."
+      return 0
+    fi
+
+    log_line "Theme runtime verification attempt $attempt failed (status $engine_status)."
+    if [ "$attempt" -lt 3 ]; then
+      /bin/sleep "$backoff"
+      backoff=$((backoff * 2))
+    fi
+    attempt=$((attempt + 1))
+  done
+  return 1
+}
+
 refresh_port
 ensure_theme_persistence
 engine_status=0
-run_engine || engine_status=$?
-if [ "$engine_status" -ne 0 ]; then
-  log_line "The Codex Studio theme engine failed with status $engine_status."
-  exit "$engine_status"
+if ! start_engine_with_retries; then
+  log_line "The Codex Studio theme engine failed its bounded verification loop."
+  exit 1
 fi
 
 # A successful engine run leaves the official app running with the active
@@ -174,7 +232,7 @@ while true; do
     exit 0
   fi
 
-  if cdp_ready; then
+  if themed_runtime_ready; then
     /bin/sleep 2
     continue
   fi
@@ -184,15 +242,13 @@ while true; do
   # same verified engine path used by Apply to Codex.
   /bin/sleep 2
   [ -n "$(find_codex_pid)" ] || exit 0
-  if cdp_ready; then
+  if themed_runtime_ready; then
     continue
   fi
 
-  log_line "Codex pid $codex_pid has no theme endpoint; repairing the launch."
-  engine_status=0
-  run_engine || engine_status=$?
-  if [ "$engine_status" -ne 0 ]; then
-    log_line "The Codex Studio repair failed with status $engine_status."
-    exit "$engine_status"
+  log_line "Codex pid $codex_pid is not verified as themed; repairing the launch."
+  if ! start_engine_with_retries; then
+    log_line "The Codex Studio repair failed its bounded verification loop."
+    exit 1
   fi
 done

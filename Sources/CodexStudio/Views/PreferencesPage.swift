@@ -6,18 +6,29 @@ struct PreferencesPage: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 22) {
-                HStack(alignment: .bottom) {
+                HStack(alignment: .center, spacing: 14) {
+                    ZStack {
+                        Circle()
+                            .fill(StudioColor.cyan.opacity(0.13))
+                        Image(systemName: "slider.horizontal.3")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundStyle(StudioColor.cyan)
+                    }
+                    .frame(width: 42, height: 42)
+
                     VStack(alignment: .leading, spacing: 5) {
                         Text("SETTINGS")
-                            .font(.system(size: 10, weight: .bold, design: .rounded))
-                            .tracking(1.7)
+                            .font(.system(size: 10, weight: .semibold))
+                            .tracking(0.8)
                             .foregroundStyle(StudioColor.cyan)
                         Text("Keep the studio quiet and dependable.")
-                            .font(.system(size: 27, weight: .bold, design: .rounded))
+                            .font(.system(size: 26, weight: .bold))
                             .foregroundStyle(StudioColor.text)
+                            .lineLimit(2)
                         Text("Runtime details, local sources, and recovery controls live here—not in the way of the work.")
-                            .font(.system(size: 13, weight: .medium))
+                            .font(.system(size: 12, weight: .regular))
                             .foregroundStyle(StudioColor.textMuted)
+                            .lineLimit(2)
                     }
                     Spacer()
                     Button {
@@ -27,28 +38,46 @@ struct PreferencesPage: View {
                             .font(.system(size: 11, weight: .semibold))
                             .foregroundStyle(StudioColor.textMuted)
                             .padding(.horizontal, 12)
-                            .padding(.vertical, 9)
-                            .background(Color.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                            .frame(height: 34)
+                            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 9, style: .continuous)
+                                    .strokeBorder(StudioColor.line, lineWidth: 1)
+                            }
                     }
                     .buttonStyle(.plain)
                 }
 
-                HStack(alignment: .top, spacing: 15) {
-                    runtimeCard
-                    sourceCard
+                ViewThatFits(in: .horizontal) {
+                    HStack(alignment: .top, spacing: 14) {
+                        runtimeCard
+                        sourceCard
+                    }
+
+                    VStack(alignment: .leading, spacing: 14) {
+                        runtimeCard
+                        sourceCard
+                    }
                 }
 
-                HStack(alignment: .top, spacing: 15) {
-                    behaviorCard
-                    recoveryCard
+                ViewThatFits(in: .horizontal) {
+                    HStack(alignment: .top, spacing: 14) {
+                        behaviorCard
+                        recoveryCard
+                    }
+
+                    VStack(alignment: .leading, spacing: 14) {
+                        behaviorCard
+                        recoveryCard
+                    }
                 }
             }
-            .padding(.horizontal, 34)
-            .padding(.top, 28)
-            .padding(.bottom, 38)
+            .padding(.horizontal, 28)
+            .padding(.top, 26)
+            .padding(.bottom, 32)
         }
         .scrollIndicators(.hidden)
-        .background(StudioColor.ink)
+        .background(Color.clear)
     }
 
     private var runtimeCard: some View {
@@ -70,6 +99,10 @@ struct PreferencesPage: View {
             SettingLine(label: "Active theme", value: store.runtime.activeThemeName ?? "None")
             SettingLine(label: "Codex version", value: store.runtime.codexVersion ?? "Not reported")
             SettingLine(label: "Loopback port", value: store.runtime.port.map(String.init) ?? "—")
+            SettingLine(label: "Relaunch recovery", value: store.runtime.persistenceEnabled ? "Armed" : "Not armed")
+            if let lastVerifiedAt = store.runtime.lastVerifiedAt {
+                SettingLine(label: "Last verification", value: lastVerifiedAt)
+            }
         }
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -80,7 +113,7 @@ struct PreferencesPage: View {
         VStack(alignment: .leading, spacing: 15) {
             cardHeading("Local sources", symbol: "shippingbox.fill", tint: StudioColor.violet)
             SourceRow(title: "Managed Codex library", detail: "\(store.sourceSummary.localCount) themes", path: store.sourceSummary.managedPath)
-            SourceRow(title: "WallBuddy bundle", detail: store.sourceSummary.wallBuddyCount > 0 ? "\(store.sourceSummary.wallBuddyCount) image assets" : "No wallpaper catalog in bundle", path: store.sourceSummary.wallBuddyPath)
+            SourceRow(title: "Local image sources", detail: store.sourceSummary.wallBuddyCount > 0 ? "\(store.sourceSummary.wallBuddyCount) discovered" : "No additional local images", path: store.sourceSummary.wallBuddyPath)
             Button {
                 Task { await store.bootstrap(force: true) }
             } label: {
@@ -124,7 +157,7 @@ struct PreferencesPage: View {
     private var recoveryCard: some View {
         VStack(alignment: .leading, spacing: 15) {
             cardHeading("Recovery", symbol: "arrow.counterclockwise", tint: .orange)
-            Text("If a theme ever looks wrong, stop the managed layer and return Codex to its original appearance. Your theme library remains untouched.")
+            Text("If a theme ever looks wrong, stop the managed layer and return Codex to its original appearance. Relaunch recovery verifies the themed process with bounded retries, while your theme library remains untouched.")
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(StudioColor.textMuted)
                 .lineSpacing(2)
@@ -140,6 +173,15 @@ struct PreferencesPage: View {
             }
             .buttonStyle(.plain)
             .disabled(store.isApplying)
+
+            Button {
+                store.openRuntimeLog()
+            } label: {
+                Label("Open recovery log", systemImage: "doc.text.magnifyingglass")
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(StudioColor.textMuted)
+            }
+            .buttonStyle(.plain)
         }
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)

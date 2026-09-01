@@ -20,6 +20,9 @@ struct RuntimeStatus: Sendable {
     var activeThemeName: String?
     var codexVersion: String?
     var port: Int?
+    var persistenceEnabled: Bool
+    var lastVerifiedAt: String?
+    var diagnosticLogPath: String?
     var message: String
 
     static let unknown = RuntimeStatus(
@@ -28,6 +31,9 @@ struct RuntimeStatus: Sendable {
         activeThemeName: nil,
         codexVersion: nil,
         port: nil,
+        persistenceEnabled: false,
+        lastVerifiedAt: nil,
+        diagnosticLogPath: nil,
         message: "Codex runtime has not been checked yet."
     )
 }

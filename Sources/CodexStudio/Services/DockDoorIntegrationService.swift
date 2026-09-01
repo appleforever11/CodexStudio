@@ -1,11 +1,14 @@
 import Foundation
 
-/// Keeps DockDoor's themed Codex shortcut distinct from the official Codex
-/// process that the theme runtime launches.
+/// Keeps DockDoor's Codex shortcuts stable across Codex and Codex Studio
+/// updates. The themed pin launches the managed helper path but tracks the
+/// official Codex bundle identifier, because that process owns the visible
+/// windows and therefore DockDoor's active-state indicator. Explicit icon
+/// paths keep both pins from falling back to stock or generic artwork.
 ///
 /// DockDoor stores its profile model as JSON strings inside the user's
 /// `com.ejbills.DockDoorPro` preferences domain. We only touch an app entry
-/// whose path points at our managed helper; unrelated ChatGPT/Codex pins and
+/// whose path or bundle identifier belongs to Codex Studio; unrelated pins and
 /// the rest of the user's DockDoor configuration are left unchanged.
 struct DockDoorIntegrationService {
     private static let preferenceDomain = "com.ejbills.DockDoorPro"
@@ -13,7 +16,9 @@ struct DockDoorIntegrationService {
     private static let hiddenRunningAppsKey = "hiddenRunningApps"
     private static let officialCodexBundleIdentifier = "com.openai.codex"
     private static let themedLauncherBundleIdentifier = "com.codexthemes.themed-codex-launcher"
-    private static let dockDoorIconFileName = "CodexStudio-CodexDark.icns"
+    private static let codexStudioBundleIdentifier = "local.kevinhowe.CodexStudio"
+    private static let themedDockDoorIconFileName = "CodexStudio-CodexDark.icns"
+    private static let studioDockDoorIconFileName = "CodexStudio-AppIcon.icns"
 
     @discardableResult
     static func repairIfNeeded() -> Bool {
@@ -28,8 +33,17 @@ struct DockDoorIntegrationService {
         }
 
         let helperPaths = managedLauncherPaths(home: home)
-        let iconDestination = dockDoorIconDestination(home: home)
+        let studioPaths = managedStudioPaths(home: home)
+        let themedIconDestination = dockDoorIconDestination(
+            home: home,
+            fileName: themedDockDoorIconFileName
+        )
+        let studioIconDestination = dockDoorIconDestination(
+            home: home,
+            fileName: studioDockDoorIconFileName
+        )
         var foundManagedPin = false
+        var foundStudioPin = false
         var changed = false
 
         for index in profiles.indices {
@@ -42,8 +56,11 @@ struct DockDoorIntegrationService {
             let profileChanged = repairJSON(
                 &root,
                 helperPaths: helperPaths,
-                customIconPath: nil,
-                foundManagedPin: &foundManagedPin
+                studioPaths: studioPaths,
+                themedCustomIconPath: nil,
+                studioCustomIconPath: nil,
+                foundManagedPin: &foundManagedPin,
+                foundStudioPin: &foundStudioPin
             )
             guard profileChanged,
                   let encoded = try? JSONSerialization.data(
@@ -59,15 +76,29 @@ struct DockDoorIntegrationService {
             changed = true
         }
 
-        guard foundManagedPin else {
+        guard foundManagedPin || foundStudioPin else {
             return false
         }
 
-        if let iconDestination,
-           installDockDoorIcon(from: bundledDockDoorIcon(), to: iconDestination) {
-            // Re-run the small profile rewrite after the icon has been copied.
-            // This avoids pointing DockDoor at a path that could not be
-            // created while still making the custom icon deterministic.
+        var themedCustomIconPath: String?
+        if foundManagedPin,
+           let themedIconDestination,
+           installDockDoorIcon(from: bundledThemedDockDoorIcon(), to: themedIconDestination)
+            || fileManager.isReadableFile(atPath: themedIconDestination.path) {
+            themedCustomIconPath = themedIconDestination.path
+        }
+
+        var studioCustomIconPath: String?
+        if foundStudioPin,
+           let studioIconDestination,
+           installDockDoorIcon(from: bundledStudioDockDoorIcon(), to: studioIconDestination)
+            || fileManager.isReadableFile(atPath: studioIconDestination.path) {
+            studioCustomIconPath = studioIconDestination.path
+        }
+
+        if themedCustomIconPath != nil || studioCustomIconPath != nil {
+            // Re-run the small profile rewrite after each icon has been copied.
+            // This avoids pointing DockDoor at a path that could not be created.
             for index in profiles.indices {
                 guard let data = profiles[index].data(using: .utf8),
                       var root = try? JSONSerialization.jsonObject(with: data)
@@ -77,8 +108,11 @@ struct DockDoorIntegrationService {
                 let profileChanged = repairJSON(
                     &root,
                     helperPaths: helperPaths,
-                    customIconPath: iconDestination.path,
-                    foundManagedPin: &foundManagedPin
+                    studioPaths: studioPaths,
+                    themedCustomIconPath: themedCustomIconPath,
+                    studioCustomIconPath: studioCustomIconPath,
+                    foundManagedPin: &foundManagedPin,
+                    foundStudioPin: &foundStudioPin
                 )
                 guard profileChanged,
                       let encoded = try? JSONSerialization.data(
@@ -94,11 +128,14 @@ struct DockDoorIntegrationService {
             }
         }
 
-        if !(defaults.stringArray(forKey: hiddenRunningAppsKey) ?? []).contains(officialCodexBundleIdentifier) {
+        if foundManagedPin {
             var hiddenApps = defaults.stringArray(forKey: hiddenRunningAppsKey) ?? []
-            hiddenApps.append(officialCodexBundleIdentifier)
-            defaults.set(hiddenApps, forKey: hiddenRunningAppsKey)
-            changed = true
+            let originalCount = hiddenApps.count
+            hiddenApps.removeAll { $0 == officialCodexBundleIdentifier }
+            if hiddenApps.count != originalCount {
+                defaults.set(hiddenApps, forKey: hiddenRunningAppsKey)
+                changed = true
+            }
         }
 
         if changed {
@@ -136,21 +173,33 @@ struct DockDoorIntegrationService {
         return Set(candidates.map { $0.standardizedFileURL.path })
     }
 
-    private static func dockDoorIconDestination(home: URL) -> URL? {
+    private static func managedStudioPaths(home: URL) -> Set<String> {
+        let candidates = [
+            URL(fileURLWithPath: "/Applications/CodexStudio.app", isDirectory: true),
+            home.appendingPathComponent("Applications/CodexStudio.app", isDirectory: true)
+        ]
+        return Set(candidates.map { $0.standardizedFileURL.path })
+    }
+
+    private static func dockDoorIconDestination(home: URL, fileName: String) -> URL? {
         let directory = home
             .appendingPathComponent("Library", isDirectory: true)
             .appendingPathComponent("Application Support", isDirectory: true)
             .appendingPathComponent("DockDoorPro", isDirectory: true)
             .appendingPathComponent("CustomIcons", isDirectory: true)
-        return directory.appendingPathComponent(dockDoorIconFileName)
+        return directory.appendingPathComponent(fileName)
     }
 
-    private static func bundledDockDoorIcon() -> URL? {
+    private static func bundledThemedDockDoorIcon() -> URL? {
         Bundle.main.resourceURL?
             .appendingPathComponent("CodexThemedLauncherTemplate", isDirectory: true)
             .appendingPathComponent("Contents", isDirectory: true)
             .appendingPathComponent("Resources", isDirectory: true)
-            .appendingPathComponent("CodexDark.icns")
+            .appendingPathComponent("CodexDarkDockDoor.icns")
+    }
+
+    private static func bundledStudioDockDoorIcon() -> URL? {
+        Bundle.main.resourceURL?.appendingPathComponent("CodexStudio.icns")
     }
 
     @discardableResult
@@ -166,8 +215,9 @@ struct DockDoorIntegrationService {
             return true
         }
 
+        let temporaryName = ".\(destination.deletingPathExtension().lastPathComponent)-\(UUID().uuidString).icns"
         let temporary = destination.deletingLastPathComponent()
-            .appendingPathComponent(".CodexStudio-CodexDark-\(UUID().uuidString).icns")
+            .appendingPathComponent(temporaryName)
         do {
             try fileManager.createDirectory(
                 at: destination.deletingLastPathComponent(),
@@ -190,21 +240,24 @@ struct DockDoorIntegrationService {
     private static func repairJSON(
         _ value: inout Any,
         helperPaths: Set<String>,
-        customIconPath: String?,
-        foundManagedPin: inout Bool
+        studioPaths: Set<String>,
+        themedCustomIconPath: String?,
+        studioCustomIconPath: String?,
+        foundManagedPin: inout Bool,
+        foundStudioPin: inout Bool
     ) -> Bool {
         if var dictionary = value as? [String: Any] {
             var changed = false
 
             if isManagedLauncherEntry(dictionary, helperPaths: helperPaths) {
                 foundManagedPin = true
-                if dictionary["bundleIdentifier"] as? String != themedLauncherBundleIdentifier {
-                    dictionary["bundleIdentifier"] = themedLauncherBundleIdentifier
+                if dictionary["bundleIdentifier"] as? String != officialCodexBundleIdentifier {
+                    dictionary["bundleIdentifier"] = officialCodexBundleIdentifier
                     changed = true
                 }
-                if let customIconPath,
-                   dictionary["customIconPath"] as? String != customIconPath {
-                    dictionary["customIconPath"] = customIconPath
+                if let themedCustomIconPath,
+                   dictionary["customIconPath"] as? String != themedCustomIconPath {
+                    dictionary["customIconPath"] = themedCustomIconPath
                     changed = true
                 }
                 if let name = dictionary["name"] as? String,
@@ -214,13 +267,34 @@ struct DockDoorIntegrationService {
                 }
             }
 
+            if isManagedStudioEntry(dictionary, studioPaths: studioPaths) {
+                foundStudioPin = true
+                if dictionary["bundleIdentifier"] as? String != codexStudioBundleIdentifier {
+                    dictionary["bundleIdentifier"] = codexStudioBundleIdentifier
+                    changed = true
+                }
+                if let studioCustomIconPath,
+                   dictionary["customIconPath"] as? String != studioCustomIconPath {
+                    dictionary["customIconPath"] = studioCustomIconPath
+                    changed = true
+                }
+                if let name = dictionary["name"] as? String,
+                   name != "Codex Studio" {
+                    dictionary["name"] = "Codex Studio"
+                    changed = true
+                }
+            }
+
             for key in dictionary.keys {
                 guard var child = dictionary[key] else { continue }
                 if repairJSON(
                     &child,
                     helperPaths: helperPaths,
-                    customIconPath: customIconPath,
-                    foundManagedPin: &foundManagedPin
+                    studioPaths: studioPaths,
+                    themedCustomIconPath: themedCustomIconPath,
+                    studioCustomIconPath: studioCustomIconPath,
+                    foundManagedPin: &foundManagedPin,
+                    foundStudioPin: &foundStudioPin
                 ) {
                     dictionary[key] = child
                     changed = true
@@ -237,8 +311,11 @@ struct DockDoorIntegrationService {
                 if repairJSON(
                     &array[index],
                     helperPaths: helperPaths,
-                    customIconPath: customIconPath,
-                    foundManagedPin: &foundManagedPin
+                    studioPaths: studioPaths,
+                    themedCustomIconPath: themedCustomIconPath,
+                    studioCustomIconPath: studioCustomIconPath,
+                    foundManagedPin: &foundManagedPin,
+                    foundStudioPin: &foundStudioPin
                 ) {
                     changed = true
                 }
@@ -264,5 +341,19 @@ struct DockDoorIntegrationService {
             return false
         }
         return helperPaths.contains(URL(fileURLWithPath: applicationPath).standardizedFileURL.path)
+    }
+
+    private static func isManagedStudioEntry(
+        _ dictionary: [String: Any],
+        studioPaths: Set<String>
+    ) -> Bool {
+        if dictionary["bundleIdentifier"] as? String == codexStudioBundleIdentifier {
+            return true
+        }
+
+        guard let applicationPath = dictionary["applicationPath"] as? String else {
+            return false
+        }
+        return studioPaths.contains(URL(fileURLWithPath: applicationPath).standardizedFileURL.path)
     }
 }

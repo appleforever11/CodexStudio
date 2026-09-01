@@ -9,7 +9,7 @@ enum ThemeOrigin: String, Codable, CaseIterable, Sendable {
         switch self {
         case .curated: "Curated"
         case .local: "Local library"
-        case .wallBuddy: "WallBuddy"
+        case .wallBuddy: "Local images"
         }
     }
 }
@@ -28,6 +28,22 @@ enum ThemeFilter: String, CaseIterable, Identifiable, Sendable {
         case .curated: "Curated"
         case .local: "Local"
         case .favorites: "Favorites"
+        }
+    }
+}
+
+enum ThemeSortOrder: String, CaseIterable, Identifiable, Sendable {
+    case featured
+    case name
+    case category
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .featured: "Studio order"
+        case .name: "Name"
+        case .category: "Category"
         }
     }
 }
@@ -136,9 +152,17 @@ struct Theme: Identifiable, Codable, Hashable, Sendable {
     var focusY: Double
     var safeArea: String
     var taskMode: String
+    var sourceURL: String? = nil
+    var rightsSummary: String? = nil
+    var institution: String? = nil
+    var isAIGenerated: Bool? = nil
 
     var sourceLabel: String {
-        if isInstalled && origin == .curated { return "Installed · Curated" }
+        if rightsSummary?.localizedCaseInsensitiveContains("local-only") == true {
+            return "Local-only · Apple wallpaper"
+        }
+        if isCurated { return isInstalled ? "Installed · Provenance verified" : "Provenance verified" }
+        if isInstalled && origin != .wallBuddy { return "Local · Provenance unverified" }
         return origin.label
     }
 
@@ -148,20 +172,27 @@ struct Theme: Identifiable, Codable, Hashable, Sendable {
 
     func mergingLocal(_ local: Theme) -> Theme {
         var merged = self
-        merged.name = local.name.isEmpty ? name : local.name
-        merged.author = local.author.isEmpty ? author : local.author
-        merged.description = local.description.isEmpty ? description : local.description
-        merged.category = local.category.isEmpty ? category : local.category
-        merged.collection = local.collection.isEmpty ? collection : local.collection
-        merged.appearance = local.appearance.isEmpty ? appearance : local.appearance
-        merged.palette = local.palette
-        merged.imagePath = local.imagePath
-        merged.previewPath = local.previewPath
+        let bundledIsLocalOnly = rightsSummary?.localizedCaseInsensitiveContains("local-only") == true
         merged.isInstalled = local.isInstalled
-        merged.focusX = local.focusX
-        merged.focusY = local.focusY
-        merged.safeArea = local.safeArea
-        merged.taskMode = local.taskMode
+        if !bundledIsLocalOnly {
+            merged.name = local.name.isEmpty ? name : local.name
+            merged.author = local.author.isEmpty ? author : local.author
+            merged.description = local.description.isEmpty ? description : local.description
+            merged.category = local.category.isEmpty ? category : local.category
+            merged.collection = local.collection.isEmpty ? collection : local.collection
+            merged.appearance = local.appearance.isEmpty ? appearance : local.appearance
+            merged.palette = local.palette
+            merged.imagePath = local.imagePath
+            merged.previewPath = local.previewPath
+            merged.focusX = local.focusX
+            merged.focusY = local.focusY
+            merged.safeArea = local.safeArea
+            merged.taskMode = local.taskMode
+            merged.sourceURL = local.sourceURL ?? sourceURL
+            merged.rightsSummary = local.rightsSummary ?? rightsSummary
+            merged.institution = local.institution ?? institution
+            merged.isAIGenerated = local.isAIGenerated ?? isAIGenerated
+        }
         return merged
     }
 }

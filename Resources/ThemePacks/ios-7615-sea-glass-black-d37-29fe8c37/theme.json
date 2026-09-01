@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "ios-7615-sea-glass-black-d37-29fe8c37",
+  "name": "Sea Glass Black D37",
+  "author": "Apple Inc. and the respective wallpaper creators",
+  "description": "Official Apple iOS wallpaper artwork preserved in the SniperGER iOS-Wallpapers archive, adapted as a local-only Mac direction. First associated with iOS 17 on 6.1\" @3x.",
+  "category": "iOS",
+  "collection": "iOS · iOS 17",
+  "appearance": "auto",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.5,
+    "focusY": 0.5,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#160C1D",
+    "panel": "#29152F",
+    "panelAlt": "#45203E",
+    "accent": "#F28BC4",
+    "accentAlt": "#FFD0E9",
+    "secondary": "#8D4679",
+    "highlight": "#F7B1D7",
+    "text": "#FFF5FB",
+    "muted": "#C6A8BB",
+    "line": "rgba(242,139,196,0.32)"
+  }
+}

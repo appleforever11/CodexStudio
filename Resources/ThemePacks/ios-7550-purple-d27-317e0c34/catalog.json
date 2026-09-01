@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "aiGenerated": false,
+  "localOnly": true,
+  "artist": "Apple Inc. and the respective wallpaper creators",
+  "artworkID": "apple-ios-ios-7550-purple-d27-317e0c34",
+  "artworkTitle": "Purple D27",
+  "category": "iOS",
+  "collection": "iOS · iOS 16",
+  "institution": "Apple Inc. (archived by SniperGER)",
+  "rightsStatus": "Apple copyrighted — local-only",
+  "sourceURL": "https://github.com/SniperGER/iOS-Wallpapers",
+  "imageURL": "https://raw.githubusercontent.com/SniperGER/iOS-Wallpapers/master/iPhone/6.1%22%20@3x/iOS%2016/Stills/7550.Purple-D27-390w-844h@3x~iphone.heic",
+  "sourcePath": "iPhone/6.1\" @3x/iOS 16/Stills/7550.Purple-D27-390w-844h@3x~iphone.heic",
+  "platform": "iOS",
+  "platformVersion": "iOS 16",
+  "deviceClass": "6.1\" @3x",
+  "retrievedAt": "2026-08-31",
+  "summary": "Official Apple iOS wallpaper artwork preserved in the SniperGER iOS-Wallpapers archive, adapted as a local-only Mac direction.",
+  "transformation": "Deterministic center crop to a 2400×1500 16:10 Mac canvas, JPEG encoding, and interface palette mapping only; the original mobile proportions are not displayed directly.",
+  "distribution": "Not for redistribution without permission from Apple and any respective creators or owners."
+}

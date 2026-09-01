@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "aiGenerated": false,
+  "localOnly": true,
+  "artist": "Apple Inc. and the respective wallpaper creators",
+  "artworkID": "apple-ios-ios-112-flower-pink-581b1e17",
+  "artworkTitle": "Flower Pink",
+  "category": "iOS",
+  "collection": "iOS · iOS 8",
+  "institution": "Apple Inc. (archived by SniperGER)",
+  "rightsStatus": "Apple copyrighted — local-only",
+  "sourceURL": "https://github.com/SniperGER/iOS-Wallpapers",
+  "imageURL": "https://raw.githubusercontent.com/SniperGER/iOS-Wallpapers/master/iPhone/4.0%22/iOS%208/Stills/112.Flower_Pink@2x~iphone.png",
+  "sourcePath": "iPhone/4.0\"/iOS 8/Stills/112.Flower_Pink@2x~iphone.png",
+  "platform": "iOS",
+  "platformVersion": "iOS 8",
+  "deviceClass": "4.0\"",
+  "retrievedAt": "2026-08-31",
+  "summary": "Official Apple iOS wallpaper artwork preserved in the SniperGER iOS-Wallpapers archive, adapted as a local-only Mac direction.",
+  "transformation": "Deterministic center crop to a 2400×1500 16:10 Mac canvas, JPEG encoding, and interface palette mapping only; the original mobile proportions are not displayed directly.",
+  "distribution": "Not for redistribution without permission from Apple and any respective creators or owners."
+}

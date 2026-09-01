@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "aiGenerated": false,
+  "localOnly": true,
+  "artist": "Apple Inc. and the respective wallpaper creators",
+  "artworkID": "apple-ios-ios-334-aura-red-granite-e9744537",
+  "artworkTitle": "Aura Red Granite",
+  "category": "iOS",
+  "collection": "iOS · iOS 11",
+  "institution": "Apple Inc. (archived by SniperGER)",
+  "rightsStatus": "Apple copyrighted — local-only",
+  "sourceURL": "https://github.com/SniperGER/iOS-Wallpapers",
+  "imageURL": "https://raw.githubusercontent.com/SniperGER/iOS-Wallpapers/master/iPhone/5.5%22/iOS%2011/Stills/334.Aura_Red-granite-414w-736h@3x~iphone.jpg",
+  "sourcePath": "iPhone/5.5\"/iOS 11/Stills/334.Aura_Red-granite-414w-736h@3x~iphone.jpg",
+  "platform": "iOS",
+  "platformVersion": "iOS 11",
+  "deviceClass": "5.5\"",
+  "retrievedAt": "2026-08-31",
+  "summary": "Official Apple iOS wallpaper artwork preserved in the SniperGER iOS-Wallpapers archive, adapted as a local-only Mac direction.",
+  "transformation": "Deterministic center crop to a 2400×1500 16:10 Mac canvas, JPEG encoding, and interface palette mapping only; the original mobile proportions are not displayed directly.",
+  "distribution": "Not for redistribution without permission from Apple and any respective creators or owners."
+}

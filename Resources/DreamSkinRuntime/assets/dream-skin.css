@@ -130,6 +130,137 @@ html[data-dream-skin="active"] [class~="bg-token-dropdown-background"] {
   --color-token-border-default: var(--ds-line);
 }
 
+/* Codex 26.825+ resolves most of its visible chrome through a native
+   VS Code-compatible token layer. The theme renderer's `--ds-*` variables
+   already describe the intended palette, but the native layer otherwise
+   keeps reading the user's saved Codex accent (often purple). Bridge the
+   native aliases only while Dream Skin is active so the step/status pill,
+   environment/project surfaces, and their hover states follow the selected
+   theme without changing Codex's saved appearance preference. */
+html[data-dream-skin="active"] {
+  --dream-native-sidebar: var(--dream-studio-sidebar-background, var(--ds-panel));
+  --dream-native-surface: var(--dream-studio-surface, var(--ds-panel));
+  --dream-native-surface-hover: var(--dream-studio-surface-hover, var(--ds-panel-2));
+  --dream-native-surface-selected: var(--dream-studio-surface-selected, var(--ds-panel-2));
+  --dream-native-surface-elevated: var(--dream-studio-surface-elevated, var(--ds-panel-2));
+  --dream-native-code: var(--dream-studio-code-background, var(--ds-panel));
+  --dream-native-user-bubble: var(--dream-studio-user-bubble, var(--ds-panel-2));
+  --dream-native-on-accent: var(--dream-studio-accent-contrast, var(--ds-on-accent));
+  --dream-native-accent-hover: var(--dream-studio-accent-hover, var(--ds-accent));
+
+  --color-background-composer-primary: var(--ds-accent) !important;
+  --color-text-composer-primary: var(--dream-native-on-accent) !important;
+  --color-background-user-message: var(--dream-native-user-bubble) !important;
+  --color-text-user-message: var(--ds-text) !important;
+  --color-background-text-selection: rgb(var(--ds-accent-rgb) / .30) !important;
+  --color-background-attribution-highlight: rgb(var(--ds-accent-rgb) / .24) !important;
+
+  --codex-base-accent: var(--ds-accent) !important;
+  --codex-base-ink: var(--dream-native-on-accent) !important;
+  --codex-base-surface: var(--dream-native-surface) !important;
+  --color-accent-blue: var(--ds-accent) !important;
+  --color-accent-purple: var(--ds-accent) !important;
+  --color-text-accent: var(--ds-accent) !important;
+  --color-icon-accent: var(--ds-accent) !important;
+
+  --color-background-accent: rgb(var(--ds-accent-rgb) / .18) !important;
+  --color-background-accent-active: rgb(var(--ds-accent-rgb) / .28) !important;
+  --color-background-accent-hover: rgb(var(--ds-accent-rgb) / .16) !important;
+  --color-background-primary-ghost-hover: rgb(var(--ds-accent-rgb) / .12) !important;
+  --color-background-primary-ghost-active: rgb(var(--ds-accent-rgb) / .18) !important;
+  --color-background-primary-soft: var(--dream-native-surface) !important;
+  --color-background-primary-soft-alpha: rgb(var(--ds-text-rgb) / .05) !important;
+  --color-background-secondary-soft-alpha: rgb(var(--ds-text-rgb) / .05) !important;
+
+  --color-background-application-menu: var(--dream-native-surface) !important;
+  --color-background-button-primary: var(--ds-accent) !important;
+  --color-background-button-primary-active: rgb(var(--ds-accent-rgb) / .22) !important;
+  --color-background-button-primary-hover: rgb(var(--ds-accent-rgb) / .16) !important;
+  --color-background-button-primary-inactive: rgb(var(--ds-accent-rgb) / .08) !important;
+  --color-background-button-secondary: var(--dream-native-surface-hover) !important;
+  --color-background-button-secondary-active: rgb(var(--ds-accent-rgb) / .16) !important;
+  --color-background-button-secondary-hover: rgb(var(--ds-accent-rgb) / .11) !important;
+  --color-background-button-secondary-inactive: rgb(var(--ds-text-rgb) / .04) !important;
+  --color-background-button-tertiary: rgb(var(--ds-text-rgb) / .035) !important;
+  --color-background-button-tertiary-active: rgb(var(--ds-accent-rgb) / .14) !important;
+  --color-background-button-tertiary-hover: rgb(var(--ds-accent-rgb) / .09) !important;
+  --color-background-control: var(--dream-native-surface-hover) !important;
+  --color-background-control-opaque: var(--dream-native-surface-hover) !important;
+  --color-background-composer-action-bar: rgb(var(--ds-text-rgb) / .04) !important;
+  --color-background-editor-opaque: var(--dream-native-code) !important;
+  --color-background-elevated-primary: var(--dream-native-surface-elevated) !important;
+  --color-background-elevated-primary-opaque: var(--dream-native-surface-elevated) !important;
+  --color-background-elevated-secondary: rgb(var(--ds-text-rgb) / .05) !important;
+  --color-background-elevated-secondary-opaque: var(--dream-native-surface-hover) !important;
+  --color-background-mode-toggle-track: rgb(var(--ds-text-rgb) / .08) !important;
+  --color-background-mode-toggle-selected: var(--dream-native-surface-selected) !important;
+  --color-background-panel: var(--ds-panel) !important;
+  --color-background-surface: var(--ds-bg) !important;
+  --color-background-surface-under: var(--ds-bg) !important;
+
+  --color-border: var(--ds-line) !important;
+  --color-border-application-menu-separator: var(--ds-line) !important;
+  --color-border-focus: var(--ds-accent) !important;
+  --color-border-heavy: rgb(var(--ds-accent-rgb) / .30) !important;
+  --color-border-light: rgb(var(--ds-muted-rgb) / .12) !important;
+  --color-border-mode-toggle-selected: rgb(var(--ds-accent-rgb) / .24) !important;
+
+  --color-icon-primary: var(--ds-text) !important;
+  --color-icon-secondary: rgb(var(--ds-muted-rgb) / .84) !important;
+  --color-icon-tertiary: rgb(var(--ds-muted-rgb) / .62) !important;
+  --color-simple-scrim: rgb(var(--ds-bg-rgb) / .16) !important;
+  --color-foreground-application-menu: var(--ds-text) !important;
+  --color-text: var(--ds-text) !important;
+  --color-text-secondary: var(--ds-muted) !important;
+  --color-text-tertiary: var(--ds-text-faint, var(--ds-muted)) !important;
+  --color-text-button-primary: var(--dream-native-on-accent) !important;
+  --color-text-button-secondary: var(--ds-text) !important;
+  --color-text-button-tertiary: var(--ds-muted) !important;
+  --color-text-foreground: var(--ds-text) !important;
+  --color-text-foreground-secondary: rgb(var(--ds-muted-rgb) / .84) !important;
+  --color-text-foreground-tertiary: rgb(var(--ds-muted-rgb) / .64) !important;
+  --color-text-inverse: var(--dream-native-on-accent) !important;
+  --color-text-mode-toggle-inactive: rgb(var(--ds-muted-rgb) / .78) !important;
+
+  /* These aliases feed current Codex's Tailwind and VS Code-compatible
+     classes, including `bg-surface-elevated-secondary` and native popovers. */
+  --color-surface: var(--ds-bg) !important;
+  --color-surface-secondary: var(--dream-native-sidebar) !important;
+  --color-surface-recovery: var(--ds-panel) !important;
+  --color-surface-tertiary: var(--dream-native-code) !important;
+  --color-surface-elevated: var(--dream-native-surface-elevated) !important;
+  --color-surface-elevated-secondary: var(--dream-native-surface-elevated) !important;
+  --color-token-dropdown-background: var(--dream-native-surface-elevated) !important;
+  --color-token-foreground: var(--ds-text) !important;
+  --color-token-text-secondary: var(--ds-muted) !important;
+  --color-token-muted-foreground: var(--ds-muted) !important;
+  --color-token-description-foreground: var(--ds-muted) !important;
+  --color-token-list-hover-background: rgb(var(--ds-accent-rgb) / .13) !important;
+  --color-token-border: var(--ds-line) !important;
+  --color-token-border-default: var(--ds-line) !important;
+
+  --vscode-dropdown-background: var(--dream-native-surface-elevated) !important;
+  --vscode-menu-background: var(--dream-native-surface-elevated) !important;
+  --vscode-sideBar-background: var(--dream-native-sidebar) !important;
+  --vscode-editor-background: var(--dream-native-code) !important;
+  --vscode-input-background: var(--dream-native-surface) !important;
+  --vscode-foreground: var(--ds-text) !important;
+  --vscode-descriptionForeground: var(--ds-muted) !important;
+  --vscode-icon-foreground: var(--ds-text) !important;
+  --vscode-focusBorder: var(--ds-accent) !important;
+  --vscode-textLink-foreground: var(--ds-accent) !important;
+  --vscode-textLink-activeForeground: var(--dream-native-accent-hover) !important;
+  --vscode-editor-selectionBackground: rgb(var(--ds-accent-rgb) / .30) !important;
+  --vscode-editor-hoverHighlightBackground: rgb(var(--ds-accent-rgb) / .16) !important;
+  --vscode-editorWidget-background: var(--dream-native-surface-elevated) !important;
+  --vscode-editorWidget-foreground: var(--ds-text) !important;
+  --vscode-editorWidget-border: var(--ds-line) !important;
+  --vscode-editorHoverWidget-background: var(--dream-native-surface-elevated) !important;
+  --vscode-editorHoverWidget-foreground: var(--ds-text) !important;
+  --vscode-editorHoverWidget-border: var(--ds-line) !important;
+  --vscode-editorHoverWidget-statusBarBackground: var(--dream-native-surface-hover) !important;
+}
+
 html[data-dream-skin="active"]:is([data-dream-art-safe="left"], [data-dream-art-safe-area="left"]) {
   --ds-safe-side: left;
   --ds-art-position: 100% var(--ds-focus-y);

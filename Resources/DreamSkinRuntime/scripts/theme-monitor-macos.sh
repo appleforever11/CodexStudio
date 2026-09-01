@@ -35,7 +35,7 @@ fi
 trap cleanup_monitor EXIT INT TERM
 
 discover_codex_app || { log_monitor "Could not locate the signed Codex application."; exit 1; }
-LAST_REPAIRED_PID=""
+LAST_ATTEMPT_PID=""
 LAST_ATTEMPT_AT=0
 
 log_monitor "Persistence monitor started with engine $SKIN_VERSION."
@@ -44,24 +44,21 @@ while :; do
   [ "$ENABLED" = "true" ] || { log_monitor "Persistence disabled; monitor exiting."; exit 0; }
 
   if ! codex_is_running; then
-    LAST_REPAIRED_PID=""
+    LAST_ATTEMPT_PID=""
+    LAST_ATTEMPT_AT=0
     /bin/sleep 2
     continue
   fi
 
   PORT="$(config_value port)"
   case "$PORT" in ''|*[!0-9]*) PORT=9341 ;; esac
-  if verified_cdp_endpoint "$PORT"; then
+  if verified_cdp_endpoint "$PORT" && theme_runtime_state_ready; then
     /bin/sleep 2
     continue
   fi
 
   CODEX_PID="$(codex_main_pids | /usr/bin/head -n 1)"
   [ -n "$CODEX_PID" ] || { /bin/sleep 2; continue; }
-  if [ "$CODEX_PID" = "$LAST_REPAIRED_PID" ]; then
-    /bin/sleep 2
-    continue
-  fi
 
   OPERATION="$(/usr/bin/plutil -extract status raw -o - "$OPERATION_STATE_PATH" 2>/dev/null || true)"
   case "$OPERATION" in applying|pausing) /bin/sleep 2; continue ;; esac
@@ -69,17 +66,17 @@ while :; do
 
   /bin/sleep 3
   codex_is_running || continue
-  verified_cdp_endpoint "$PORT" && continue
+  verified_cdp_endpoint "$PORT" && theme_runtime_state_ready && continue
   CURRENT_PID="$(codex_main_pids | /usr/bin/head -n 1)"
   [ "$CURRENT_PID" = "$CODEX_PID" ] || continue
 
   NOW="$(/bin/date +%s)"
-  if [ $((NOW - LAST_ATTEMPT_AT)) -lt 10 ]; then
+  if [ "$CODEX_PID" = "$LAST_ATTEMPT_PID" ] && [ $((NOW - LAST_ATTEMPT_AT)) -lt 10 ]; then
     /bin/sleep 2
     continue
   fi
   LAST_ATTEMPT_AT="$NOW"
-  LAST_REPAIRED_PID="$CODEX_PID"
+  LAST_ATTEMPT_PID="$CODEX_PID"
   log_monitor "Detected an unthemed Codex launch (pid $CODEX_PID); restoring the saved theme."
   if "$SCRIPT_DIR/start-dream-skin-macos.sh" --port "$PORT" --restart-existing >> "$THEME_PERSISTENCE_LOG" 2>&1; then
     log_monitor "Saved theme restored successfully."

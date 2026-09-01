@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "ipados-126-ipad-d06d6cf5",
+  "name": "126 Ipad",
+  "author": "Apple Inc. and the respective wallpaper creators",
+  "description": "Official Apple iPadOS wallpaper artwork preserved in the SniperGER iOS-Wallpapers archive, adapted as a local-only Mac direction. First associated with iOS 5.1 on 9.7\" @2x.",
+  "category": "iPadOS",
+  "collection": "iPadOS · iOS 5.1",
+  "appearance": "auto",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.5,
+    "focusY": 0.5,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#15110A",
+    "panel": "#292014",
+    "panelAlt": "#49351D",
+    "accent": "#F2B95D",
+    "accentAlt": "#FFE7A8",
+    "secondary": "#936A2F",
+    "highlight": "#F5CA82",
+    "text": "#FFF9ED",
+    "muted": "#C4B294",
+    "line": "rgba(242,185,93,0.32)"
+  }
+}

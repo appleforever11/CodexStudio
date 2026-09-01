@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "aiGenerated": false,
+  "localOnly": true,
+  "artist": "Apple Inc. and the respective wallpaper creators",
+  "artworkID": "apple-ios-ios-1382-silk-purple-dark-2d83b000",
+  "artworkTitle": "Silk Purple Dark",
+  "category": "iOS",
+  "collection": "iOS · iOS 13.4.1",
+  "institution": "Apple Inc. (archived by SniperGER)",
+  "rightsStatus": "Apple copyrighted — local-only",
+  "sourceURL": "https://github.com/SniperGER/iOS-Wallpapers",
+  "imageURL": "https://raw.githubusercontent.com/SniperGER/iOS-Wallpapers/master/iPhone/4.7%22/iOS%2013.4.1/Stills/1382.Silk_Purple_Dark-375w-667h@2x~iphone.heic",
+  "sourcePath": "iPhone/4.7\"/iOS 13.4.1/Stills/1382.Silk_Purple_Dark-375w-667h@2x~iphone.heic",
+  "platform": "iOS",
+  "platformVersion": "iOS 13.4.1",
+  "deviceClass": "4.7\"",
+  "retrievedAt": "2026-08-31",
+  "summary": "Official Apple iOS wallpaper artwork preserved in the SniperGER iOS-Wallpapers archive, adapted as a local-only Mac direction.",
+  "transformation": "Deterministic center crop to a 2400×1500 16:10 Mac canvas, JPEG encoding, and interface palette mapping only; the original mobile proportions are not displayed directly.",
+  "distribution": "Not for redistribution without permission from Apple and any respective creators or owners."
+}

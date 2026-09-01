@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "ios-7650-deep-purple-d73-3a5b0b10",
+  "name": "Deep Purple D73",
+  "author": "Apple Inc. and the respective wallpaper creators",
+  "description": "Official Apple iOS wallpaper artwork preserved in the SniperGER iOS-Wallpapers archive, adapted as a local-only Mac direction. First associated with iOS 16 on 6.1\" @3x.",
+  "category": "iOS",
+  "collection": "iOS · iOS 16",
+  "appearance": "auto",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.5,
+    "focusY": 0.5,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#160B0B",
+    "panel": "#2A1614",
+    "panelAlt": "#4C2520",
+    "accent": "#FF8B69",
+    "accentAlt": "#FFD1C3",
+    "secondary": "#9C4E3D",
+    "highlight": "#FFB19C",
+    "text": "#FFF7F3",
+    "muted": "#CBA9A0",
+    "line": "rgba(255,139,105,0.32)"
+  }
+}

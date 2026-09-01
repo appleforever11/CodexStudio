@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "macos-lion-sunlit-pride",
+  "name": "Lion",
+  "author": "Apple Inc. / original wallpaper creators",
+  "description": "The official Apple wallpaper associated with Lion, presented as a local-only Codex direction.",
+  "category": "macOS Era",
+  "collection": "macOS · Lion 10.7",
+  "appearance": "dark",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.73,
+    "focusY": 0.43,
+    "safeArea": "left",
+    "taskMode": "banner"
+  },
+  "colors": {
+    "background": "#17100C",
+    "panel": "#2C1B13",
+    "panelAlt": "#4B2B1C",
+    "accent": "#F0B44D",
+    "accentAlt": "#FFE0A1",
+    "secondary": "#8E5C3A",
+    "highlight": "#D09B68",
+    "text": "#FFF7EE",
+    "muted": "#C7A58B",
+    "line": "rgba(240,180,77,0.34)"
+  }
+}

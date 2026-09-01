@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "macos-snow-leopard-polar-light",
+  "name": "Snow Leopard",
+  "author": "Apple Inc. / original wallpaper creators",
+  "description": "The official Apple wallpaper associated with Snow Leopard, presented as a local-only Codex direction.",
+  "category": "macOS Era",
+  "collection": "macOS · Snow Leopard 10.6",
+  "appearance": "dark",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.68,
+    "focusY": 0.44,
+    "safeArea": "left",
+    "taskMode": "off"
+  },
+  "colors": {
+    "background": "#08121E",
+    "panel": "#122434",
+    "panelAlt": "#213B4D",
+    "accent": "#79D7F2",
+    "accentAlt": "#D0F7FF",
+    "secondary": "#42708C",
+    "highlight": "#A8C6D1",
+    "text": "#F4FCFF",
+    "muted": "#A8C0CB",
+    "line": "rgba(121,215,242,0.31)"
+  }
+}

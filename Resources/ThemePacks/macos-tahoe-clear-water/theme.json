@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "macos-tahoe-clear-water",
+  "name": "Tahoe",
+  "author": "Apple Inc. / original wallpaper creators",
+  "description": "The official Apple wallpaper associated with Tahoe, presented as a local-only Codex direction.",
+  "category": "macOS Era",
+  "collection": "macOS · Tahoe 26",
+  "appearance": "dark",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.72,
+    "focusY": 0.44,
+    "safeArea": "left",
+    "taskMode": "off"
+  },
+  "colors": {
+    "background": "#07131D",
+    "panel": "#102433",
+    "panelAlt": "#1E4053",
+    "accent": "#5DD4E5",
+    "accentAlt": "#C2F7F6",
+    "secondary": "#3D7890",
+    "highlight": "#9CC5C8",
+    "text": "#F0FBFF",
+    "muted": "#9EBAC4",
+    "line": "rgba(93,212,229,0.32)"
+  }
+}

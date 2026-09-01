@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "ipados-1912-mini-pink-dark-4ec85119",
+  "name": "Mini Pink Dark",
+  "author": "Apple Inc. and the respective wallpaper creators",
+  "description": "Official Apple iPadOS wallpaper artwork preserved in the SniperGER iOS-Wallpapers archive, adapted as a local-only Mac direction. First associated with iPadOS 15 on 8.3\".",
+  "category": "iPadOS",
+  "collection": "iPadOS · iPadOS 15",
+  "appearance": "dark",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.5,
+    "focusY": 0.5,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#160B0B",
+    "panel": "#2A1614",
+    "panelAlt": "#4C2520",
+    "accent": "#FF8B69",
+    "accentAlt": "#FFD1C3",
+    "secondary": "#9C4E3D",
+    "highlight": "#FFB19C",
+    "text": "#FFF7F3",
+    "muted": "#CBA9A0",
+    "line": "rgba(255,139,105,0.32)"
+  }
+}

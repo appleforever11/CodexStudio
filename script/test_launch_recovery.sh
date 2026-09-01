@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+LAUNCHER="$ROOT_DIR/Resources/CodexThemedLauncherTemplate/Contents/MacOS/CodexThemedLauncher"
+COMMON="$ROOT_DIR/Resources/DreamSkinRuntime/scripts/common-macos.sh"
+MONITOR="$ROOT_DIR/Resources/DreamSkinRuntime/scripts/theme-monitor-macos.sh"
+
+assert_contains() {
+  local file="$1"
+  local expected="$2"
+  if ! /usr/bin/grep -Fq "$expected" "$file"; then
+    echo "Launch recovery check failed: '$expected' is missing from $file." >&2
+    exit 1
+  fi
+}
+
+/bin/bash -n "$COMMON" "$MONITOR"
+/bin/zsh -n "$LAUNCHER"
+
+assert_contains "$LAUNCHER" "themed_runtime_ready"
+assert_contains "$LAUNCHER" "wait_for_themed_runtime 20"
+assert_contains "$LAUNCHER" "start_engine_with_retries"
+assert_contains "$LAUNCHER" 'while [ "$attempt" -le 3 ]'
+assert_contains "$COMMON" "theme_runtime_state_ready"
+assert_contains "$COMMON" 'recorded_pid="'
+assert_contains "$MONITOR" 'verified_cdp_endpoint "$PORT" && theme_runtime_state_ready'
+assert_contains "$MONITOR" "LAST_ATTEMPT_PID"
+if /usr/bin/grep -Fq "LAST_REPAIRED_PID" "$MONITOR"; then
+  echo "Launch recovery check failed: stale LAST_REPAIRED_PID guard remains." >&2
+  exit 1
+fi
+
+echo "Launch recovery guard checks passed."

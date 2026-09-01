@@ -1,0 +1,14 @@
+Codex Studio local-only artwork provenance record
+
+Artwork: Redspider
+Platform: iOS (iOS 8)
+Device source: 4.0"
+Original archive path: iPhone/4.0"/iOS 8/Stills/113.RedSpider@2x~iphone.png
+Creator / rights holder: Apple Inc. and the respective wallpaper creators
+Source record: https://github.com/SniperGER/iOS-Wallpapers
+Image URL: https://raw.githubusercontent.com/SniperGER/iOS-Wallpapers/master/iPhone/4.0%22/iOS%208/Stills/113.RedSpider@2x~iphone.png
+Rights status: Apple copyrighted — local-only; not for redistribution without permission
+Retrieved: 2026-08-31
+
+AI-generated imagery: No.
+Codex Studio transformation: Deterministic center crop to a 2400×1500 16:10 Mac canvas, JPEG encoding, and interface palette mapping only; the original mobile proportions are not displayed directly.

@@ -1,0 +1,14 @@
+Codex Studio local-only artwork provenance record
+
+Artwork: Spash2 Potassium
+Platform: iPadOS (iPadOS 12.1)
+Device source: 12.9"
+Original archive path: iPad/12.9"/iPadOS 12.1/Stills/547.Spash2-potassium-1024w-1366h@2x~ipad.jpg
+Creator / rights holder: Apple Inc. and the respective wallpaper creators
+Source record: https://github.com/SniperGER/iOS-Wallpapers
+Image URL: https://raw.githubusercontent.com/SniperGER/iOS-Wallpapers/master/iPad/12.9%22/iPadOS%2012.1/Stills/547.Spash2-potassium-1024w-1366h@2x~ipad.jpg
+Rights status: Apple copyrighted — local-only; not for redistribution without permission
+Retrieved: 2026-08-31
+
+AI-generated imagery: No.
+Codex Studio transformation: Deterministic center crop to a 2400×1500 16:10 Mac canvas, JPEG encoding, and interface palette mapping only; the original mobile proportions are not displayed directly.

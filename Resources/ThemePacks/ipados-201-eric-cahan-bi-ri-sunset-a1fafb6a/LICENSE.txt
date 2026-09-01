@@ -1,0 +1,14 @@
+Codex Studio local-only artwork provenance record
+
+Artwork: Eric Cahan Bi Ri Sunset
+Platform: iPadOS (iOS 9.1)
+Device source: 12.9"
+Original archive path: iPad/12.9"/iOS 9.1/Stills/201.Eric_Cahan_BI_RI_Sunset-1024w-1366h@2x~ipad.png
+Creator / rights holder: Apple Inc. and the respective wallpaper creators
+Source record: https://github.com/SniperGER/iOS-Wallpapers
+Image URL: https://raw.githubusercontent.com/SniperGER/iOS-Wallpapers/master/iPad/12.9%22/iOS%209.1/Stills/201.Eric_Cahan_BI_RI_Sunset-1024w-1366h@2x~ipad.png
+Rights status: Apple copyrighted — local-only; not for redistribution without permission
+Retrieved: 2026-08-31
+
+AI-generated imagery: No.
+Codex Studio transformation: Deterministic center crop to a 2400×1500 16:10 Mac canvas, JPEG encoding, and interface palette mapping only; the original mobile proportions are not displayed directly.

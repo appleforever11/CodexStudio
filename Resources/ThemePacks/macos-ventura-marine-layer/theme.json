@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "macos-ventura-marine-layer",
+  "name": "Ventura",
+  "author": "Apple Inc. / original wallpaper creators",
+  "description": "The official Apple wallpaper associated with Ventura, presented as a local-only Codex direction.",
+  "category": "macOS Era",
+  "collection": "macOS · Ventura 13",
+  "appearance": "dark",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.74,
+    "focusY": 0.43,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#0B111B",
+    "panel": "#182332",
+    "panelAlt": "#29384B",
+    "accent": "#D4E38A",
+    "accentAlt": "#F3F8C8",
+    "secondary": "#5B7890",
+    "highlight": "#ADC1C8",
+    "text": "#F4F8FA",
+    "muted": "#A7B7C0",
+    "line": "rgba(212,227,138,0.30)"
+  }
+}

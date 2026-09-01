@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "macos-panther-ink-cut",
+  "name": "Panther",
+  "author": "Apple Inc. / original wallpaper creators",
+  "description": "The official Apple wallpaper associated with Panther, presented as a local-only Codex direction.",
+  "category": "macOS Era",
+  "collection": "macOS · Panther 10.3",
+  "appearance": "dark",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.54,
+    "focusY": 0.48,
+    "safeArea": "left",
+    "taskMode": "off"
+  },
+  "colors": {
+    "background": "#050505",
+    "panel": "#151515",
+    "panelAlt": "#2A2A2A",
+    "accent": "#C7F36B",
+    "accentAlt": "#F3FFD0",
+    "secondary": "#676767",
+    "highlight": "#B6C99B",
+    "text": "#FAFAF7",
+    "muted": "#B7B7AF",
+    "line": "rgba(199,243,107,0.34)"
+  }
+}

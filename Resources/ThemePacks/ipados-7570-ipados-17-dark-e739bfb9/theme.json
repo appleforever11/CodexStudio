@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "ipados-7570-ipados-17-dark-e739bfb9",
+  "name": "iPadOS 17 Dark",
+  "author": "Apple Inc. and the respective wallpaper creators",
+  "description": "Official Apple iPadOS wallpaper artwork preserved in the SniperGER iOS-Wallpapers archive, adapted as a local-only Mac direction. First associated with iPadOS 17 on 12.9\".",
+  "category": "iPadOS",
+  "collection": "iPadOS · iPadOS 17",
+  "appearance": "dark",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.5,
+    "focusY": 0.5,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#15110A",
+    "panel": "#292014",
+    "panelAlt": "#49351D",
+    "accent": "#F2B95D",
+    "accentAlt": "#FFE7A8",
+    "secondary": "#936A2F",
+    "highlight": "#F5CA82",
+    "text": "#FFF9ED",
+    "muted": "#C4B294",
+    "line": "rgba(242,185,93,0.32)"
+  }
+}

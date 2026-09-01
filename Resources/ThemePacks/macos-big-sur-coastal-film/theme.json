@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "macos-big-sur-coastal-film",
+  "name": "Big Sur",
+  "author": "Apple Inc. / original wallpaper creators",
+  "description": "The official Apple wallpaper associated with Big Sur, presented as a local-only Codex direction.",
+  "category": "macOS Era",
+  "collection": "macOS · Big Sur 11",
+  "appearance": "dark",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.72,
+    "focusY": 0.45,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#07131B",
+    "panel": "#122832",
+    "panelAlt": "#214452",
+    "accent": "#E08C62",
+    "accentAlt": "#FFC4A4",
+    "secondary": "#3B7584",
+    "highlight": "#A4C1C1",
+    "text": "#F2FBFF",
+    "muted": "#A3BBC0",
+    "line": "rgba(224,140,98,0.32)"
+  }
+}

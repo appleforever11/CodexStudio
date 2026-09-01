@@ -12,8 +12,8 @@ struct CodexStudioApp: App {
             ContentView()
                 .environmentObject(store)
         }
-        .defaultSize(width: 1460, height: 930)
-        .windowResizability(.contentSize)
+        .defaultSize(width: 1280, height: 760)
+        .windowResizability(.automatic)
         .commands {
             CommandGroup(after: .appSettings) {
                 Button("Check for Updates…") {

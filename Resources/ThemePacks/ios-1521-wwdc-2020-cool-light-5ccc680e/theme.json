@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "ios-1521-wwdc-2020-cool-light-5ccc680e",
+  "name": "WWDC 2020 Cool Light",
+  "author": "Apple Inc. and the respective wallpaper creators",
+  "description": "Official Apple iOS wallpaper artwork preserved in the SniperGER iOS-Wallpapers archive, adapted as a local-only Mac direction. First associated with iOS 14.1 on 6.7\".",
+  "category": "iOS",
+  "collection": "iOS · iOS 14.1",
+  "appearance": "light",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.5,
+    "focusY": 0.5,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#07131D",
+    "panel": "#102432",
+    "panelAlt": "#173B4A",
+    "accent": "#58D5E8",
+    "accentAlt": "#B4F5F5",
+    "secondary": "#286277",
+    "highlight": "#8EE7EF",
+    "text": "#F2FCFF",
+    "muted": "#9DBCC6",
+    "line": "rgba(88,213,232,0.32)"
+  }
+}

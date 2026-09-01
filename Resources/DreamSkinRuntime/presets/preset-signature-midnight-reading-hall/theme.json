@@ -4,11 +4,11 @@
   "name": "Midnight Reading Hall",
   "author": "Codex Theme Studio",
   "version": "3.0.0",
-  "description": "Midnight Reading Hall is an individually art-directed theme built around museum-grade architectural interior photography, with a purpose-matched Codex interface rather than a generated palette variation.",
+  "description": "Midnight Reading Hall is an individually art-directed theme built around monumental library interior photography, with a purpose-matched Codex interface rather than a generated palette variation.",
   "category": "Interior",
   "collection": "Signature Collection",
   "featuredRank": 36,
-  "medium": "Museum-grade architectural interior photography",
+  "medium": "Monumental library interior photography",
   "appearance": "dark",
   "image": "background.jpg",
   "preview": "background.jpg",
@@ -39,7 +39,7 @@
   "studio": {
     "family": "signature",
     "composition": "midnight-reading-hall",
-    "medium": "Museum-grade architectural interior photography",
+    "medium": "Monumental library interior photography",
     "tokens": {
       "appBackground": "#05080A",
       "sidebarBackground": "#0D1316E8",

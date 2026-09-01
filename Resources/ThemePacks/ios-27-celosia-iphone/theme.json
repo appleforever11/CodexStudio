@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "ios-27-celosia-iphone",
+  "name": "Celosia · iPhone",
+  "author": "Apple Inc.",
+  "description": "Official Apple iOS wallpaper published on Apple's WWDC26 wallpaper page, adapted as a local-only Mac direction. First associated with iOS 27 on iPhone.",
+  "category": "iOS",
+  "collection": "iOS · iOS 27",
+  "appearance": "auto",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.5,
+    "focusY": 0.5,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#07131D",
+    "panel": "#102432",
+    "panelAlt": "#173B4A",
+    "accent": "#58D5E8",
+    "accentAlt": "#B4F5F5",
+    "secondary": "#286277",
+    "highlight": "#8EE7EF",
+    "text": "#F2FCFF",
+    "muted": "#9DBCC6",
+    "line": "rgba(88,213,232,0.32)"
+  }
+}

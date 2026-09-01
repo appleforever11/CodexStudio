@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "macos-cheetah-night-grid",
+  "name": "Cheetah",
+  "author": "Apple Inc. / original wallpaper creators",
+  "description": "The official Apple wallpaper associated with Cheetah, presented as a local-only Codex direction.",
+  "category": "macOS Era",
+  "collection": "macOS · Cheetah 10.0",
+  "appearance": "dark",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.68,
+    "focusY": 0.44,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#080D16",
+    "panel": "#111A28",
+    "panelAlt": "#1E2D3E",
+    "accent": "#F4A64A",
+    "accentAlt": "#FFD58A",
+    "secondary": "#3C6B91",
+    "highlight": "#9CC4DB",
+    "text": "#F8FBFF",
+    "muted": "#A5B5C5",
+    "line": "rgba(244,166,74,0.32)"
+  }
+}

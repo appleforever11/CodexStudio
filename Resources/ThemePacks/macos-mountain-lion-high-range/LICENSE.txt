@@ -1,0 +1,12 @@
+Codex Studio local-only artwork provenance record
+
+Artwork: Mountain Lion Andromeda galaxy
+Release: Mountain Lion 10.8
+Creator / rights holder: Apple Inc. and the original wallpaper creators
+Archive record: https://512pixels.net/projects/default-mac-wallpapers-in-5k/
+Image URL: https://media.512pixels.net/downloads/macos-wallpapers-6k/10-8-6k.jpg
+Rights status: Apple copyrighted — local-only; not for redistribution without permission
+Retrieved: 2026-08-31
+
+AI-generated imagery: No.
+Codex Studio transformation: deterministic downscale to 2400px, JPEG encoding, and interface palette mapping only.

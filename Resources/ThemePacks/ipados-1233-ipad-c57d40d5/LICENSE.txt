@@ -1,0 +1,14 @@
+Codex Studio local-only artwork provenance record
+
+Artwork: 1233 Ipad
+Platform: iPadOS (iOS 6)
+Device source: 9.7" @2x
+Original archive path: iPad/9.7" @2x/iOS 6/Stills/1233_iPad@2x~ipad.png
+Creator / rights holder: Apple Inc. and the respective wallpaper creators
+Source record: https://github.com/SniperGER/iOS-Wallpapers
+Image URL: https://raw.githubusercontent.com/SniperGER/iOS-Wallpapers/master/iPad/9.7%22%20@2x/iOS%206/Stills/1233_iPad@2x~ipad.png
+Rights status: Apple copyrighted — local-only; not for redistribution without permission
+Retrieved: 2026-08-31
+
+AI-generated imagery: No.
+Codex Studio transformation: Deterministic center crop to a 2400×1500 16:10 Mac canvas, JPEG encoding, and interface palette mapping only; the original mobile proportions are not displayed directly.

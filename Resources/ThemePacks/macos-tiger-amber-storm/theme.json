@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "macos-tiger-amber-storm",
+  "name": "Tiger",
+  "author": "Apple Inc. / original wallpaper creators",
+  "description": "The official Apple wallpaper associated with Tiger, presented as a local-only Codex direction.",
+  "category": "macOS Era",
+  "collection": "macOS · Tiger 10.4",
+  "appearance": "dark",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.64,
+    "focusY": 0.46,
+    "safeArea": "left",
+    "taskMode": "banner"
+  },
+  "colors": {
+    "background": "#120D08",
+    "panel": "#241812",
+    "panelAlt": "#3D2818",
+    "accent": "#E4A53A",
+    "accentAlt": "#FFD984",
+    "secondary": "#795129",
+    "highlight": "#C99D64",
+    "text": "#FFF8E8",
+    "muted": "#C7B28C",
+    "line": "rgba(228,165,58,0.34)"
+  }
+}

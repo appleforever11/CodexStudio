@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "macos-sequoia-redwood-atlas",
+  "name": "Sequoia",
+  "author": "Apple Inc. / original wallpaper creators",
+  "description": "The official Apple wallpaper associated with Sequoia, presented as a local-only Codex direction.",
+  "category": "macOS Era",
+  "collection": "macOS · Sequoia 15",
+  "appearance": "dark",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.72,
+    "focusY": 0.45,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#0D1514",
+    "panel": "#1B2926",
+    "panelAlt": "#2C4038",
+    "accent": "#86D39C",
+    "accentAlt": "#D1F1C8",
+    "secondary": "#587F70",
+    "highlight": "#B0C9B1",
+    "text": "#F3FBF3",
+    "muted": "#A8BDB1",
+    "line": "rgba(134,211,156,0.30)"
+  }
+}

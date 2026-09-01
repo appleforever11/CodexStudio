@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "macos-leopard-quiet-menagerie",
+  "name": "Leopard",
+  "author": "Apple Inc. / original wallpaper creators",
+  "description": "The official Apple wallpaper associated with Leopard, presented as a local-only Codex direction.",
+  "category": "macOS Era",
+  "collection": "macOS · Leopard 10.5",
+  "appearance": "dark",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.72,
+    "focusY": 0.48,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#11120D",
+    "panel": "#22251A",
+    "panelAlt": "#353827",
+    "accent": "#C8798A",
+    "accentAlt": "#F0B3B4",
+    "secondary": "#66704B",
+    "highlight": "#B7BE89",
+    "text": "#F8F4EC",
+    "muted": "#B9B4A4",
+    "line": "rgba(200,121,138,0.31)"
+  }
+}

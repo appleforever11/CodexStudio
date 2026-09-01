@@ -43,7 +43,9 @@ struct CodexRuntimeClient: Sendable {
             return ApplyResult(verified: false, message: "That theme id is not valid.", runtime: readStatus())
         }
         let themeURL = ThemeLibraryService.managedThemesDirectory.appendingPathComponent(themeID, isDirectory: true)
-        guard FileManager.default.fileExists(atPath: themeURL.appendingPathComponent("theme.json").path) else {
+        let isManaged = FileManager.default.fileExists(atPath: themeURL.appendingPathComponent("theme.json").path)
+            || ThemeLibraryService.installBundledThemeIfNeeded(themeID)
+        guard isManaged else {
             return ApplyResult(verified: false, message: "\(themeID) is preview-only on this Mac because it is not in the managed library.", runtime: readStatus())
         }
 
@@ -56,7 +58,10 @@ struct CodexRuntimeClient: Sendable {
             )
         }
 
-        let output = run(script: script, arguments: ["--id", themeID], timeout: 35)
+        // A cold start can spend up to 45 seconds waiting for the official
+        // Codex renderer after an update. Keep the UI operation bounded, but
+        // do not cut the verified recovery loop off before it can finish.
+        let output = run(script: script, arguments: ["--id", themeID], timeout: 90)
         guard output.completed, output.exitCode == 0 else {
             let detail = output.detail.isEmpty ? "The theme switch did not complete." : output.detail
             return ApplyResult(verified: false, message: detail, runtime: readStatus())
@@ -95,6 +100,9 @@ struct CodexRuntimeClient: Sendable {
                 activeThemeName: nil,
                 codexVersion: nil,
                 port: nil,
+                persistenceEnabled: false,
+                lastVerifiedAt: nil,
+                diagnosticLogPath: diagnosticLogURL.path,
                 message: "No managed Codex theme runtime was found."
             )
         }
@@ -104,13 +112,20 @@ struct CodexRuntimeClient: Sendable {
         let activeName = object["appliedThemeName"] as? String
         let version = object["codexVersion"] as? String
         let port = (object["port"] as? NSNumber)?.intValue
-        let connection: RuntimeConnection = session == "active" && activeID != nil ? .connected : .offline
+        let codexPID = (object["codexPid"] as? NSNumber)?.intValue ?? 0
+        let codexIsRunning = codexPID > 0 && NSRunningApplication(processIdentifier: pid_t(codexPID)) != nil
+        let persistenceEnabled = readPersistenceEnabled()
+        let lastVerifiedAt = object["verifiedAt"] as? String
+        let connection: RuntimeConnection = session == "active" && activeID != nil && codexIsRunning ? .connected : .offline
         let message: String
         switch connection {
         case .connected:
-            message = "Live theme runtime ready on port \(port.map(String.init) ?? "9341")."
+            let recovery = persistenceEnabled ? " Relaunch recovery is armed." : " Relaunch recovery is not armed."
+            message = "Theme verified on port \(port.map(String.init) ?? "9341").\(recovery)"
         case .offline:
-            message = "Codex theme runtime is installed but not currently active."
+            message = session == "active" && activeID != nil
+                ? "Saved theme is waiting for the themed Codex process."
+                : "Codex theme runtime is installed but not currently active."
         case .unavailable:
             message = "No managed Codex theme runtime was found."
         }
@@ -121,8 +136,36 @@ struct CodexRuntimeClient: Sendable {
             activeThemeName: activeName,
             codexVersion: version,
             port: port,
+            persistenceEnabled: persistenceEnabled,
+            lastVerifiedAt: lastVerifiedAt,
+            diagnosticLogPath: diagnosticLogURL.path,
             message: message
         )
+    }
+
+    private static var persistenceURL: URL {
+        homeDirectory
+            .appendingPathComponent("Library", isDirectory: true)
+            .appendingPathComponent("Application Support", isDirectory: true)
+            .appendingPathComponent("CodexDreamSkinStudio", isDirectory: true)
+            .appendingPathComponent("theme-persistence.plist")
+    }
+
+    private static var diagnosticLogURL: URL {
+        homeDirectory
+            .appendingPathComponent("Library", isDirectory: true)
+            .appendingPathComponent("Application Support", isDirectory: true)
+            .appendingPathComponent("CodexDreamSkinStudio", isDirectory: true)
+            .appendingPathComponent("theme-persistence.log")
+    }
+
+    private static func readPersistenceEnabled() -> Bool {
+        guard let data = try? Data(contentsOf: persistenceURL),
+              let plist = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any]
+        else {
+            return false
+        }
+        return (plist["enabled"] as? NSNumber)?.boolValue ?? (plist["enabled"] as? Bool ?? false)
     }
 
     private static func run(script: URL, arguments: [String], timeout: TimeInterval) -> ProcessOutput {
@@ -133,9 +176,9 @@ struct CodexRuntimeClient: Sendable {
         process.arguments = [script.path] + arguments
         process.standardOutput = standardOutput
         process.standardError = standardError
-        process.environment = [
-            "PATH": "/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/homebrew/bin"
-        ]
+        var environment = ProcessInfo.processInfo.environment
+        environment["PATH"] = "/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/homebrew/bin"
+        process.environment = environment
 
         do {
             try process.run()
@@ -149,6 +192,7 @@ struct CodexRuntimeClient: Sendable {
         }
         if process.isRunning {
             process.terminate()
+            process.waitUntilExit()
             return ProcessOutput(completed: false, exitCode: -1, detail: "The Codex theme runtime timed out before verification.")
         }
 

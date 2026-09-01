@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "aiGenerated": false,
+  "localOnly": true,
+  "artist": "Apple Inc. / original wallpaper creators",
+  "artworkID": "apple-macos-26",
+  "artworkTitle": "Tahoe light",
+  "category": "macOS Era",
+  "collection": "macOS Era · Tahoe 26",
+  "institution": "Apple Inc. (archived by 512 Pixels)",
+  "rightsStatus": "Apple copyrighted — local-only",
+  "sourceURL": "https://512pixels.net/projects/default-mac-wallpapers-in-5k/",
+  "imageURL": "https://media.512pixels.net/downloads/macos-wallpapers-6k/26-Tahoe-Light-6K.png",
+  "retrievedAt": "2026-08-31",
+  "summary": "The official Apple wallpaper associated with Tahoe, archived by 512 Pixels and stored locally for personal use in Codex Studio.",
+  "transformation": "Deterministic downscale to 2400px, JPEG encoding, and interface palette mapping only.",
+  "distribution": "Not for redistribution without permission from Apple and any respective creators or owners."
+}

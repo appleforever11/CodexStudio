@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "macos-monterey-water-signal",
+  "name": "Monterey",
+  "author": "Apple Inc. / original wallpaper creators",
+  "description": "The official Apple wallpaper associated with Monterey, presented as a local-only Codex direction.",
+  "category": "macOS Era",
+  "collection": "macOS · Monterey 12",
+  "appearance": "dark",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.73,
+    "focusY": 0.44,
+    "safeArea": "left",
+    "taskMode": "banner"
+  },
+  "colors": {
+    "background": "#071323",
+    "panel": "#10243C",
+    "panelAlt": "#1A3D5B",
+    "accent": "#F07D78",
+    "accentAlt": "#FFC1AD",
+    "secondary": "#3A7DA6",
+    "highlight": "#93C2D7",
+    "text": "#F1FAFF",
+    "muted": "#A5BDCD",
+    "line": "rgba(240,125,120,0.32)"
+  }
+}

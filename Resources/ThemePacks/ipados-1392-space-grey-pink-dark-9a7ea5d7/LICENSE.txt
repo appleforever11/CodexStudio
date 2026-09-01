@@ -1,0 +1,14 @@
+Codex Studio local-only artwork provenance record
+
+Artwork: Space Grey Pink Dark
+Platform: iPadOS (iPadOS 13.4)
+Device source: 11.0"
+Original archive path: iPad/11.0"/iPadOS 13.4/Stills/1392.Space_Grey_Pink_Dark-834w-1194h@2x~ipad.heic
+Creator / rights holder: Apple Inc. and the respective wallpaper creators
+Source record: https://github.com/SniperGER/iOS-Wallpapers
+Image URL: https://raw.githubusercontent.com/SniperGER/iOS-Wallpapers/master/iPad/11.0%22/iPadOS%2013.4/Stills/1392.Space_Grey_Pink_Dark-834w-1194h@2x~ipad.heic
+Rights status: Apple copyrighted — local-only; not for redistribution without permission
+Retrieved: 2026-08-31
+
+AI-generated imagery: No.
+Codex Studio transformation: Deterministic center crop to a 2400×1500 16:10 Mac canvas, JPEG encoding, and interface palette mapping only; the original mobile proportions are not displayed directly.

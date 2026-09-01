@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "macos-mojave-desert-field",
+  "name": "Mojave",
+  "author": "Apple Inc. / original wallpaper creators",
+  "description": "The official Apple wallpaper associated with Mojave, presented as a local-only Codex direction.",
+  "category": "macOS Era",
+  "collection": "macOS · Mojave 10.14",
+  "appearance": "dark",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.72,
+    "focusY": 0.46,
+    "safeArea": "left",
+    "taskMode": "banner"
+  },
+  "colors": {
+    "background": "#160E15",
+    "panel": "#281822",
+    "panelAlt": "#432836",
+    "accent": "#E99373",
+    "accentAlt": "#FFD0A9",
+    "secondary": "#765064",
+    "highlight": "#C39188",
+    "text": "#FFF5F0",
+    "muted": "#C4A6A2",
+    "line": "rgba(233,147,115,0.32)"
+  }
+}

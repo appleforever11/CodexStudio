@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "aiGenerated": false,
+  "localOnly": true,
+  "artist": "Apple Inc. and the respective wallpaper creators",
+  "artworkID": "apple-ios-ios-1531-wwdc-2020-neutral-light-7891c728",
+  "artworkTitle": "WWDC 2020 Neutral Light",
+  "category": "iOS",
+  "collection": "iOS · iOS 14.1",
+  "institution": "Apple Inc. (archived by SniperGER)",
+  "rightsStatus": "Apple copyrighted — local-only",
+  "sourceURL": "https://github.com/SniperGER/iOS-Wallpapers",
+  "imageURL": "https://raw.githubusercontent.com/SniperGER/iOS-Wallpapers/master/iPhone/6.7%22/iOS%2014.1/Stills/1531.WWDC_2020_Neutral_Light-428w-926h@3x~iphone.heic",
+  "sourcePath": "iPhone/6.7\"/iOS 14.1/Stills/1531.WWDC_2020_Neutral_Light-428w-926h@3x~iphone.heic",
+  "platform": "iOS",
+  "platformVersion": "iOS 14.1",
+  "deviceClass": "6.7\"",
+  "retrievedAt": "2026-08-31",
+  "summary": "Official Apple iOS wallpaper artwork preserved in the SniperGER iOS-Wallpapers archive, adapted as a local-only Mac direction.",
+  "transformation": "Deterministic center crop to a 2400×1500 16:10 Mac canvas, JPEG encoding, and interface palette mapping only; the original mobile proportions are not displayed directly.",
+  "distribution": "Not for redistribution without permission from Apple and any respective creators or owners."
+}

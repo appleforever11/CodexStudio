@@ -5,17 +5,35 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            StudioColor.ink.ignoresSafeArea()
+            StudioBackdrop(theme: store.selectedTheme)
 
-            HStack(spacing: 0) {
+            NavigationSplitView {
                 StudioSidebar()
-                Rectangle()
-                    .fill(StudioColor.line)
-                    .frame(width: 1)
-                mainSurface
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    .navigationSplitViewColumnWidth(min: 220, ideal: 248, max: 290)
+            } detail: {
+                VStack(spacing: 0) {
+                    StudioCommandBar()
+                    Divider()
+                        .overlay(StudioColor.line)
+                    mainSurface
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                }
+                // The native titlebar overlays the first content band on a
+                // WindowGroup. Keep the command row in the document area with
+                // enough breathing room to remain visible on every launch.
+                .padding(.top, 76)
             }
+            .navigationSplitViewStyle(.balanced)
+            .background(.clear)
+            .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .strokeBorder(StudioColor.lineStrong, lineWidth: 1)
+                    .allowsHitTesting(false)
+            }
+            .shadow(color: .black.opacity(0.30), radius: 30, y: 14)
         }
+        .padding(10)
         .frame(minWidth: 1120, minHeight: 700)
         .preferredColorScheme(.dark)
         .task {
@@ -24,7 +42,7 @@ struct ContentView: View {
         .overlay(alignment: .bottomTrailing) {
             if let notice = store.notice {
                 NoticeToast(message: notice)
-                    .padding(24)
+                    .padding(22)
                     .transition(.move(edge: .trailing).combined(with: .opacity))
             }
         }
@@ -52,18 +70,19 @@ struct NoticeToast: View {
     let message: String
 
     var body: some View {
-        HStack(spacing: 10) {
-            Image(systemName: "checkmark.circle.fill")
-                .foregroundStyle(StudioColor.cyan)
+        Label {
             Text(message)
                 .font(.system(size: 12, weight: .medium))
-                .foregroundStyle(StudioColor.text)
                 .lineLimit(2)
+        } icon: {
+            Image(systemName: "checkmark.circle.fill")
+                .foregroundStyle(StudioColor.mint)
         }
+        .foregroundStyle(StudioColor.text)
         .padding(.horizontal, 15)
         .padding(.vertical, 12)
         .frame(maxWidth: 360, alignment: .leading)
-        .studioPanel(radius: 14, fill: StudioColor.inkSoft.opacity(0.96))
-        .shadow(color: .black.opacity(0.38), radius: 20, y: 8)
+        .studioPanel(radius: 14, fill: StudioColor.inkRaised.opacity(0.78))
+        .shadow(color: .black.opacity(0.32), radius: 20, y: 8)
     }
 }

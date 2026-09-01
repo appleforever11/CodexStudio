@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "macos-mavericks-deep-tide",
+  "name": "Mavericks",
+  "author": "Apple Inc. / original wallpaper creators",
+  "description": "The official Apple wallpaper associated with Mavericks, presented as a local-only Codex direction.",
+  "category": "macOS Era",
+  "collection": "macOS · Mavericks 10.9",
+  "appearance": "dark",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.72,
+    "focusY": 0.44,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#06161B",
+    "panel": "#0D2930",
+    "panelAlt": "#17464D",
+    "accent": "#52D3C4",
+    "accentAlt": "#B8F7E9",
+    "secondary": "#307A7A",
+    "highlight": "#82C9C1",
+    "text": "#F0FFFC",
+    "muted": "#9FC6C7",
+    "line": "rgba(82,211,196,0.32)"
+  }
+}

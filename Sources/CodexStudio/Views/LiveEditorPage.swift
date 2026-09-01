@@ -5,38 +5,36 @@ struct LiveEditorPage: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack(alignment: .bottom) {
-                VStack(alignment: .leading, spacing: 5) {
-                    Text("LIVE EDITOR")
-                        .font(.system(size: 10, weight: .bold, design: .rounded))
-                        .tracking(1.7)
-                        .foregroundStyle(StudioColor.cyan)
-                    Text("Tune the system in context.")
-                        .font(.system(size: 27, weight: .bold, design: .rounded))
-                        .foregroundStyle(StudioColor.text)
-                    Text("Select a surface in the emulated Codex canvas. Every change stays local until you choose what to do with it.")
-                        .font(.system(size: 13, weight: .medium))
-                        .foregroundStyle(StudioColor.textMuted)
-                }
+            HStack(alignment: .bottom, spacing: 20) {
+                ThemeAtlasHeader(
+                    eyebrow: "LIVE THEME LAB",
+                    title: "Design against a living Codex.",
+                    detail: "Select any surface inside the emulator, tune it in context, and keep every experiment local until you deliberately apply it.",
+                    symbol: "slider.horizontal.below.square.filled.and.square"
+                )
                 Spacer()
                 if let theme = store.selectedTheme {
-                    HStack(spacing: 9) {
-                        ThemeSwatch(theme: theme, size: 28)
-                        VStack(alignment: .trailing, spacing: 2) {
-                            Text("EDITING")
-                                .font(.system(size: 8, weight: .bold, design: .rounded))
-                                .tracking(1.2)
-                                .foregroundStyle(StudioColor.textFaint)
-                            Text(theme.name)
-                                .font(.system(size: 12, weight: .semibold))
-                                .foregroundStyle(StudioColor.text)
+                    VStack(alignment: .trailing, spacing: 8) {
+                        StudioPill(title: "Editing live", tint: StudioColor.mint, symbol: "waveform.path.ecg")
+                        HStack(spacing: 9) {
+                            ThemeSwatch(theme: theme, size: 30)
+                            VStack(alignment: .trailing, spacing: 2) {
+                                Text(theme.name)
+                                    .font(.system(size: 12, weight: .semibold))
+                                    .foregroundStyle(StudioColor.text)
+                                    .lineLimit(1)
+                                Text(theme.collection)
+                                    .font(.system(size: 9, weight: .medium))
+                                    .foregroundStyle(StudioColor.textFaint)
+                                    .lineLimit(1)
+                            }
                         }
                     }
                 }
             }
-            .padding(.horizontal, 34)
-            .padding(.top, 28)
-            .padding(.bottom, 19)
+            .padding(.horizontal, 24)
+            .padding(.top, 22)
+            .padding(.bottom, 18)
 
             ViewThatFits(in: .horizontal) {
                 HStack(spacing: 17) {
@@ -55,10 +53,16 @@ struct LiveEditorPage: View {
                 }
                 .scrollIndicators(.hidden)
             }
-            .padding(.horizontal, 28)
-            .padding(.bottom, 30)
+            .padding(.horizontal, 24)
+            .padding(.bottom, 24)
         }
-        .background(StudioColor.ink)
+        .background(
+            LinearGradient(
+                colors: [StudioColor.cyan.opacity(0.025), .clear, StudioColor.violet.opacity(0.035)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
         .onChange(of: store.previewMode) { _, mode in
             store.selectedSurface = switch mode {
             case .home: .composer
@@ -72,9 +76,20 @@ struct LiveEditorPage: View {
         VStack(alignment: .leading, spacing: 11) {
             HStack {
                 HStack(spacing: 7) {
-                    StatusDot(color: StudioColor.cyan, isPulsing: store.motionEnabled)
-                    Text("Interactive canvas")
-                        .font(.system(size: 12, weight: .semibold))
+                    ZStack {
+                        Circle().fill(StudioColor.cyan.opacity(0.13))
+                        Image(systemName: "macwindow.on.rectangle")
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundStyle(StudioColor.cyan)
+                    }
+                    .frame(width: 29, height: 29)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Interactive Codex emulator")
+                            .font(.system(size: 12, weight: .semibold))
+                        Text("Click a surface to inspect its tokens")
+                            .font(.system(size: 9, weight: .medium))
+                            .foregroundStyle(StudioColor.textFaint)
+                    }
                         .foregroundStyle(StudioColor.text)
                 }
                 Spacer()
@@ -86,6 +101,9 @@ struct LiveEditorPage: View {
                 .pickerStyle(.segmented)
                 .frame(width: 210)
             }
+            .padding(.horizontal, 12)
+            .frame(height: 49)
+            .studioPanel(radius: 14, fill: Color.white.opacity(0.035))
             if let theme = store.selectedTheme {
                 CodexLivePreview(theme: theme)
             } else {
@@ -682,7 +700,7 @@ private struct EditorInspector: View {
                             .foregroundStyle(StudioColor.ink)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 10)
-                            .background(StudioColor.cyan, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                            .background(StudioColor.spectrum, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
                     }
                     .buttonStyle(.plain)
                     .disabled(store.isApplying || store.selectedTheme?.isInstalled != true)

@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "ios-085-droplet-red-5bbe0f80",
+  "name": "Droplet Red",
+  "author": "Apple Inc. and the respective wallpaper creators",
+  "description": "Official Apple iOS wallpaper artwork preserved in the SniperGER iOS-Wallpapers archive, adapted as a local-only Mac direction. First associated with iOS 10 on 5.5\".",
+  "category": "iOS",
+  "collection": "iOS · iOS 10",
+  "appearance": "auto",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.5,
+    "focusY": 0.5,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#160B0B",
+    "panel": "#2A1614",
+    "panelAlt": "#4C2520",
+    "accent": "#FF8B69",
+    "accentAlt": "#FFD1C3",
+    "secondary": "#9C4E3D",
+    "highlight": "#FFB19C",
+    "text": "#FFF7F3",
+    "muted": "#CBA9A0",
+    "line": "rgba(255,139,105,0.32)"
+  }
+}

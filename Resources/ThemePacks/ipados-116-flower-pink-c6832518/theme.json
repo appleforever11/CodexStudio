@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "ipados-116-flower-pink-c6832518",
+  "name": "Flower Pink",
+  "author": "Apple Inc. and the respective wallpaper creators",
+  "description": "Official Apple iPadOS wallpaper artwork preserved in the SniperGER iOS-Wallpapers archive, adapted as a local-only Mac direction. First associated with iOS 9.1 on 12.9\".",
+  "category": "iPadOS",
+  "collection": "iPadOS · iOS 9.1",
+  "appearance": "auto",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.5,
+    "focusY": 0.5,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#08170F",
+    "panel": "#10291C",
+    "panelAlt": "#1B4730",
+    "accent": "#62D7A5",
+    "accentAlt": "#C3F6DD",
+    "secondary": "#307A5A",
+    "highlight": "#90E9BE",
+    "text": "#F0FFF7",
+    "muted": "#9FC2AE",
+    "line": "rgba(98,215,165,0.32)"
+  }
+}

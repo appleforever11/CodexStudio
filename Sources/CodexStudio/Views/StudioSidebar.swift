@@ -2,230 +2,243 @@ import SwiftUI
 
 struct StudioSidebar: View {
     @EnvironmentObject private var store: StudioStore
+    private let sidebarFooterHeight: CGFloat = 86
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            brand
-                .padding(.horizontal, 20)
-                .padding(.top, 22)
-                .padding(.bottom, 28)
+        GeometryReader { proxy in
+            VStack(spacing: 0) {
+                ScrollView(.vertical) {
+                    VStack(alignment: .leading, spacing: 0) {
+                        brand
+                            .padding(.horizontal, 18)
+                            // WindowGroup content can begin underneath the
+                            // native titlebar on macOS. Keep the brand clear
+                            // of traffic lights and the titlebar's drag region.
+                            .padding(.top, 72)
+                            .padding(.bottom, 8)
 
-            VStack(alignment: .leading, spacing: 5) {
-                Text("WORKSPACE")
-                    .font(.system(size: 9, weight: .bold, design: .rounded))
-                    .tracking(1.4)
-                    .foregroundStyle(StudioColor.textFaint)
-                    .padding(.horizontal, 13)
-                    .padding(.bottom, 5)
-
-                ForEach(StudioSection.allCases) { section in
-                    SidebarRow(section: section, isSelected: store.section == section) {
-                        store.selectSection(section)
-                    }
-                }
-            }
-            .padding(.horizontal, 10)
-
-            if let selectedTheme = store.selectedTheme {
-                VStack(alignment: .leading, spacing: 11) {
-                    HStack {
-                        Text("NOW PLAYING")
-                            .font(.system(size: 9, weight: .bold, design: .rounded))
-                            .tracking(1.4)
-                            .foregroundStyle(StudioColor.textFaint)
-                        Spacer()
-                        StatusDot(color: store.connectionColor, isPulsing: store.runtime.connection == .connected)
-                    }
-
-                    HStack(spacing: 10) {
-                        ThemeArtworkView(theme: selectedTheme, animated: store.motionEnabled)
-                            .frame(width: 48, height: 48)
-                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                            .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).stroke(Color.white.opacity(0.18), lineWidth: 1))
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(selectedTheme.name)
-                                .font(.system(size: 12, weight: .semibold))
-                                .foregroundStyle(StudioColor.text)
-                                .lineLimit(1)
-                            Text(store.runtime.activeThemeID == selectedTheme.id ? "Applied to Codex" : "Preview selected")
-                                .font(.system(size: 10, weight: .medium))
-                                .foregroundStyle(store.runtime.activeThemeID == selectedTheme.id ? .green : StudioColor.textMuted)
-                                .lineLimit(1)
-                        }
-                    }
-
-                    Button {
-                        store.applySelectedTheme()
-                    } label: {
-                        HStack(spacing: 8) {
-                            Image(systemName: store.isApplying ? "arrow.triangle.2.circlepath" : "bolt.fill")
-                                .font(.system(size: 11, weight: .bold))
-                            Text(store.isApplying ? "Applying…" : "Apply selection")
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Workspace")
                                 .font(.system(size: 11, weight: .semibold))
-                            Spacer()
-                            Image(systemName: "arrow.up.right")
-                                .font(.system(size: 9, weight: .bold))
+                                .foregroundStyle(StudioColor.textFaint)
+                                .padding(.horizontal, 18)
+                                .padding(.bottom, 4)
+
+                            ForEach(StudioSection.allCases) { section in
+                                Button {
+                                    store.selectSection(section)
+                                } label: {
+                                    StudioNavigationRow(
+                                        section: section,
+                                        count: section == .themes ? store.themes.count : nil,
+                                        isSelected: store.section == section
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                                .padding(.horizontal, 9)
+                            }
                         }
-                        .foregroundStyle(StudioColor.ink)
-                        .padding(.horizontal, 11)
-                        .padding(.vertical, 9)
-                        .background(StudioColor.cyan, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-                    }
-                    .buttonStyle(.plain)
-                    .disabled(store.isApplying || !selectedTheme.isInstalled)
-                    .opacity(selectedTheme.isInstalled ? 1 : 0.48)
-                }
-                .padding(14)
-                .studioPanel(radius: 16, fill: Color.white.opacity(0.055))
-                .padding(.horizontal, 14)
-                .padding(.top, 30)
-            }
 
-            Spacer(minLength: 20)
-
-            VStack(alignment: .leading, spacing: 12) {
-                RuntimeStatusLine()
-                Button {
-                    store.openCodex()
-                } label: {
-                    HStack(spacing: 8) {
-                        Image(systemName: "arrow.up.forward.app")
-                            .font(.system(size: 12, weight: .semibold))
-                        Text("Open Codex")
-                            .font(.system(size: 12, weight: .semibold))
-                        Spacer()
-                        Text("⌘O")
-                            .font(.system(size: 10, weight: .medium, design: .monospaced))
-                            .foregroundStyle(StudioColor.textFaint)
+                        if let selectedTheme = store.selectedTheme {
+                            SidebarFocusCard(theme: selectedTheme)
+                                .padding(.horizontal, 12)
+                                .padding(.top, 14)
+                        }
                     }
-                    .foregroundStyle(StudioColor.textMuted)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 10)
-                    .background(Color.white.opacity(0.055), in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                    // Keep the last scrolled item clear of the persistent
+                    // footer when the sidebar content becomes taller than the
+                    // window.
+                    .padding(.bottom, 20)
                 }
-                .buttonStyle(.plain)
+                .scrollIndicators(.hidden)
+                .frame(width: proxy.size.width, height: max(0, proxy.size.height - sidebarFooterHeight))
+
+                sidebarFooter
+                    .padding(.horizontal, 14)
+                    .padding(.top, 11)
+                    .padding(.bottom, 14)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(.regularMaterial)
+                    .overlay(alignment: .top) {
+                        Rectangle()
+                            .fill(StudioColor.line)
+                            .frame(height: 1)
+                    }
+                    .frame(height: sidebarFooterHeight, alignment: .topLeading)
             }
-            .padding(.horizontal, 14)
-            .padding(.bottom, 16)
+            .frame(width: proxy.size.width, height: proxy.size.height, alignment: .topLeading)
         }
-        .frame(width: 236)
-        .background {
-            LinearGradient(
-                colors: [Color(hex: "#0B111B"), Color(hex: "#0A0E16"), Color(hex: "#10101B")],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .overlay(alignment: .topTrailing) {
-                Circle()
-                    .fill(StudioColor.violet.opacity(0.12))
-                    .frame(width: 190, height: 190)
-                    .blur(radius: 42)
-                    .offset(x: 70, y: -65)
-            }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .background(.regularMaterial)
+        .overlay(alignment: .trailing) {
+            Rectangle()
+                .fill(StudioColor.line)
+                .frame(width: 1)
         }
     }
 
     private var brand: some View {
         HStack(spacing: 11) {
             ZStack {
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .fill(
-                        LinearGradient(
-                            colors: [StudioColor.cyan, StudioColor.violet],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                Image(systemName: "rectangle.3.group.bubble.left.fill")
-                    .font(.system(size: 15, weight: .bold))
+                RoundedRectangle(cornerRadius: 11, style: .continuous)
+                    .fill(StudioColor.spectrum)
+                Image(systemName: "sparkles.rectangle.stack.fill")
+                    .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(StudioColor.ink)
             }
-            .frame(width: 33, height: 33)
-            .shadow(color: StudioColor.cyan.opacity(0.22), radius: 12)
+            .frame(width: 34, height: 34)
 
             VStack(alignment: .leading, spacing: 2) {
-                Text("CODEX STUDIO")
-                    .font(.system(size: 12, weight: .bold, design: .rounded))
-                    .tracking(1.1)
+                Text("Codex Studio")
+                    .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(StudioColor.text)
-                Text("art-direct your workspace")
+                Text("Visual systems for Codex")
                     .font(.system(size: 10, weight: .medium))
-                    .foregroundStyle(StudioColor.textMuted)
+                    .foregroundStyle(StudioColor.textFaint)
+                    .lineLimit(1)
             }
+
+            Spacer(minLength: 0)
+        }
+    }
+
+    private var sidebarFooter: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) {
+                StatusDot(color: store.connectionColor, isPulsing: store.runtime.connection == .connected)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(store.runtime.connection.label)
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundStyle(StudioColor.text)
+                    Text(store.runtime.codexVersion.map { "Codex \($0)" } ?? "Local preview")
+                        .font(.system(size: 9, weight: .medium))
+                        .foregroundStyle(StudioColor.textFaint)
+                }
+                Spacer()
+                Button {
+                    store.refreshRuntime()
+                } label: {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundStyle(StudioColor.textMuted)
+                        .frame(width: 26, height: 26)
+                }
+                .buttonStyle(.plain)
+                .help("Refresh Codex status")
+            }
+
+            Button {
+                store.openCodex()
+            } label: {
+                Label("Open themed Codex", systemImage: "arrow.up.forward.app")
+                    .font(.system(size: 11, weight: .semibold))
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.bordered)
+            .controlSize(.small)
+            .tint(StudioColor.cyan)
         }
     }
 }
 
-private struct SidebarRow: View {
+private struct StudioNavigationRow: View {
     let section: StudioSection
+    let count: Int?
     let isSelected: Bool
-    let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
-            HStack(spacing: 11) {
-                Image(systemName: section.systemImage)
-                    .font(.system(size: 14, weight: isSelected ? .semibold : .regular))
-                    .frame(width: 20)
+        Label {
+            HStack(spacing: 8) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(section.label)
-                        .font(.system(size: 13, weight: isSelected ? .semibold : .medium))
+                        .font(.system(size: 12, weight: .medium))
+                        .lineLimit(1)
                     Text(section.subtitle)
-                        .font(.system(size: 9, weight: .medium))
-                        .foregroundStyle(isSelected ? StudioColor.textMuted : StudioColor.textFaint)
+                        .font(.system(size: 9, weight: .regular))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
                 }
-                Spacer()
-                if section == .themes {
-                    Text("\(ThemeCatalog.curated.count)")
-                        .font(.system(size: 9, weight: .bold, design: .monospaced))
+                Spacer(minLength: 0)
+                if let count {
+                    Text(count.formatted(.number.notation(.compactName)))
+                        .font(.system(size: 9, weight: .semibold, design: .monospaced))
                         .foregroundStyle(isSelected ? StudioColor.cyan : StudioColor.textFaint)
                 }
             }
-            .foregroundStyle(isSelected ? StudioColor.text : StudioColor.textMuted)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 9)
-            .background {
-                if isSelected {
-                    RoundedRectangle(cornerRadius: 11, style: .continuous)
-                        .fill(StudioColor.cyan.opacity(0.12))
-                        .overlay(alignment: .leading) {
-                            Capsule()
-                                .fill(StudioColor.cyan)
-                                .frame(width: 3)
-                                .padding(.vertical, 7)
-                        }
-                }
+        } icon: {
+            Image(systemName: section.systemImage)
+                .font(.system(size: 13, weight: .medium))
+                .frame(width: 18)
+        }
+        .labelStyle(.titleAndIcon)
+        .foregroundStyle(isSelected ? StudioColor.text : StudioColor.textMuted)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 8)
+        .background(
+            isSelected ? StudioColor.inkSoft.opacity(0.84) : Color.clear,
+            in: RoundedRectangle(cornerRadius: 11, style: .continuous)
+        )
+        .overlay(alignment: .leading) {
+            if isSelected {
+                Capsule()
+                    .fill(StudioColor.cyan)
+                    .frame(width: 3, height: 22)
+                    .padding(.leading, 2)
             }
         }
-        .buttonStyle(.plain)
+        .accessibilityLabel(count.map { "\(section.label), \($0) themes" } ?? section.label)
     }
 }
 
-private struct RuntimeStatusLine: View {
+private struct SidebarFocusCard: View {
     @EnvironmentObject private var store: StudioStore
+    let theme: Theme
 
     var body: some View {
-        HStack(spacing: 9) {
-            StatusDot(color: store.connectionColor, isPulsing: store.runtime.connection == .connected)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(store.runtime.connection.label)
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(StudioColor.text)
-                Text(store.runtime.codexVersion.map { "Codex \($0)" } ?? "Local preview mode")
-                    .font(.system(size: 9, weight: .medium))
+        VStack(alignment: .leading, spacing: 9) {
+            HStack {
+                Text("Now playing")
+                    .font(.system(size: 10, weight: .semibold))
                     .foregroundStyle(StudioColor.textFaint)
+                Spacer()
+                StatusDot(color: store.connectionColor, isPulsing: store.runtime.connection == .connected)
             }
-            Spacer()
+
+            ZStack(alignment: .bottomLeading) {
+                ThemeArtworkView(theme: theme, animated: store.motionEnabled, showOverlay: false)
+                LinearGradient(
+                    colors: [.clear, .black.opacity(0.82)],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(theme.name)
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .lineLimit(1)
+                    Text(store.runtime.activeThemeID == theme.id ? "Live in Codex" : "Preview selected")
+                        .font(.system(size: 9, weight: .medium))
+                        .foregroundStyle(store.runtime.activeThemeID == theme.id ? StudioColor.mint : .white.opacity(0.72))
+                }
+                .padding(9)
+            }
+            .frame(height: 70)
+            .clipShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
+
             Button {
-                store.refreshRuntime()
+                store.applySelectedTheme()
             } label: {
-                Image(systemName: "arrow.clockwise")
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(StudioColor.textMuted)
+                Label(store.isApplying ? "Applying…" : "Apply selection", systemImage: "bolt.fill")
+                    .font(.system(size: 10, weight: .semibold))
+                    .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.plain)
-            .help("Refresh Codex runtime status")
+            .buttonStyle(.borderedProminent)
+            .controlSize(.small)
+            .tint(StudioColor.cyan)
+            .disabled(store.isApplying || !theme.isInstalled)
         }
-        .padding(.horizontal, 3)
+        .padding(11)
+        .studioPanel(radius: 15, fill: Color.white.opacity(0.045))
     }
 }

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "aiGenerated": false,
+  "localOnly": true,
+  "artist": "Apple Inc. and the respective wallpaper creators",
+  "artworkID": "apple-ipados-ipados-1632-noodles-silver-dark-35618bd3",
+  "artworkTitle": "Noodles Silver Dark",
+  "category": "iPadOS",
+  "collection": "iPadOS · iPadOS 14.1",
+  "institution": "Apple Inc. (archived by SniperGER)",
+  "rightsStatus": "Apple copyrighted — local-only",
+  "sourceURL": "https://github.com/SniperGER/iOS-Wallpapers",
+  "imageURL": "https://raw.githubusercontent.com/SniperGER/iOS-Wallpapers/master/iPad/10.9%22/iPadOS%2014.1/Stills/1632.Noodles_Silver_Dark-820w-1180h@2x~ipad.heic",
+  "sourcePath": "iPad/10.9\"/iPadOS 14.1/Stills/1632.Noodles_Silver_Dark-820w-1180h@2x~ipad.heic",
+  "platform": "iPadOS",
+  "platformVersion": "iPadOS 14.1",
+  "deviceClass": "10.9\"",
+  "retrievedAt": "2026-08-31",
+  "summary": "Official Apple iPadOS wallpaper artwork preserved in the SniperGER iOS-Wallpapers archive, adapted as a local-only Mac direction.",
+  "transformation": "Deterministic center crop to a 2400×1500 16:10 Mac canvas, JPEG encoding, and interface palette mapping only; the original mobile proportions are not displayed directly.",
+  "distribution": "Not for redistribution without permission from Apple and any respective creators or owners."
+}

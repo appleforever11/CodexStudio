@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "ios-135-nudibranch-blue-zinc-dd2308ea",
+  "name": "Nudibranch Blue Zinc",
+  "author": "Apple Inc. and the respective wallpaper creators",
+  "description": "Official Apple iOS wallpaper artwork preserved in the SniperGER iOS-Wallpapers archive, adapted as a local-only Mac direction. First associated with iOS 9.3 on 4.0\".",
+  "category": "iOS",
+  "collection": "iOS · iOS 9.3",
+  "appearance": "auto",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.5,
+    "focusY": 0.5,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#0D1020",
+    "panel": "#171B34",
+    "panelAlt": "#273266",
+    "accent": "#8EA6FF",
+    "accentAlt": "#D9E0FF",
+    "secondary": "#4E61B3",
+    "highlight": "#B5C3FF",
+    "text": "#F5F7FF",
+    "muted": "#A5AFD0",
+    "line": "rgba(142,166,255,0.32)"
+  }
+}

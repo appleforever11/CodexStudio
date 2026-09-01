@@ -59,16 +59,16 @@ struct ThemeLibraryService {
 
     static func loadSynchronously() -> ThemeLibraryResult {
         _ = installBundledRuntimeIfNeeded()
-        _ = seedBundledThemesIfNeeded()
 
+        let bundledThemes = scanBundledThemes()
         let localThemes = scanManagedThemes()
-        var themeByID = Dictionary(uniqueKeysWithValues: localThemes.map { ($0.id, $0) })
+        var themeByID = Dictionary(uniqueKeysWithValues: bundledThemes.map { ($0.id, $0) })
 
-        for curated in ThemeCatalog.curated {
-            if let local = themeByID[curated.id] {
-                themeByID[curated.id] = curated.mergingLocal(local)
+        for local in localThemes {
+            if let bundled = themeByID[local.id] {
+                themeByID[local.id] = bundled.mergingLocal(local)
             } else {
-                themeByID[curated.id] = curated
+                themeByID[local.id] = local
             }
         }
 
@@ -84,14 +84,14 @@ struct ThemeLibraryService {
         }
 
         let curatedCount = themes.filter(\.isCurated).count
-        let localCount = themes.filter { $0.origin == .local }.count
+        let localCount = themes.filter { $0.isInstalled && $0.origin != .wallBuddy }.count
         let wallBuddyCount = themes.filter { $0.origin == .wallBuddy }.count
         let wallBuddyPath = wallBuddyBundle.path
         let message: String
         if wallBuddyCount > 0 {
-            message = "\(themes.count) themes ready · \(wallBuddyCount) WallBuddy asset\(wallBuddyCount == 1 ? "" : "s") found"
+            message = "\(themes.count) themes ready · \(wallBuddyCount) local image source\(wallBuddyCount == 1 ? "" : "s") found"
         } else {
-            message = "\(themes.count) themes ready · local library connected"
+            message = "\(themes.count) bundled and local themes ready"
         }
 
         return ThemeLibraryResult(
@@ -335,17 +335,125 @@ struct ThemeLibraryService {
     }
 
     @discardableResult
+    static func installBundledThemeIfNeeded(_ id: String) -> Bool {
+        let fileManager = FileManager.default
+        guard isSafeThemeID(id),
+              let bundledThemesDirectory
+        else {
+            return false
+        }
+
+        let destination = managedThemesDirectory.appendingPathComponent(id, isDirectory: true)
+        let source = bundledThemesDirectory.appendingPathComponent(id, isDirectory: true)
+        guard (try? source.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]))
+            .map({ $0.isDirectory == true && $0.isSymbolicLink != true }) == true,
+              parseThemeDirectory(source, origin: .curated) != nil
+        else {
+            return false
+        }
+
+        if fileManager.fileExists(atPath: destination.appendingPathComponent("theme.json").path) {
+            // A previous build may have installed an older local copy under
+            // the same id. Apple wallpaper packs are local-only and are
+            // refreshed atomically so applying one always uses the official
+            // bundled image rather than a stale managed asset.
+            if isLocalOnlyTheme(at: source) && localOnlyThemeNeedsRefresh(source: source, destination: destination) {
+                return refreshManagedThemeAtomically(from: source, to: destination, id: id)
+            }
+            return true
+        }
+        guard !fileManager.fileExists(atPath: destination.path) else { return false }
+
+        do {
+            try fileManager.createDirectory(
+                at: managedThemesDirectory,
+                withIntermediateDirectories: true,
+                attributes: [.posixPermissions: 0o700]
+            )
+            let stagingDirectory = managedThemesDirectory.appendingPathComponent(
+                ".\(id).bundled-\(UUID().uuidString)",
+                isDirectory: true
+            )
+            defer { try? fileManager.removeItem(at: stagingDirectory) }
+            try fileManager.copyItem(at: source, to: stagingDirectory)
+            guard parseThemeDirectory(stagingDirectory, origin: .local) != nil,
+                  !fileManager.fileExists(atPath: destination.path)
+            else {
+                return false
+            }
+            try fileManager.moveItem(at: stagingDirectory, to: destination)
+            return true
+        } catch {
+            return false
+        }
+    }
+
+    private static func isLocalOnlyTheme(at directory: URL) -> Bool {
+        boolValue(catalogMetadata(in: directory), key: "localOnly")
+    }
+
+    private static func localOnlyThemeNeedsRefresh(source: URL, destination: URL) -> Bool {
+        let sourceImageURL = stringValue(catalogMetadata(in: source), key: "imageURL")
+        let destinationImageURL = stringValue(catalogMetadata(in: destination), key: "imageURL")
+        return sourceImageURL.isEmpty || sourceImageURL != destinationImageURL
+    }
+
+    private static func refreshManagedThemeAtomically(from source: URL, to destination: URL, id: String) -> Bool {
+        let fileManager = FileManager.default
+        let codexDirectory = managedThemesDirectory
+        let stagingDirectory = codexDirectory.appendingPathComponent(
+            ".(id).bundled-(UUID().uuidString)",
+            isDirectory: true
+        )
+        let backupDirectory = codexDirectory.appendingPathComponent(
+            ".(id).previous-(UUID().uuidString)",
+            isDirectory: true
+        )
+        var movedExisting = false
+
+        do {
+            guard (try? destination.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]))
+                .map({ $0.isDirectory == true && $0.isSymbolicLink != true }) == true
+            else {
+                return false
+            }
+            try fileManager.createDirectory(
+                at: codexDirectory,
+                withIntermediateDirectories: true,
+                attributes: [.posixPermissions: 0o700]
+            )
+            try fileManager.copyItem(at: source, to: stagingDirectory)
+            guard parseThemeDirectory(stagingDirectory, origin: .local) != nil else {
+                try? fileManager.removeItem(at: stagingDirectory)
+                return false
+            }
+            try fileManager.moveItem(at: destination, to: backupDirectory)
+            movedExisting = true
+            try fileManager.moveItem(at: stagingDirectory, to: destination)
+            try? fileManager.removeItem(at: backupDirectory)
+            return true
+        } catch {
+            try? fileManager.removeItem(at: stagingDirectory)
+            if movedExisting,
+               !fileManager.fileExists(atPath: destination.path),
+               fileManager.fileExists(atPath: backupDirectory.path) {
+                try? fileManager.moveItem(at: backupDirectory, to: destination)
+            }
+            return false
+        }
+    }
+
+    @discardableResult
     static func seedBundledThemesIfNeeded() -> Int {
         let fileManager = FileManager.default
         guard let bundledThemesDirectory,
-              let entries = try? fileManager.contentsOfDirectory(
-                at: bundledThemesDirectory,
-                includingPropertiesForKeys: [.isDirectoryKey],
-                options: [.skipsHiddenFiles]
-              )
+              let entryNames = try? fileManager.contentsOfDirectory(atPath: bundledThemesDirectory.path)
         else {
             return 0
         }
+        let entries = entryNames
+            .filter { !$0.hasPrefix(".") }
+            .map { bundledThemesDirectory.appendingPathComponent($0, isDirectory: true) }
 
         do {
             try fileManager.createDirectory(
@@ -465,7 +573,7 @@ struct ThemeLibraryService {
         if isSafeFileName(previewName), fileManager.fileExists(atPath: source.appendingPathComponent(previewName).path) {
             names.append(previewName)
         }
-        for optionalName in ["README.md", "theme.css"] where fileManager.fileExists(atPath: source.appendingPathComponent(optionalName).path) {
+        for optionalName in ["README.md", "theme.css", "catalog.json", "LICENSE.txt"] where fileManager.fileExists(atPath: source.appendingPathComponent(optionalName).path) {
             names.append(optionalName)
         }
         names = Array(Set(names))
@@ -488,17 +596,35 @@ struct ThemeLibraryService {
 
     private static func scanManagedThemes() -> [Theme] {
         let fileManager = FileManager.default
-        guard let entries = try? fileManager.contentsOfDirectory(
-            at: managedThemesDirectory,
-            includingPropertiesForKeys: [.isDirectoryKey],
-            options: [.skipsHiddenFiles]
-        ) else {
+        guard let entryNames = try? fileManager.contentsOfDirectory(atPath: managedThemesDirectory.path) else {
             return []
         }
 
-        return entries.compactMap { directory in
-            guard (try? directory.resourceValues(forKeys: [.isDirectoryKey]).isDirectory) == true else { return nil }
+        return entryNames.filter { !$0.hasPrefix(".") }.compactMap { entryName in
+            let directory = managedThemesDirectory.appendingPathComponent(entryName, isDirectory: true)
+            guard let values = try? directory.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]),
+                  values.isDirectory == true,
+                  values.isSymbolicLink != true
+            else { return nil }
             return parseThemeDirectory(directory, origin: .local)
+        }
+    }
+
+    private static func scanBundledThemes() -> [Theme] {
+        let fileManager = FileManager.default
+        guard let bundledThemesDirectory,
+              let entryNames = try? fileManager.contentsOfDirectory(atPath: bundledThemesDirectory.path)
+        else {
+            return []
+        }
+
+        return entryNames.filter { !$0.hasPrefix(".") }.compactMap { entryName in
+            let directory = bundledThemesDirectory.appendingPathComponent(entryName, isDirectory: true)
+            guard let values = try? directory.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]),
+                  values.isDirectory == true,
+                  values.isSymbolicLink != true
+            else { return nil }
+            return parseThemeDirectory(directory, origin: .curated)
         }
     }
 
@@ -524,15 +650,27 @@ struct ThemeLibraryService {
             : imageURL
         let colors = object["colors"] as? [String: Any] ?? [:]
         let art = object["art"] as? [String: Any] ?? [:]
-        let category = stringValue(object, key: "category", fallback: stringValue(object, key: "collection", fallback: "Local"))
+        let catalog = catalogMetadata(in: directory)
+        let category = stringValue(
+            catalog,
+            key: "category",
+            fallback: stringValue(object, key: "category", fallback: stringValue(object, key: "collection", fallback: "Local"))
+        )
+        let sourceURL = stringValue(catalog, key: "sourceURL", fallback: stringValue(object, key: "promoUrl"))
+        let rightsSummary = stringValue(catalog, key: "rightsStatus")
+        let aiGenerated = optionalBoolValue(catalog, key: "aiGenerated")
+        let hasVerifiedProvenance = regularFile(at: directory.appendingPathComponent("LICENSE.txt"))
+            && aiGenerated == false
+            && !sourceURL.isEmpty
+            && (rightsSummary.localizedCaseInsensitiveContains("public domain") || rightsSummary.localizedCaseInsensitiveContains("cc0"))
 
         return Theme(
             id: id,
             name: stringValue(object, key: "name", fallback: id),
-            author: stringValue(object, key: "author", fallback: "Local theme"),
-            description: stringValue(object, key: "description", fallback: stringValue(object, key: "tagline", fallback: "A locally managed Codex theme.")),
+            author: stringValue(catalog, key: "artist", fallback: stringValue(object, key: "author", fallback: "Creator not recorded")),
+            description: stringValue(catalog, key: "summary", fallback: stringValue(object, key: "description", fallback: stringValue(object, key: "tagline", fallback: "A locally managed Codex theme."))),
             category: category,
-            collection: stringValue(object, key: "collection", fallback: "Local library"),
+            collection: stringValue(catalog, key: "collection", fallback: stringValue(object, key: "collection", fallback: "Local library")),
             appearance: stringValue(object, key: "appearance", fallback: "auto"),
             palette: ThemePalette(
                 background: stringValue(colors, key: "background", fallback: ThemePalette.fallback.background),
@@ -550,13 +688,30 @@ struct ThemeLibraryService {
             previewPath: previewURL.path,
             origin: origin,
             isInstalled: true,
-            isCurated: false,
+            isCurated: hasVerifiedProvenance,
             isFavorite: false,
             focusX: numberValue(art, key: "focusX", fallback: 0.5),
             focusY: numberValue(art, key: "focusY", fallback: 0.5),
             safeArea: stringValue(art, key: "safeArea", fallback: "auto"),
-            taskMode: stringValue(art, key: "taskMode", fallback: "auto")
+            taskMode: stringValue(art, key: "taskMode", fallback: "auto"),
+            sourceURL: sourceURL.isEmpty ? nil : sourceURL,
+            rightsSummary: rightsSummary.isEmpty ? nil : rightsSummary,
+            institution: stringValue(catalog, key: "institution").nilIfEmpty,
+            isAIGenerated: aiGenerated
         )
+    }
+
+    private static func catalogMetadata(in directory: URL) -> [String: Any] {
+        let url = directory.appendingPathComponent("catalog.json")
+        guard regularFile(at: url),
+              let data = try? Data(contentsOf: url),
+              data.count <= 64 * 1024,
+              let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              numberValue(object, key: "schemaVersion") == 1
+        else {
+            return [:]
+        }
+        return object
     }
 
     private static func scanWallBuddyThemes() -> [Theme] {
@@ -584,10 +739,10 @@ struct ThemeLibraryService {
             let slug = slugify(url.deletingPathExtension().lastPathComponent)
             return Theme(
                 id: "wallbuddy-\(slug)",
-                name: "WallBuddy · \(displayName(url.deletingPathExtension().lastPathComponent))",
-                author: "WallBuddy",
-                description: "A local visual source discovered from the WallBuddy workspace.",
-                category: "WallBuddy",
+                name: "Local · \(displayName(url.deletingPathExtension().lastPathComponent))",
+                author: "Local source",
+                description: "A local visual source discovered on this Mac.",
+                category: "Local source",
                 collection: "Local source",
                 appearance: "dark",
                 palette: ThemePalette(
@@ -639,6 +794,18 @@ struct ThemeLibraryService {
         return fallback
     }
 
+    private static func boolValue(_ object: [String: Any], key: String, fallback: Bool = false) -> Bool {
+        if let value = object[key] as? Bool { return value }
+        if let number = object[key] as? NSNumber { return number.boolValue }
+        return fallback
+    }
+
+    private static func optionalBoolValue(_ object: [String: Any], key: String) -> Bool? {
+        if let value = object[key] as? Bool { return value }
+        if let number = object[key] as? NSNumber { return number.boolValue }
+        return nil
+    }
+
     private static func slugify(_ value: String) -> String {
         let lowered = value.lowercased().map { character in
             character.isLetter || character.isNumber ? String(character) : "-"
@@ -652,6 +819,10 @@ struct ThemeLibraryService {
             .replacingOccurrences(of: "_", with: " ")
             .capitalized
     }
+}
+
+private extension String {
+    var nilIfEmpty: String? { isEmpty ? nil : self }
 }
 
 enum ThemeImportError: LocalizedError {

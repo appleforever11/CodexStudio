@@ -35,7 +35,7 @@ INJECTOR_JOB_LABEL="com.openai.codex-dream-skin-studio.injector"
 EXPECTED_CODEX_TEAM_ID="2DC432GLL2"
 EXPECTED_CODEX_REQUIREMENT="anchor apple generic and certificate leaf[subject.OU] = \"$EXPECTED_CODEX_TEAM_ID\""
 SKIN_VERSION="$(/usr/bin/tr -d '[:space:]' < "$PROJECT_ROOT/VERSION" 2>/dev/null || true)"
-[ -n "$SKIN_VERSION" ] || SKIN_VERSION="1.9.0"
+[ -n "$SKIN_VERSION" ] || SKIN_VERSION="1.9.1"
 DREAM_SKIN_VALIDATED_RUNTIME_PID=""
 DREAM_SKIN_VALIDATED_RUNTIME_BUNDLE=""
 DREAM_SKIN_VALIDATED_RUNTIME_EXE=""
@@ -516,6 +516,29 @@ verified_cdp_endpoint() {
   local port="$1"
   port_belongs_to_codex "$port" || return 1
   cdp_http_ready "$port"
+}
+
+# A loopback endpoint alone is not proof that the current Codex process is the
+# themed one. The endpoint can survive an updater handoff while state.json
+# still describes the previous process. Require the active theme, staged
+# theme identity, and recorded Codex PID to agree before treating a launch as
+# healthy.
+theme_runtime_state_ready() {
+  local session=""
+  local active_id=""
+  local expected_id=""
+  local recorded_pid=""
+  local current_pid=""
+  [ -f "$STATE_PATH" ] || return 1
+  [ -f "$THEME_DIR/theme.json" ] || return 1
+  session="$(/usr/bin/plutil -extract session raw -o - "$STATE_PATH" 2>/dev/null || true)"
+  active_id="$(/usr/bin/plutil -extract appliedThemeId raw -o - "$STATE_PATH" 2>/dev/null || true)"
+  expected_id="$(/usr/bin/plutil -extract id raw -o - "$THEME_DIR/theme.json" 2>/dev/null || true)"
+  recorded_pid="$(/usr/bin/plutil -extract codexPid raw -o - "$STATE_PATH" 2>/dev/null || true)"
+  current_pid="$(codex_main_pids | /usr/bin/head -n 1)"
+  [ "$session" = "active" ]
+  [ -n "$active_id" ] && [ "$active_id" = "$expected_id" ]
+  [ -n "$recorded_pid" ] && [ "$recorded_pid" != "0" ] && [ "$recorded_pid" = "$current_pid" ]
 }
 
 select_available_port() {

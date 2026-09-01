@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "ios-1221-wwdc-2019-light-66d540f4",
+  "name": "WWDC 2019 Light",
+  "author": "Apple Inc. and the respective wallpaper creators",
+  "description": "Official Apple iOS wallpaper artwork preserved in the SniperGER iOS-Wallpapers archive, adapted as a local-only Mac direction. First associated with iOS 13 on 6.5\".",
+  "category": "iOS",
+  "collection": "iOS · iOS 13",
+  "appearance": "light",
+  "image": "background.jpg",
+  "preview": "background.jpg",
+  "art": {
+    "focusX": 0.5,
+    "focusY": 0.5,
+    "safeArea": "left",
+    "taskMode": "ambient"
+  },
+  "colors": {
+    "background": "#0D1020",
+    "panel": "#171B34",
+    "panelAlt": "#273266",
+    "accent": "#8EA6FF",
+    "accentAlt": "#D9E0FF",
+    "secondary": "#4E61B3",
+    "highlight": "#B5C3FF",
+    "text": "#F5F7FF",
+    "muted": "#A5AFD0",
+    "line": "rgba(142,166,255,0.32)"
+  }
+}
