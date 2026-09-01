@@ -46,7 +46,7 @@ struct CanvasPage: View {
     }
 
     private var hero: some View {
-        ZStack(alignment: .topLeading) {
+        ZStack {
             if let selectedTheme = store.selectedTheme {
                 ThemeArtworkView(theme: selectedTheme, animated: store.motionEnabled, showOverlay: false)
             } else {
@@ -58,7 +58,13 @@ struct CanvasPage: View {
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
-
+        }
+        // Apply the fixed card geometry before laying out the overlay. Canvas
+        // is inside a vertical ScrollView, so an overlay placed inside the
+        // unconstrained ZStack can otherwise resolve outside the clipped
+        // artwork on macOS 26.
+        .frame(maxWidth: .infinity, minHeight: 334, maxHeight: 334)
+        .overlay(alignment: .topLeading) {
             VStack(alignment: .leading, spacing: 0) {
                 HStack {
                     StudioPill(title: "Selected world", tint: StudioColor.cyan, symbol: "cursorarrow.rays")
@@ -83,9 +89,9 @@ struct CanvasPage: View {
                     }
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .padding(22)
         }
-        .frame(height: 334)
         .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         .overlay {
             RoundedRectangle(cornerRadius: 20, style: .continuous)

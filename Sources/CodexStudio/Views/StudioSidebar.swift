@@ -2,72 +2,69 @@ import SwiftUI
 
 struct StudioSidebar: View {
     @EnvironmentObject private var store: StudioStore
-    private let sidebarFooterHeight: CGFloat = 86
 
     var body: some View {
-        GeometryReader { proxy in
-            VStack(spacing: 0) {
-                ScrollView(.vertical) {
-                    VStack(alignment: .leading, spacing: 0) {
-                        brand
+        VStack(spacing: 0) {
+            ScrollView(.vertical) {
+                VStack(alignment: .leading, spacing: 0) {
+                    brand
+                        .padding(.horizontal, 18)
+                        // WindowGroup content can begin underneath the native
+                        // titlebar on macOS. Keep the brand clear of traffic
+                        // lights and the titlebar's drag region.
+                        .padding(.top, 72)
+                        .padding(.bottom, 8)
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Workspace")
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundStyle(StudioColor.textFaint)
                             .padding(.horizontal, 18)
-                            // WindowGroup content can begin underneath the
-                            // native titlebar on macOS. Keep the brand clear
-                            // of traffic lights and the titlebar's drag region.
-                            .padding(.top, 72)
-                            .padding(.bottom, 8)
+                            .padding(.bottom, 4)
 
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("Workspace")
-                                .font(.system(size: 11, weight: .semibold))
-                                .foregroundStyle(StudioColor.textFaint)
-                                .padding(.horizontal, 18)
-                                .padding(.bottom, 4)
-
-                            ForEach(StudioSection.allCases) { section in
-                                Button {
-                                    store.selectSection(section)
-                                } label: {
-                                    StudioNavigationRow(
-                                        section: section,
-                                        count: section == .themes ? store.themes.count : nil,
-                                        isSelected: store.section == section
-                                    )
-                                }
-                                .buttonStyle(.plain)
-                                .padding(.horizontal, 9)
+                        ForEach(StudioSection.allCases) { section in
+                            Button {
+                                store.selectSection(section)
+                            } label: {
+                                StudioNavigationRow(
+                                    section: section,
+                                    count: section == .themes ? store.themes.count : nil,
+                                    isSelected: store.section == section
+                                )
                             }
-                        }
-
-                        if let selectedTheme = store.selectedTheme {
-                            SidebarFocusCard(theme: selectedTheme)
-                                .padding(.horizontal, 12)
-                                .padding(.top, 14)
+                            .buttonStyle(.plain)
+                            .padding(.horizontal, 9)
                         }
                     }
-                    .frame(maxWidth: .infinity, alignment: .topLeading)
-                    // Keep the last scrolled item clear of the persistent
-                    // footer when the sidebar content becomes taller than the
-                    // window.
-                    .padding(.bottom, 20)
+
+                    if let selectedTheme = store.selectedTheme {
+                        SidebarFocusCard(theme: selectedTheme)
+                            .padding(.horizontal, 12)
+                            .padding(.top, 14)
+                    }
                 }
-                .scrollIndicators(.hidden)
-                .frame(width: proxy.size.width, height: max(0, proxy.size.height - sidebarFooterHeight))
-
-                sidebarFooter
-                    .padding(.horizontal, 14)
-                    .padding(.top, 11)
-                    .padding(.bottom, 14)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(.regularMaterial)
-                    .overlay(alignment: .top) {
-                        Rectangle()
-                            .fill(StudioColor.line)
-                            .frame(height: 1)
-                    }
-                    .frame(height: sidebarFooterHeight, alignment: .topLeading)
+                .frame(maxWidth: .infinity, alignment: .topLeading)
+                .padding(.bottom, 20)
             }
-            .frame(width: proxy.size.width, height: proxy.size.height, alignment: .topLeading)
+            .scrollIndicators(.hidden)
+            // The parent split view is constrained to the window viewport;
+            // let the scrollable region absorb only the space left after the
+            // natural-height footer.
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            sidebarFooter
+                .padding(.horizontal, 14)
+                .padding(.top, 11)
+                .padding(.bottom, 14)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .fixedSize(horizontal: false, vertical: true)
+                .layoutPriority(1)
+                .background(.regularMaterial)
+                .overlay(alignment: .top) {
+                    Rectangle()
+                        .fill(StudioColor.line)
+                        .frame(height: 1)
+                }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(.regularMaterial)

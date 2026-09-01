@@ -32,8 +32,13 @@ struct ContentView: View {
                     .allowsHitTesting(false)
             }
             .shadow(color: .black.opacity(0.30), radius: 30, y: 14)
+            // Keep the split view tied to the window viewport. Without an
+            // explicit finite height, a vertical ScrollView can make the
+            // sidebar's layout extend past the visible window on macOS 26.
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .padding(10)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .frame(minWidth: 1120, minHeight: 700)
         .preferredColorScheme(.dark)
         .task {

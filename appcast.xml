@@ -3,6 +3,23 @@
     <channel>
         <title>CodexStudio</title>
         <item>
+            <title>0.1.7</title>
+            <pubDate>Tue, 01 Sep 2026 00:08:02 -0400</pubDate>
+            <link>https://github.com/appleforever11/CodexStudio</link>
+            <sparkle:version>1007000</sparkle:version>
+            <sparkle:shortVersionString>0.1.7</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[## Canvas and sidebar layout repair
+
+- Fixes the Canvas hero overlay so the selected theme title, description, actions, and metadata stay inside the artwork card on macOS 26.
+- Constrains the split-view shell to the window viewport so vertical scrolling cannot push the sidebar below the visible window.
+- Keeps the sidebar's connection status and themed-Codex action visible with a natural-height footer at compact and tall window sizes.
+- Preserves the existing theme application, local Apple wallpaper shelves, DockDoor launcher, and Sparkle update behavior.
+]]></description>
+            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.7/CodexStudio-0.1.7-arm64.zip" length="389165595" type="application/octet-stream" sparkle:edSignature="2ewcovyM65au+HbUEX1hnQRvaH4tDgl3/LukjLrluYpojWieFr6H/EBBkFW9a2i2Z3Z/yu94bqf/5et2NdbzDQ=="/>
+        </item>
+        <item>
             <title>0.1.6</title>
             <pubDate>Mon, 31 Aug 2026 22:57:41 -0400</pubDate>
             <link>https://github.com/appleforever11/CodexStudio</link>
@@ -47,24 +64,6 @@
 - Hides the official process from DockDoor's unpinned running-app row when the managed helper pin is present, preventing a second swirl-branded Codex item.
 ]]></description>
             <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.5/CodexStudio-0.1.5-arm64.zip" length="89630989" type="application/octet-stream" sparkle:edSignature="TFKLfqSt8JXymusp91NPgQwAXbGc8NRheHN5rKLK5ayDq8KrW6YJfhbIefdNuN0Uxh7TpQsqlg4Mr7A85gEHCw=="/>
-        </item>
-        <item>
-            <title>0.1.4</title>
-            <pubDate>Sun, 30 Aug 2026 15:08:57 -0400</pubDate>
-            <link>https://github.com/appleforever11/CodexStudio</link>
-            <sparkle:version>1004000</sparkle:version>
-            <sparkle:shortVersionString>0.1.4</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[## DockDoor relaunch hardening
-
-- Repairs the per-user theme persistence monitor when the DockDoor helper is launched directly.
-- Persists the actual loopback port selected after a cold Codex restart, including non-default ports.
-- Makes the persistence agent report load failures instead of silently appearing successful.
-- Labels the DockDoor helper `Codex Studio (Themed)` so it is distinguishable from the stock Codex shortcut.
-- Keeps the bundled runtime version aligned with the release that installed it.
-]]></description>
-            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.4/CodexStudio-0.1.4-arm64.zip" length="91639539" type="application/octet-stream" sparkle:edSignature="yoEtQ2n5PCJhyiPhgz7jIrYT0H8WYN3RuYyw1yFO1eTzNcNzuU61p8zcpezkMv+Z7ChSSwDH48Lzp1/rxopqDg=="/>
         </item>
     </channel>
 </rss>
