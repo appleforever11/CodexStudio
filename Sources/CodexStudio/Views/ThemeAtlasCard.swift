@@ -54,9 +54,13 @@ struct ThemeAtlasCard: View {
                 }
             }
         }
-        .accessibilityElement(children: .combine)
+        // Keep the card discoverable as a selectable element while allowing
+        // the nested favorite/apply buttons to remain independently clickable
+        // in VoiceOver and in macOS's accessibility tree.
+        .accessibilityElement(children: .contain)
         .accessibilityAddTraits(.isButton)
         .accessibilityLabel("\(theme.name), \(theme.category), \(theme.isInstalled ? "installed" : "preview")")
+        .accessibilityHint("Select this theme. Use the star to save it to Favorites.")
     }
 
     private var artwork: some View {
@@ -98,13 +102,17 @@ struct ThemeAtlasCard: View {
                     store.toggleFavorite(theme)
                 } label: {
                     Image(systemName: theme.isFavorite ? "star.fill" : "star")
-                        .font(.system(size: 10, weight: .bold))
+                        .font(.system(size: 12, weight: .bold))
                         .foregroundStyle(theme.isFavorite ? StudioColor.amber : .white.opacity(0.88))
-                        .frame(width: 24, height: 24)
+                        .frame(width: 32, height: 32)
                         .background(.black.opacity(0.28), in: Circle())
                 }
                 .buttonStyle(StudioPressableButtonStyle())
                 .accessibilityLabel(theme.isFavorite ? "Remove \(theme.name) from favorites" : "Add \(theme.name) to favorites")
+                .accessibilityValue(theme.isFavorite ? "Saved" : "Not saved")
+                .help(theme.isFavorite ? "Remove from Favorites" : "Add to Favorites")
+                .contentShape(Circle())
+                .zIndex(2)
             }
             .padding(10)
         }
@@ -162,13 +170,20 @@ struct ThemeAtlasCard: View {
 struct ThemeAtlasEmptyState: View {
     let title: String
     let detail: String
+    let symbol: String
+
+    init(title: String, detail: String, symbol: String = "sparkle.magnifyingglass") {
+        self.title = title
+        self.detail = detail
+        self.symbol = symbol
+    }
 
     var body: some View {
         VStack(spacing: 12) {
             ZStack {
                 Circle()
                     .fill(StudioColor.cyan.opacity(0.10))
-                Image(systemName: "sparkle.magnifyingglass")
+                Image(systemName: symbol)
                     .font(.system(size: 22, weight: .semibold))
                     .foregroundStyle(StudioColor.cyan)
             }

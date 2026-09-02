@@ -111,6 +111,12 @@ final class StudioStore: ObservableObject {
         return result
     }
 
+    var favoriteCount: Int {
+        themes.reduce(into: 0) { count, theme in
+            if theme.isFavorite { count += 1 }
+        }
+    }
+
     var connectionColor: Color {
         switch runtime.connection {
         case .connected: .green
@@ -167,6 +173,16 @@ final class StudioStore: ObservableObject {
         section = nextSection
     }
 
+    func selectThemes(filter: ThemeFilter = .all) {
+        section = .themes
+        themeFilter = filter
+        selectedThemeCategory = "All"
+    }
+
+    func selectFavorites() {
+        selectThemes(filter: .favorites)
+    }
+
     func selectTheme(_ theme: Theme, openEditor: Bool = false) {
         selectedThemeID = theme.id
         defaults.set(theme.id, forKey: Keys.selectedThemeID)
@@ -179,6 +195,11 @@ final class StudioStore: ObservableObject {
         themes[index].isFavorite.toggle()
         let ids = themes.filter(\.isFavorite).map(\.id)
         defaults.set(ids, forKey: Keys.favoriteIDs)
+        showNotice(
+            themes[index].isFavorite
+                ? themes[index].name + " added to Favorites."
+                : themes[index].name + " removed from Favorites."
+        )
     }
 
     func applySelectedTheme() {

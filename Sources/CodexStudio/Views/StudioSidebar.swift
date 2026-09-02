@@ -39,7 +39,11 @@ struct StudioSidebar: View {
 
                             ForEach(StudioSection.allCases) { section in
                                 Button {
-                                    store.selectSection(section)
+                                    if section == .themes {
+                                        store.selectThemes()
+                                    } else {
+                                        store.selectSection(section)
+                                    }
                                 } label: {
                                     StudioNavigationRow(
                                         section: section,
@@ -50,6 +54,30 @@ struct StudioSidebar: View {
                                 .buttonStyle(StudioPressableButtonStyle())
                                 .padding(.horizontal, 9)
                             }
+                        }
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("COLLECTION")
+                                .font(.system(size: 10, weight: .bold, design: .rounded))
+                                .tracking(1.1)
+                                .foregroundStyle(StudioColor.textFaint)
+                                .padding(.horizontal, 18)
+                                .padding(.top, 10)
+                                .padding(.bottom, 4)
+
+                            Button {
+                                store.selectFavorites()
+                            } label: {
+                                StudioNavigationRow(
+                                    title: "Favorites",
+                                    subtitle: "Saved themes",
+                                    systemImage: "star.fill",
+                                    count: store.favoriteCount,
+                                    isSelected: store.section == .themes && store.themeFilter == .favorites
+                                )
+                            }
+                            .buttonStyle(StudioPressableButtonStyle())
+                            .padding(.horizontal, 9)
                         }
 
                         if let selectedTheme = store.selectedTheme {
@@ -156,18 +184,39 @@ struct StudioSidebar: View {
 }
 
 private struct StudioNavigationRow: View {
-    let section: StudioSection
+    let title: String
+    let subtitle: String
+    let systemImage: String
     let count: Int?
     let isSelected: Bool
+    let accessibilityTitle: String
+
+    init(section: StudioSection, count: Int?, isSelected: Bool) {
+        self.title = section.label
+        self.subtitle = section.subtitle
+        self.systemImage = section.systemImage
+        self.count = count
+        self.isSelected = isSelected
+        self.accessibilityTitle = count.map { "\(section.label), \($0) themes" } ?? section.label
+    }
+
+    init(title: String, subtitle: String, systemImage: String, count: Int?, isSelected: Bool) {
+        self.title = title
+        self.subtitle = subtitle
+        self.systemImage = systemImage
+        self.count = count
+        self.isSelected = isSelected
+        self.accessibilityTitle = count.map { "\(title), \($0) saved themes" } ?? title
+    }
 
     var body: some View {
         Label {
             HStack(spacing: 8) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(section.label)
+                    Text(title)
                         .font(.system(size: 12, weight: .medium))
                         .lineLimit(1)
-                    Text(section.subtitle)
+                    Text(subtitle)
                         .font(.system(size: 9, weight: .regular))
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
@@ -180,7 +229,7 @@ private struct StudioNavigationRow: View {
                 }
             }
         } icon: {
-            Image(systemName: section.systemImage)
+            Image(systemName: systemImage)
                 .font(.system(size: 13, weight: .medium))
                 // Match the brand mark's 34-point slot so every title begins
                 // on the same vertical guide while the smaller symbol stays
@@ -203,7 +252,7 @@ private struct StudioNavigationRow: View {
                     .padding(.leading, 2)
             }
         }
-        .accessibilityLabel(count.map { "\(section.label), \($0) themes" } ?? section.label)
+        .accessibilityLabel(accessibilityTitle)
     }
 }
 

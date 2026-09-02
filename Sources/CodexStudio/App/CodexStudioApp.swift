@@ -14,8 +14,10 @@ struct CodexStudioApp: App {
         }
         .defaultSize(width: 1280, height: 760)
         .windowResizability(.automatic)
-        .windowStyle(.titleBar)
-        .windowToolbarStyle(.unified)
+        // Let the app surface own one continuous header. The native traffic
+        // lights remain available, but the system's opaque title strip no
+        // longer creates a second visual bar above the Studio chrome.
+        .windowStyle(.hiddenTitleBar)
         .commands {
             CommandGroup(after: .appSettings) {
                 Button("Check for Updates…") {
@@ -48,6 +50,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.regular)
         NSApp.activate(ignoringOtherApps: true)
+
+        // WindowGroup creates its NSWindow just after the application launch
+        // callback. Apply the titlebar treatment again on the next run-loop
+        // turn so the scene's native window chrome cannot reintroduce a
+        // reserved strip above the Studio header.
+        DispatchQueue.main.async { [weak self] in
+            self?.configureStudioWindows()
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.18) { [weak self] in
+            self?.configureStudioWindows()
+        }
+    }
+
+    private func configureStudioWindows() {
+        for window in NSApp.windows where window.title == "Codex Studio" {
+            StudioWindowChromeConfigurator.configure(window: window)
+        }
     }
 
     var canCheckForUpdates: Bool {

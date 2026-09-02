@@ -7,21 +7,33 @@ struct ContentView: View {
         GeometryReader { viewport in
             ZStack(alignment: .topLeading) {
                 StudioBackdrop(theme: store.selectedTheme)
+                StudioWindowChromeConfigurator()
+                    .frame(width: 0, height: 0)
+                    .allowsHitTesting(false)
 
-                // Pin the split to the finite window viewport. A vertical
-                // ScrollView can otherwise make the HStack taller than the
-                // visible client area on macOS 26, which vertically centers
-                // and clips both the sidebar header/footer and the page header.
-                HStack(spacing: 0) {
-                    StudioSidebar()
-                        .frame(width: 248)
+                VStack(spacing: 0) {
+                    StudioWindowHeader()
 
-                    Rectangle()
-                        .fill(StudioColor.line)
-                        .frame(width: 1)
+                    // Pin the split to the finite window viewport. A vertical
+                    // ScrollView can otherwise make the HStack taller than the
+                    // visible client area on macOS 26, which vertically centers
+                    // and clips both the sidebar header/footer and the page header.
+                    HStack(spacing: 0) {
+                        StudioSidebar()
+                            .frame(width: 248)
 
-                    mainSurface
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                        Rectangle()
+                            .fill(StudioColor.line)
+                            .frame(width: 1)
+
+                        mainSurface
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    }
+                    .frame(
+                        width: viewport.size.width,
+                        height: max(0, viewport.size.height - StudioWindowHeader.height),
+                        alignment: .topLeading
+                    )
                 }
                 .frame(
                     width: viewport.size.width,
@@ -57,6 +69,10 @@ struct ContentView: View {
             }
         }
         .animation(.easeOut(duration: 0.22), value: store.notice)
+        // The window uses a transparent full-size titlebar. The shared Studio
+        // header must therefore occupy the titlebar's top safe-area region so
+        // the traffic lights and header are one continuous surface.
+        .ignoresSafeArea(.container, edges: .top)
     }
 
     @ViewBuilder

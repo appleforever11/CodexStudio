@@ -197,6 +197,9 @@ struct ThemeSpotlight: View {
                 .overlay(RoundedRectangle(cornerRadius: 11, style: .continuous).stroke(Color.white.opacity(0.18), lineWidth: 1))
         }
         .buttonStyle(StudioPressableButtonStyle())
+        .help(theme.isFavorite ? "Remove from Favorites" : "Add to Favorites")
+        .accessibilityLabel(theme.isFavorite ? "Remove \(theme.name) from favorites" : "Add \(theme.name) to favorites")
+        .accessibilityValue(theme.isFavorite ? "Saved" : "Not saved")
     }
 
     @ViewBuilder

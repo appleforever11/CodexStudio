@@ -3,6 +3,27 @@
     <channel>
         <title>CodexStudio</title>
         <item>
+            <title>0.1.12</title>
+            <pubDate>Tue, 01 Sep 2026 20:50:18 -0400</pubDate>
+            <link>https://github.com/appleforever11/CodexStudio</link>
+            <sparkle:version>1012000</sparkle:version>
+            <sparkle:shortVersionString>0.1.12</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.12
+
+## Unified Studio chrome and saved themes
+
+- Replaces the duplicated native/in-app top bars with one continuous macOS window header that keeps the traffic lights and window dragging intact.
+- Aligns the sidebar and Canvas to the full window surface so the brand, navigation, connection footer, and content no longer inherit the old top or bottom insets.
+- Adds a persistent Favorites collection with a dedicated sidebar destination, independent star controls, saved-state accessibility labels, and instant local switching.
+- Includes the offline Apple macOS, iOS, and iPadOS wallpaper shelves in the signed bundle so a fresh install has its visual library without waiting for iCloud or a network fetch.
+- Ships the refreshed rounded Codex Studio icon in the app bundle and keeps the existing themed Codex and DockDoor launcher icons unchanged.
+- Preserves the bundled theme catalog, theme application flow, DockDoor relaunch behavior, and Sparkle update feed.
+]]></description>
+            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.12/CodexStudio-0.1.12-arm64.zip" length="387123218" type="application/octet-stream" sparkle:edSignature="TttFhLWeTu0PJXtG/2wHpMYOc038QIMtqDBb6sRGnwmJrijDquLtmXUxmwZAxTgYFPxfsK4lLmdZPjAyvUUPCg=="/>
+        </item>
+        <item>
             <title>0.1.11</title>
             <pubDate>Tue, 01 Sep 2026 17:53:52 -0400</pubDate>
             <link>https://github.com/appleforever11/CodexStudio</link>
@@ -33,22 +54,6 @@
 - Preserves the existing theme application, local Apple wallpaper shelves, DockDoor launcher, and Sparkle update behavior.
 ]]></description>
             <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.9/CodexStudio-0.1.9-arm64.zip" length="389154438" type="application/octet-stream" sparkle:edSignature="oy+EkJ8mynA/Ww4Lv5hy3Oteo/mg51D9aDT2A0f9m9VOCh6YtTvNhvN9wfy//sZZ7xD7Hni9+QeV6mp73lLfCQ=="/>
-        </item>
-        <item>
-            <title>0.1.8</title>
-            <pubDate>Tue, 01 Sep 2026 10:54:11 -0400</pubDate>
-            <link>https://github.com/appleforever11/CodexStudio</link>
-            <sparkle:version>1008000</sparkle:version>
-            <sparkle:shortVersionString>0.1.8</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[## Native titlebar and sidebar layout repair
-
-- Separates the Codex Studio content surface from the macOS titlebar on macOS 26 so the sidebar brand and Canvas command bar no longer draw underneath the traffic lights or titlebar.
-- Gives the split view a stable vertical viewport and pins the sidebar footer so the connection status and “Open themed Codex” action remain fully visible at compact window sizes.
-- Keeps the existing theme application, local Apple wallpaper shelves, DockDoor launcher, and Sparkle update behavior unchanged.
-]]></description>
-            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.8/CodexStudio-0.1.8-arm64.zip" length="389167597" type="application/octet-stream" sparkle:edSignature="kUNfPRQW46rBB3ShU+WIEMrVqaum/JmXK+thEBRFSlvqMpECdn4m8XUHPFev39rQobJWiDyDXe3UP0AFBK1qBg=="/>
         </item>
     </channel>
 </rss>

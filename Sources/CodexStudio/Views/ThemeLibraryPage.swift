@@ -14,8 +14,15 @@ private enum ThemeGalleryMetrics {
 struct ThemesPage: View {
     @EnvironmentObject private var store: StudioStore
 
+    private var isFavorites: Bool {
+        store.themeFilter == .favorites
+    }
+
     private var appleShelfEyebrow: String? {
-        switch store.selectedThemeCategory {
+        if isFavorites {
+            return "FAVORITES · SAVED WORLDS"
+        }
+        return switch store.selectedThemeCategory {
         case "macOS Era": "MACOS ERA · LOCAL SHELF"
         case "iOS": "IOS · LOCAL SHELF"
         case "iPadOS": "IPADOS · LOCAL SHELF"
@@ -24,6 +31,12 @@ struct ThemesPage: View {
     }
 
     private var appleShelfDetail: String? {
+        if isFavorites {
+            let noun = store.filteredThemes.count == 1 ? "theme" : "themes"
+            return store.filteredThemes.isEmpty
+                ? "Star any theme to keep it here for instant switching."
+                : "\(store.filteredThemes.count) saved \(noun), kept locally for instant switching."
+        }
         guard appleShelfEyebrow != nil else { return nil }
         let noun = store.filteredThemes.count == 1 ? "wallpaper" : "wallpapers"
         return "\(store.filteredThemes.count) official Apple \(store.selectedThemeCategory) \(noun) adapted for Mac and kept local for personal use."
@@ -43,12 +56,12 @@ struct ThemesPage: View {
                 ThemeAtlasHeader(
                     eyebrow: appleShelfEyebrow
                         ?? (store.sourceSummary.curatedCount > 0 ? "CURATED THEME LIBRARY" : "LOCAL THEME LIBRARY"),
-                    title: "Find a world worth working in.",
+                    title: isFavorites ? "Your saved worlds." : "Find a world worth working in.",
                     detail: appleShelfDetail
                         ?? (store.sourceSummary.curatedCount > 0
                             ? "\(store.filteredThemes.count) themes in this view. Every Curated entry includes its creator, source, and rights record."
                             : "\(store.filteredThemes.count) local themes in this view, ready without a network dependency."),
-                    symbol: "sparkles.rectangle.stack.fill"
+                    symbol: isFavorites ? "star.fill" : "sparkles.rectangle.stack.fill"
                 )
 
                 if let selectedTheme = spotlightTheme {
@@ -60,7 +73,9 @@ struct ThemesPage: View {
 
                 HStack(alignment: .firstTextBaseline) {
                     VStack(alignment: .leading, spacing: 3) {
-                        Text(store.selectedThemeCategory == "All" ? "All directions" : store.selectedThemeCategory)
+                        Text(isFavorites
+                            ? "Favorites"
+                            : (store.selectedThemeCategory == "All" ? "All directions" : store.selectedThemeCategory))
                             .font(.system(size: 17, weight: .bold, design: .rounded))
                             .foregroundStyle(StudioColor.text)
                         Text("\(store.filteredThemes.count) distinct theme\(store.filteredThemes.count == 1 ? "" : "s")")
@@ -82,8 +97,11 @@ struct ThemesPage: View {
                     .frame(maxWidth: .infinity, minHeight: 300)
                 } else if store.filteredThemes.isEmpty {
                     ThemeAtlasEmptyState(
-                        title: "No worlds found",
-                        detail: "Try another category, filter, or search phrase."
+                        title: isFavorites ? "No favorites yet" : "No worlds found",
+                        detail: isFavorites
+                            ? "Click the star on any theme to save it here for quick access."
+                            : "Try another category, filter, or search phrase.",
+                        symbol: isFavorites ? "star" : "sparkle.magnifyingglass"
                     )
                     .frame(maxWidth: .infinity, minHeight: 300)
                 } else {
