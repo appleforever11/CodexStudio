@@ -60,6 +60,7 @@ struct ContentView: View {
         .frame(minWidth: 1120, minHeight: 700)
         .task {
             await store.bootstrap()
+            await store.monitorRuntime()
         }
         .overlay(alignment: .bottomTrailing) {
             if let notice = store.notice {
@@ -77,6 +78,20 @@ struct ContentView: View {
 
     @ViewBuilder
     private var mainSurface: some View {
+        VStack(spacing: 0) {
+            if !store.isLoading, store.runtime.connection != .connected {
+                RuntimeHealthBanner()
+                    .padding(.horizontal, 22)
+                    .padding(.top, 14)
+            }
+
+            pageContent
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        }
+    }
+
+    @ViewBuilder
+    private var pageContent: some View {
         switch store.section {
         case .canvas:
             CanvasPage()

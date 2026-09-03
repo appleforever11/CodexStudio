@@ -72,6 +72,8 @@ catalog = {
     "artworkTitle": artwork_title,
     "category": "macOS Era",
     "collection": f"macOS Era · {release_name} {os_version}",
+    "platform": "macOS",
+    "platformVersion": f"macOS {os_version}",
     "institution": "Apple Inc. (archived by 512 Pixels)",
     "rightsStatus": "Apple copyrighted — local-only",
     "sourceURL": source_page,

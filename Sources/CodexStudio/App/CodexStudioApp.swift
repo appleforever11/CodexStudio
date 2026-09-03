@@ -25,6 +25,38 @@ struct CodexStudioApp: App {
                 }
                 .disabled(!appDelegate.canCheckForUpdates)
             }
+
+            CommandMenu("Navigate") {
+                Button("Canvas") {
+                    store.selectSection(.canvas)
+                }
+                .keyboardShortcut("1", modifiers: .command)
+
+                Button("Live editor") {
+                    store.selectSection(.editor)
+                }
+                .keyboardShortcut("2", modifiers: .command)
+
+                Button("Themes") {
+                    store.selectThemes()
+                }
+                .keyboardShortcut("3", modifiers: .command)
+
+                Button("Library") {
+                    store.selectSection(.library)
+                }
+                .keyboardShortcut("4", modifiers: .command)
+
+                Button("Favorites") {
+                    store.selectFavorites()
+                }
+                .keyboardShortcut("5", modifiers: .command)
+
+                Button("Settings") {
+                    store.selectSection(.settings)
+                }
+                .keyboardShortcut(",", modifiers: .command)
+            }
         }
 
         Settings {

@@ -19,6 +19,11 @@ let package = Package(
                 .product(name: "Sparkle", package: "Sparkle")
             ],
             path: "Sources/CodexStudio"
+        ),
+        .testTarget(
+            name: "CodexStudioTests",
+            dependencies: ["CodexStudio"],
+            path: "Tests/CodexStudioTests"
         )
     ]
 )

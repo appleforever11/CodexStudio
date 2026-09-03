@@ -36,6 +36,7 @@ enum ThemeSortOrder: String, CaseIterable, Identifiable, Sendable {
     case featured
     case name
     case category
+    case platformRelease
 
     var id: String { rawValue }
 
@@ -44,7 +45,57 @@ enum ThemeSortOrder: String, CaseIterable, Identifiable, Sendable {
         case .featured: "Studio order"
         case .name: "Name"
         case .category: "Category"
+        case .platformRelease: "Platform release"
         }
+    }
+}
+
+enum ThemeLayout: String, CaseIterable, Identifiable, Sendable {
+    case grid
+    case list
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .grid: "Grid"
+        case .list: "List"
+        }
+    }
+
+    var systemImage: String {
+        switch self {
+        case .grid: "square.grid.2x2"
+        case .list: "list.bullet"
+        }
+    }
+}
+
+struct ThemePlatformRelease: Hashable, Sendable {
+    enum Platform: String, Sendable {
+        case macOS
+        case iOS
+        case iPadOS
+
+        var sortIndex: Int {
+            switch self {
+            case .macOS: 0
+            case .iOS: 1
+            case .iPadOS: 2
+            }
+        }
+    }
+
+    let platform: Platform
+    let versionLabel: String
+    let versionComponents: [Int]
+
+    var id: String { "\(platform.rawValue)-\(versionLabel)" }
+
+    var displayName: String {
+        versionLabel.localizedCaseInsensitiveContains(platform.rawValue)
+            ? versionLabel
+            : "\(platform.rawValue) · \(versionLabel)"
     }
 }
 
@@ -156,6 +207,43 @@ struct Theme: Identifiable, Codable, Hashable, Sendable {
     var rightsSummary: String? = nil
     var institution: String? = nil
     var isAIGenerated: Bool? = nil
+    var platformVersion: String? = nil
+
+    var platformRelease: ThemePlatformRelease? {
+        let platform: ThemePlatformRelease.Platform
+        switch category {
+        case "macOS Era": platform = .macOS
+        case "iOS": platform = .iOS
+        case "iPadOS": platform = .iPadOS
+        default: return nil
+        }
+
+        let versionLabel = collection
+            .split(separator: "·", maxSplits: 1, omittingEmptySubsequences: true)
+            .last
+            .map(String.init)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            ?? collection.trimmingCharacters(in: .whitespacesAndNewlines)
+        let numericSource = platformVersion ?? versionLabel
+
+        guard !versionLabel.isEmpty,
+              let numericToken = numericSource.split(whereSeparator: { !$0.isNumber && $0 != "." }).first,
+              !numericToken.isEmpty
+        else {
+            return nil
+        }
+
+        let versionComponents = numericToken
+            .split(separator: ".")
+            .compactMap { Int($0) }
+        guard !versionComponents.isEmpty else { return nil }
+
+        return ThemePlatformRelease(
+            platform: platform,
+            versionLabel: versionLabel,
+            versionComponents: versionComponents
+        )
+    }
 
     var sourceLabel: String {
         if rightsSummary?.localizedCaseInsensitiveContains("local-only") == true {
@@ -192,6 +280,7 @@ struct Theme: Identifiable, Codable, Hashable, Sendable {
             merged.rightsSummary = local.rightsSummary ?? rightsSummary
             merged.institution = local.institution ?? institution
             merged.isAIGenerated = local.isAIGenerated ?? isAIGenerated
+            merged.platformVersion = local.platformVersion ?? platformVersion
         }
         return merged
     }

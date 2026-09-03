@@ -1,16 +1,5 @@
 import SwiftUI
 
-private enum ThemeGalleryMetrics {
-    static let sectionSpacing: CGFloat = 28
-    static let cardSpacing: CGFloat = 20
-    static let horizontalPadding: CGFloat = 28
-    static let verticalPadding: CGFloat = 26
-
-    static var columns: [GridItem] {
-        [GridItem(.adaptive(minimum: 264, maximum: 370), spacing: cardSpacing, alignment: .top)]
-    }
-}
-
 struct ThemesPage: View {
     @EnvironmentObject private var store: StudioStore
 
@@ -83,7 +72,9 @@ struct ThemesPage: View {
                             .foregroundStyle(StudioColor.textFaint)
                     }
                     Spacer()
-                    Text("SELECT A CARD TO CHANGE THE STAGE")
+                    Text(store.themeSortOrder == .platformRelease
+                        ? "OLDEST → NEWEST · PLATFORM RELEASE"
+                        : "SELECT A CARD TO CHANGE THE STAGE")
                         .font(.system(size: 8, weight: .bold, design: .rounded))
                         .tracking(1.25)
                         .foregroundStyle(StudioColor.textFaint)
@@ -93,6 +84,13 @@ struct ThemesPage: View {
                     ThemeAtlasLoadingState(
                         title: "Loading local worlds",
                         detail: "Reading bundled and installed themes…"
+                    )
+                    .frame(maxWidth: .infinity, minHeight: 300)
+                } else if store.themes.isEmpty, let libraryError = store.libraryError {
+                    ThemeAtlasErrorState(
+                        title: "The local catalog needs attention",
+                        detail: libraryError,
+                        retry: { Task { await store.bootstrap(force: true) } }
                     )
                     .frame(maxWidth: .infinity, minHeight: 300)
                 } else if store.filteredThemes.isEmpty {
@@ -105,13 +103,25 @@ struct ThemesPage: View {
                     )
                     .frame(maxWidth: .infinity, minHeight: 300)
                 } else {
-                    LazyVGrid(
-                        columns: ThemeGalleryMetrics.columns,
-                        spacing: ThemeGalleryMetrics.cardSpacing
-                    ) {
-                        ForEach(store.filteredThemes) { theme in
-                            ThemeAtlasCard(theme: theme, isSelected: store.selectedTheme?.id == theme.id)
+                    if store.themeSortOrder == .platformRelease {
+                        LazyVStack(alignment: .leading, spacing: 24) {
+                            ForEach(releaseGroups) { group in
+                                VStack(alignment: .leading, spacing: 12) {
+                                    HStack(alignment: .firstTextBaseline, spacing: 10) {
+                                        Text(group.title)
+                                            .font(.system(size: 14, weight: .bold, design: .rounded))
+                                            .foregroundStyle(StudioColor.text)
+                                        Text(group.detail)
+                                            .font(.system(size: 10, weight: .medium))
+                                            .foregroundStyle(StudioColor.textFaint)
+                                    }
+
+                                    ThemeCollectionView(themes: group.themes, layout: store.themeLayout)
+                                }
+                            }
                         }
+                    } else {
+                        ThemeCollectionView(themes: store.filteredThemes, layout: store.themeLayout)
                     }
                 }
             }
@@ -122,6 +132,43 @@ struct ThemesPage: View {
         .scrollIndicators(.hidden)
         .background(Color.clear)
     }
+
+    private var releaseGroups: [ThemeReleaseGroup] {
+        var groups: [ThemeReleaseGroup] = []
+
+        for theme in store.filteredThemes {
+            let release = theme.platformRelease
+            // Keep the release sort order inside each platform shelf. Grouping by
+            // the exact release made the gallery render one card per section,
+            // which turned a dense catalog into a long, mostly empty column.
+            let id = release?.platform.rawValue ?? "other"
+            if let lastIndex = groups.indices.last, groups[lastIndex].id == id {
+                groups[lastIndex].themes.append(theme)
+            } else {
+                groups.append(
+                    ThemeReleaseGroup(
+                        id: id,
+                        title: release?.platform.rawValue ?? "Other themes",
+                        detail: "",
+                        themes: [theme]
+                    )
+                )
+            }
+        }
+
+        for index in groups.indices {
+            let count = groups[index].themes.count
+            groups[index].detail = "\(count) wallpaper\(count == 1 ? "" : "s") · oldest to newest"
+        }
+        return groups
+    }
+}
+
+private struct ThemeReleaseGroup: Identifiable {
+    let id: String
+    let title: String
+    var detail: String
+    var themes: [Theme]
 }
 
 struct LibraryPage: View {
@@ -205,6 +252,13 @@ struct LibraryPage: View {
                         detail: "Checking the local theme library…"
                     )
                     .frame(maxWidth: .infinity, minHeight: 280)
+                } else if store.themes.isEmpty, let libraryError = store.libraryError {
+                    ThemeAtlasErrorState(
+                        title: "The local catalog needs attention",
+                        detail: libraryError,
+                        retry: { Task { await store.bootstrap(force: true) } }
+                    )
+                    .frame(maxWidth: .infinity, minHeight: 280)
                 } else if localThemes.isEmpty {
                     ThemeAtlasEmptyState(
                         title: "Nothing matches this view",
@@ -212,14 +266,7 @@ struct LibraryPage: View {
                     )
                     .frame(maxWidth: .infinity, minHeight: 280)
                 } else {
-                    LazyVGrid(
-                        columns: ThemeGalleryMetrics.columns,
-                        spacing: ThemeGalleryMetrics.cardSpacing
-                    ) {
-                        ForEach(localThemes) { theme in
-                            ThemeAtlasCard(theme: theme, isSelected: store.selectedTheme?.id == theme.id)
-                        }
-                    }
+                    ThemeCollectionView(themes: localThemes, layout: store.themeLayout)
                 }
             }
             .padding(.horizontal, ThemeGalleryMetrics.horizontalPadding)

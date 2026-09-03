@@ -10,7 +10,7 @@ extension ThemeLibraryService {
             return []
         }
 
-        return entryNames.filter { !$0.hasPrefix(".") }.compactMap { entryName in
+        return entryNames.sorted().filter { !$0.hasPrefix(".") }.compactMap { entryName in
             let directory = managedThemesDirectory.appendingPathComponent(entryName, isDirectory: true)
             guard let values = try? directory.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]),
                   values.isDirectory == true,
@@ -28,7 +28,7 @@ extension ThemeLibraryService {
             return []
         }
 
-        return entryNames.filter { !$0.hasPrefix(".") }.compactMap { entryName in
+        return entryNames.sorted().filter { !$0.hasPrefix(".") }.compactMap { entryName in
             let directory = bundledThemesDirectory.appendingPathComponent(entryName, isDirectory: true)
             guard let values = try? directory.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]),
                   values.isDirectory == true,
@@ -69,6 +69,7 @@ extension ThemeLibraryService {
         let sourceURL = stringValue(catalog, key: "sourceURL", fallback: stringValue(object, key: "promoUrl"))
         let rightsSummary = stringValue(catalog, key: "rightsStatus")
         let aiGenerated = optionalBoolValue(catalog, key: "aiGenerated")
+        let platformVersion = stringValue(catalog, key: "platformVersion").nilIfEmpty
         let hasVerifiedProvenance = regularFile(at: directory.appendingPathComponent("LICENSE.txt"))
             && aiGenerated == false
             && !sourceURL.isEmpty
@@ -107,7 +108,8 @@ extension ThemeLibraryService {
             sourceURL: sourceURL.isEmpty ? nil : sourceURL,
             rightsSummary: rightsSummary.isEmpty ? nil : rightsSummary,
             institution: stringValue(catalog, key: "institution").nilIfEmpty,
-            isAIGenerated: aiGenerated
+            isAIGenerated: aiGenerated,
+            platformVersion: platformVersion
         )
     }
 

@@ -64,60 +64,86 @@ struct ThemeAtlasCard: View {
     }
 
     private var artwork: some View {
-        ZStack(alignment: .topLeading) {
+        ZStack {
             ThemeArtworkView(theme: theme, animated: isHovered && store.motionEnabled, showOverlay: false)
             LinearGradient(
                 colors: [.black.opacity(0.10), .clear, .black.opacity(0.58)],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
-
-            HStack(alignment: .top, spacing: 6) {
-                Text(theme.category)
-                    .font(.system(size: 9, weight: .semibold))
-                    .foregroundStyle(.white.opacity(0.90))
-                    .lineLimit(1)
-                    .padding(.horizontal, 9)
-                    .frame(height: 24)
-                    .background(.black.opacity(0.28), in: Capsule())
-
-                Spacer(minLength: 0)
-
-                if store.runtime.activeThemeID == theme.id {
-                    Label("Active", systemImage: "checkmark")
-                        .font(.system(size: 9, weight: .semibold))
-                        .foregroundStyle(StudioColor.mint)
-                        .padding(.horizontal, 8)
-                        .frame(height: 24)
-                        .background(.black.opacity(0.30), in: Capsule())
-                } else if theme.isInstalled {
-                    Image(systemName: "checkmark")
-                        .font(.system(size: 10, weight: .bold))
-                        .foregroundStyle(.white.opacity(0.88))
-                        .frame(width: 24, height: 24)
-                        .background(.black.opacity(0.28), in: Circle())
-                }
-
-                Button {
-                    store.toggleFavorite(theme)
-                } label: {
-                    Image(systemName: theme.isFavorite ? "star.fill" : "star")
-                        .font(.system(size: 12, weight: .bold))
-                        .foregroundStyle(theme.isFavorite ? StudioColor.amber : .white.opacity(0.88))
-                        .frame(width: 32, height: 32)
-                        .background(.black.opacity(0.28), in: Circle())
-                }
-                .buttonStyle(StudioPressableButtonStyle())
-                .accessibilityLabel(theme.isFavorite ? "Remove \(theme.name) from favorites" : "Add \(theme.name) to favorites")
-                .accessibilityValue(theme.isFavorite ? "Saved" : "Not saved")
-                .help(theme.isFavorite ? "Remove from Favorites" : "Add to Favorites")
-                .contentShape(Circle())
-                .zIndex(2)
-            }
-            .padding(10)
         }
         .frame(height: 176)
+        .overlay(alignment: .topLeading) {
+            categoryBadge
+                .padding(12)
+        }
+        .overlay(alignment: .topTrailing) {
+            HStack(spacing: 6) {
+                if store.runtime.activeThemeID == theme.id {
+                    installedBadge(tint: StudioColor.mint, background: StudioColor.mint.opacity(0.18))
+                } else if theme.isInstalled {
+                    installedBadge(tint: .white.opacity(0.90), background: .black.opacity(0.38))
+                }
+                favoriteButton
+            }
+            .padding(12)
+        }
         .clipShape(UnevenRoundedRectangle(topLeadingRadius: 18, topTrailingRadius: 18))
+    }
+
+    private var categoryBadge: some View {
+        Text(theme.category)
+            .font(.system(size: 9, weight: .semibold))
+            .foregroundStyle(.white.opacity(0.92))
+            .lineLimit(1)
+            .padding(.horizontal, 10)
+            .frame(height: 26)
+            .background(.black.opacity(0.42), in: Capsule())
+            .overlay {
+                Capsule()
+                    .strokeBorder(.white.opacity(0.18), lineWidth: 1)
+            }
+    }
+
+    private func installedBadge(tint: Color, background: Color) -> some View {
+        Image(systemName: "checkmark")
+            .font(.system(size: 10, weight: .bold))
+            .foregroundStyle(tint)
+            .frame(width: 30, height: 30)
+            .background(background, in: Circle())
+            .overlay {
+                Circle()
+                    .strokeBorder(tint.opacity(0.34), lineWidth: 1)
+            }
+            .accessibilityLabel(store.runtime.activeThemeID == theme.id ? "Active in Codex" : "Installed")
+    }
+
+    private var favoriteButton: some View {
+        Button {
+            store.toggleFavorite(theme)
+        } label: {
+            Image(systemName: theme.isFavorite ? "star.fill" : "star")
+                .font(.system(size: 12, weight: .bold))
+                .foregroundStyle(theme.isFavorite ? StudioColor.amber : .white.opacity(0.92))
+                .frame(width: 30, height: 30)
+                .background(
+                    theme.isFavorite ? StudioColor.amber.opacity(0.20) : .black.opacity(0.38),
+                    in: Circle()
+                )
+                .overlay {
+                    Circle()
+                        .strokeBorder(
+                            theme.isFavorite ? StudioColor.amber.opacity(0.58) : .white.opacity(0.22),
+                            lineWidth: 1
+                        )
+                }
+        }
+        .buttonStyle(StudioPressableButtonStyle())
+        .accessibilityLabel(theme.isFavorite ? "Remove \(theme.name) from favorites" : "Add \(theme.name) to favorites")
+        .accessibilityValue(theme.isFavorite ? "Saved" : "Not saved")
+        .help(theme.isFavorite ? "Remove from Favorites" : "Add to Favorites")
+        .contentShape(Circle())
+        .zIndex(2)
     }
 
     private var metadata: some View {

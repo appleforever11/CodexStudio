@@ -10,6 +10,10 @@ struct ThemeArtworkView: View {
     @State private var hasAppeared = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
+    private var artworkPath: String? {
+        theme.previewPath ?? theme.imagePath
+    }
+
     var body: some View {
         let shouldAnimate = animated && !reduceMotion
         ZStack {
@@ -37,21 +41,18 @@ struct ThemeArtworkView: View {
         }
         .clipped()
         .contentShape(Rectangle())
+        .task(id: artworkPath) {
+            localImage = nil
+            guard let artworkPath else { return }
+            let data = await ThemeImageCache.shared.data(atPath: artworkPath)
+            guard !Task.isCancelled else { return }
+            localImage = data.flatMap(NSImage.init(data:))
+        }
         .onAppear {
-            if let path = theme.previewPath ?? theme.imagePath {
-                localImage = NSImage(contentsOfFile: path)
-            }
             guard shouldAnimate else { return }
             withAnimation(.easeInOut(duration: 12).repeatForever(autoreverses: true)) {
                 hasAppeared = true
             }
-        }
-        .onChange(of: theme.previewPath) { _, _ in
-            guard let path = theme.previewPath ?? theme.imagePath else {
-                localImage = nil
-                return
-            }
-            localImage = NSImage(contentsOfFile: path)
         }
     }
 }

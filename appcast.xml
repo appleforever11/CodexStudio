@@ -3,6 +3,25 @@
     <channel>
         <title>CodexStudio</title>
         <item>
+            <title>0.1.13</title>
+            <pubDate>Wed, 02 Sep 2026 21:05:52 -0400</pubDate>
+            <link>https://github.com/appleforever11/CodexStudio</link>
+            <sparkle:version>1013000</sparkle:version>
+            <sparkle:shortVersionString>0.1.13</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.13
+
+## Adaptive Canvas glow and a denser theme gallery
+
+- Adds the wallpaper-matched adaptive glow from Themes to the Canvas hero while keeping the effect contained behind the preview surface.
+- Fixes the Themes spotlight bleed that could cover the controls, category rail, and gallery cards.
+- Groups Platform release sorting into compact macOS, iOS, and iPadOS shelves while preserving oldest-to-newest order within each shelf.
+- Keeps the offline Apple wallpaper library, Favorites, theme application flow, DockDoor relaunch behavior, and Sparkle updates intact.
+]]></description>
+            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.13/CodexStudio-0.1.13-arm64.zip" length="387238050" type="application/octet-stream" sparkle:edSignature="AJJ6qx1lsECf1pqWt6pyAqxJl+v+vEAZ8MzL7xTsWnBo5A3Ru88w3FqOdjP57ZWC0dxfdoVEBeZHqMuyCZ7ZBA=="/>
+        </item>
+        <item>
             <title>0.1.12</title>
             <pubDate>Tue, 01 Sep 2026 20:50:18 -0400</pubDate>
             <link>https://github.com/appleforever11/CodexStudio</link>
@@ -38,22 +57,6 @@
 - Preserves the existing theme application, bundled theme library, DockDoor launcher, and Sparkle update behavior.
 ]]></description>
             <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.11/CodexStudio-0.1.11-arm64.zip" length="9114386" type="application/octet-stream" sparkle:edSignature="D9z52hOQ+NOyOuw+eKA7fatHRhRAdIG3gjmi5qadTf8i+4mN5Eb2t9dwM6MsCHzZCoDIZabEDxP4vT/ol/RSDw=="/>
-        </item>
-        <item>
-            <title>0.1.9</title>
-            <pubDate>Tue, 01 Sep 2026 11:30:33 -0400</pubDate>
-            <link>https://github.com/appleforever11/CodexStudio</link>
-            <sparkle:version>1009000</sparkle:version>
-            <sparkle:shortVersionString>0.1.9</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[## Single titlebar hierarchy
-
-- Removes the redundant in-app command band beneath the macOS titlebar so Canvas and Themes begin directly below one consistent native window chrome.
-- Keeps the repaired split-view sizing and pinned sidebar footer from 0.1.8, including the fully visible connection status and “Open themed Codex” action at compact window sizes.
-- Preserves the existing theme application, local Apple wallpaper shelves, DockDoor launcher, and Sparkle update behavior.
-]]></description>
-            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.9/CodexStudio-0.1.9-arm64.zip" length="389154438" type="application/octet-stream" sparkle:edSignature="oy+EkJ8mynA/Ww4Lv5hy3Oteo/mg51D9aDT2A0f9m9VOCh6YtTvNhvN9wfy//sZZ7xD7Hni9+QeV6mp73lLfCQ=="/>
         </item>
     </channel>
 </rss>

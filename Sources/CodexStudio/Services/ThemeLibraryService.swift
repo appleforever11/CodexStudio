@@ -42,7 +42,13 @@ struct ThemeLibraryService {
 
         let bundledThemes = scanBundledThemes()
         let localThemes = scanManagedThemes()
-        var themeByID = Dictionary(uniqueKeysWithValues: bundledThemes.map { ($0.id, $0) })
+        // Catalogs are user-editable inputs. A duplicate id should be
+        // deterministic rather than crashing startup inside
+        // Dictionary(uniqueKeysWithValues:).
+        var themeByID: [String: Theme] = [:]
+        for theme in bundledThemes {
+            themeByID[theme.id] = theme
+        }
 
         for local in localThemes {
             if let bundled = themeByID[local.id] {

@@ -8,7 +8,8 @@ final class StudioStore: ObservableObject {
     @Published var themes: [Theme] = []
     @Published var selectedThemeID: String?
     @Published var themeFilter: ThemeFilter = .all
-    @Published var themeSortOrder: ThemeSortOrder = .featured
+    @Published var themeSortOrder: ThemeSortOrder
+    @Published var themeLayout: ThemeLayout
     @Published var selectedThemeCategory = "All"
     @Published var searchText = ""
     @Published var previewMode: PreviewMode = .home
@@ -17,6 +18,10 @@ final class StudioStore: ObservableObject {
     @Published var runtime = RuntimeStatus.unknown
     @Published var isLoading = true
     @Published var isApplying = false
+    @Published var isRefreshingRuntime = false
+    @Published var isOpeningCodex = false
+    @Published private(set) var libraryError: String?
+    @Published private(set) var lastLibraryScanDate: Date?
     @Published var notice: String?
     @Published var sourceSummary = ThemeLibraryResult(
         themes: [],
@@ -37,11 +42,17 @@ final class StudioStore: ObservableObject {
     private let runtimeClient = CodexRuntimeClient()
     private let defaults = UserDefaults.standard
     private var didBootstrap = false
+    private var bootstrapInFlight = false
+    private var bootstrapGeneration = UUID()
+    private var runtimeRefreshGeneration = UUID()
+    private var applyGeneration = UUID()
     private var noticeToken = UUID()
 
     init() {
         motionEnabled = defaults.object(forKey: Keys.motionEnabled) as? Bool ?? true
         selectedThemeID = defaults.string(forKey: Keys.selectedThemeID)
+        themeSortOrder = ThemeSortOrder(rawValue: defaults.string(forKey: Keys.themeSortOrder) ?? "") ?? .featured
+        themeLayout = ThemeLayout(rawValue: defaults.string(forKey: Keys.themeLayout) ?? "") ?? .grid
     }
 
     var selectedTheme: Theme? {
@@ -79,6 +90,8 @@ final class StudioStore: ObservableObject {
                 }
                 return $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
             }
+        case .platformRelease:
+            return filtered.sorted(by: isPlatformReleaseBefore)
         }
     }
 
@@ -131,15 +144,51 @@ final class StudioStore: ObservableObject {
         return lhs.name.localizedCaseInsensitiveCompare(rhs.name) == .orderedAscending
     }
 
+    private func isPlatformReleaseBefore(_ lhs: Theme, _ rhs: Theme) -> Bool {
+        switch (lhs.platformRelease, rhs.platformRelease) {
+        case let (left?, right?):
+            if left.platform.sortIndex != right.platform.sortIndex {
+                return left.platform.sortIndex < right.platform.sortIndex
+            }
+            if left.versionComponents != right.versionComponents {
+                return left.versionComponents.lexicographicallyPrecedes(right.versionComponents)
+            }
+            if left.versionLabel != right.versionLabel {
+                return left.versionLabel.localizedCaseInsensitiveCompare(right.versionLabel) == .orderedAscending
+            }
+            return lhs.name.localizedCaseInsensitiveCompare(rhs.name) == .orderedAscending
+        case (.some, .none):
+            return true
+        case (.none, .some):
+            return false
+        case (.none, .none):
+            return isFeaturedBefore(lhs, rhs)
+        }
+    }
+
     func bootstrap(force: Bool = false) async {
         guard !didBootstrap || force else { return }
-        didBootstrap = true
+        guard !bootstrapInFlight || force else { return }
+
+        let generation = UUID()
+        bootstrapGeneration = generation
+        bootstrapInFlight = true
         isLoading = true
+        libraryError = nil
+        defer {
+            if generation == bootstrapGeneration {
+                bootstrapInFlight = false
+                isLoading = false
+            }
+        }
 
         let catalog: ThemeLibraryResult = await Task.detached(priority: .userInitiated) {
             ThemeLibraryService.loadSynchronously()
         }.value
+        guard generation == bootstrapGeneration else { return }
+
         let status = await runtimeClient.status()
+        guard generation == bootstrapGeneration else { return }
 
         var hydratedThemes = catalog.themes
         let favoriteIDs = Set(defaults.stringArray(forKey: Keys.favoriteIDs) ?? [])
@@ -158,6 +207,10 @@ final class StudioStore: ObservableObject {
             message: catalog.message
         )
         runtime = status
+        lastLibraryScanDate = Date()
+        libraryError = hydratedThemes.isEmpty
+            ? "No readable theme packs were found. Re-scan the local sources or import a theme folder."
+            : nil
 
         let preferred = defaults.string(forKey: Keys.selectedThemeID)
         selectedThemeID = preferred.flatMap { id in hydratedThemes.contains(where: { $0.id == id }) ? id : nil }
@@ -166,7 +219,15 @@ final class StudioStore: ObservableObject {
             ?? hydratedThemes.first?.id
         if let selectedTheme { resetEditorControls(for: selectedTheme) }
 
-        isLoading = false
+        didBootstrap = true
+    }
+
+    func monitorRuntime() async {
+        while !Task.isCancelled {
+            try? await Task.sleep(for: .seconds(6))
+            guard !Task.isCancelled else { return }
+            refreshRuntime()
+        }
     }
 
     func selectSection(_ nextSection: StudioSection) {
@@ -181,6 +242,16 @@ final class StudioStore: ObservableObject {
 
     func selectFavorites() {
         selectThemes(filter: .favorites)
+    }
+
+    func setThemeSortOrder(_ order: ThemeSortOrder) {
+        themeSortOrder = order
+        defaults.set(order.rawValue, forKey: Keys.themeSortOrder)
+    }
+
+    func setThemeLayout(_ layout: ThemeLayout) {
+        themeLayout = layout
+        defaults.set(layout.rawValue, forKey: Keys.themeLayout)
     }
 
     func selectTheme(_ theme: Theme, openEditor: Bool = false) {
@@ -204,27 +275,34 @@ final class StudioStore: ObservableObject {
 
     func applySelectedTheme() {
         guard !isApplying, let selectedTheme else { return }
+        let generation = UUID()
+        applyGeneration = generation
+        let requestedThemeID = selectedTheme.id
         isApplying = true
         runtime.message = "Applying \(selectedTheme.name)…"
         showNotice("Applying \(selectedTheme.name)…")
 
         Task { [weak self] in
             guard let self else { return }
-            let result = await runtimeClient.apply(themeID: selectedTheme.id)
+            let result = await runtimeClient.apply(themeID: requestedThemeID)
+            guard generation == applyGeneration else { return }
             isApplying = false
             runtime = result.runtime
-            if result.verified {
-                selectedThemeID = selectedTheme.id
-                defaults.set(selectedTheme.id, forKey: Keys.selectedThemeID)
-            }
             showNotice(result.message)
         }
     }
 
     func refreshRuntime() {
+        guard !isRefreshingRuntime else { return }
+        let generation = UUID()
+        runtimeRefreshGeneration = generation
+        isRefreshingRuntime = true
         Task { [weak self] in
             guard let self else { return }
-            runtime = await runtimeClient.status()
+            let status = await runtimeClient.status()
+            guard generation == runtimeRefreshGeneration else { return }
+            runtime = status
+            isRefreshingRuntime = false
         }
     }
 
@@ -242,13 +320,24 @@ final class StudioStore: ObservableObject {
     }
 
     func openCodex() {
-        _ = DockDoorIntegrationService.repairIfNeeded()
-        let appURL = ThemeLibraryService.installedDockDoorLauncherURL
-            ?? URL(fileURLWithPath: "/Applications/ChatGPT.app")
-        if !NSWorkspace.shared.open(appURL) {
-            showNotice("The themed Codex launcher could not be opened. Check that Codex is installed.")
-        } else {
-            showNotice("Opened themed Codex.")
+        guard !isOpeningCodex else { return }
+        isOpeningCodex = true
+        showNotice("Preparing themed Codex…")
+        Task { [weak self] in
+            guard let self else { return }
+            _ = await Task.detached(priority: .userInitiated) {
+                DockDoorIntegrationService.repairIfNeeded()
+            }.value
+
+            let appURL = ThemeLibraryService.installedDockDoorLauncherURL
+                ?? URL(fileURLWithPath: "/Applications/ChatGPT.app")
+            let opened = NSWorkspace.shared.open(appURL)
+            isOpeningCodex = false
+            if opened {
+                showNotice("Opened themed Codex.")
+            } else {
+                showNotice("The themed Codex launcher could not be opened. Check that Codex is installed.")
+            }
         }
     }
 
@@ -352,5 +441,7 @@ final class StudioStore: ObservableObject {
         static let selectedThemeID = "CodexStudio.selectedThemeID"
         static let favoriteIDs = "CodexStudio.favoriteIDs"
         static let motionEnabled = "CodexStudio.motionEnabled"
+        static let themeSortOrder = "CodexStudio.themeSortOrder"
+        static let themeLayout = "CodexStudio.themeLayout"
     }
 }

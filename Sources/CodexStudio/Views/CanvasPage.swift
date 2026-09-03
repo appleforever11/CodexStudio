@@ -48,6 +48,18 @@ struct CanvasPage: View {
     private var hero: some View {
         ZStack {
             if let selectedTheme = store.selectedTheme {
+                ThemeAdaptiveGlow(theme: selectedTheme, height: 334, compact: false)
+            }
+
+            heroSurface
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 334)
+    }
+
+    private var heroSurface: some View {
+        ZStack {
+            if let selectedTheme = store.selectedTheme {
                 ThemeArtworkView(theme: selectedTheme, animated: store.motionEnabled, showOverlay: false)
             } else {
                 LinearGradient(colors: [StudioColor.inkSoft, StudioColor.ink], startPoint: .topLeading, endPoint: .bottomTrailing)

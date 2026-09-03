@@ -45,6 +45,19 @@ struct ThemeSpotlight: View {
     var compact = false
 
     var body: some View {
+        ZStack {
+            ThemeAdaptiveGlow(
+                theme: theme,
+                height: compact ? 224 : 276,
+                compact: compact
+            )
+            spotlightSurface
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: compact ? 224 : 276)
+    }
+
+    private var spotlightSurface: some View {
         GeometryReader { proxy in
             ZStack(alignment: .bottomLeading) {
                 ThemeArtworkView(theme: theme, animated: store.motionEnabled, showOverlay: false)
@@ -86,6 +99,7 @@ struct ThemeSpotlight: View {
                 .padding(compact ? 18 : 22)
             }
         }
+        .frame(maxWidth: .infinity)
         .frame(height: compact ? 224 : 276)
         .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
         .overlay {
@@ -234,6 +248,70 @@ struct ThemeSpotlight: View {
     }
 }
 
+struct ThemeAdaptiveGlow: View {
+    let theme: Theme
+    let height: CGFloat
+    let compact: Bool
+
+    private var accent: Color { Color(hex: theme.palette.accent) }
+    private var accentAlt: Color { Color(hex: theme.palette.accentAlt) }
+    private var secondary: Color { Color(hex: theme.palette.secondary) }
+    private var highlight: Color { Color(hex: theme.palette.highlight) }
+
+    var body: some View {
+        GeometryReader { proxy in
+            ZStack {
+                // The blurred artwork is the most faithful source of color:
+                // it makes the aura follow an image even when its palette
+                // metadata is intentionally restrained or dark.
+                ThemeArtworkView(theme: theme, animated: false, showOverlay: false)
+                    .frame(width: proxy.size.width, height: proxy.size.height)
+                    .scaleEffect(1.08)
+                    .blur(radius: compact ? 24 : 40)
+                    .saturation(1.35)
+                    .opacity(compact ? 0.26 : 0.34)
+
+                RadialGradient(
+                    colors: [
+                        accent.opacity(compact ? 0.34 : 0.46),
+                        accentAlt.opacity(compact ? 0.18 : 0.28),
+                        .clear
+                    ],
+                    center: .topLeading,
+                    startRadius: 12,
+                    endRadius: compact ? 290 : 440
+                )
+
+                RadialGradient(
+                    colors: [
+                        secondary.opacity(compact ? 0.26 : 0.36),
+                        highlight.opacity(compact ? 0.13 : 0.20),
+                        .clear
+                    ],
+                    center: .bottomTrailing,
+                    startRadius: 18,
+                    endRadius: compact ? 300 : 470
+                )
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: height)
+        // Contain the GeometryReader's artwork before the aura effects are
+        // applied. Without this boundary, an unconstrained vertical scroll
+        // proposal can let the blurred copy paint across the whole page.
+        .clipped()
+        .scaleEffect(compact ? 1.035 : 1.06)
+        .blur(radius: compact ? 10 : 16)
+        .shadow(
+            color: accent.opacity(compact ? 0.24 : 0.32),
+            radius: compact ? 24 : 36,
+            y: 12
+        )
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)
+    }
+}
+
 struct ThemeAtlasControls: View {
     @EnvironmentObject private var store: StudioStore
 
@@ -243,6 +321,7 @@ struct ThemeAtlasControls: View {
                 AtlasSearchField()
                 ThemeFilterDeck()
                 sortMenu
+                ThemeLayoutPicker()
                 libraryButton
             }
 
@@ -251,6 +330,7 @@ struct ThemeAtlasControls: View {
                 HStack(spacing: 10) {
                     ThemeFilterDeck()
                     sortMenu
+                    ThemeLayoutPicker()
                     libraryButton
                 }
             }
@@ -261,7 +341,13 @@ struct ThemeAtlasControls: View {
 
     private var sortMenu: some View {
         Menu {
-            Picker("Sort themes", selection: $store.themeSortOrder) {
+            Picker(
+                "Sort themes",
+                selection: Binding(
+                    get: { store.themeSortOrder },
+                    set: { store.setThemeSortOrder($0) }
+                )
+            ) {
                 ForEach(ThemeSortOrder.allCases) { order in
                     Text(order.label).tag(order)
                 }
