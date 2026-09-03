@@ -72,15 +72,30 @@ SIGNING_IDENTITY="${SIGNING_IDENTITY:--}"
 # path-launched process, while rebuilding a live executable can leave dyld
 # reading a partially replaced code page and surface as "Code Signature
 # Invalid" on the next launch.
+bundle_process_ids() {
+  local -a binary_paths=("$APP_BINARY")
+  # macOS can report a temporary-directory executable with the canonical
+  # /private prefix even when TMPDIR expanded to /var. Treat both spellings
+  # as the same exact bundle so an older local instance cannot survive into a
+  # newly staged build.
+  if [[ "$APP_BINARY" == /var/* ]]; then
+    binary_paths+=("/private$APP_BINARY")
+  fi
+
+  for binary_path in "${binary_paths[@]}"; do
+    pgrep -f -x "$binary_path" 2>/dev/null || true
+  done | sort -u
+}
+
 stop_existing_bundle_process() {
   local running_pid
   while IFS= read -r running_pid; do
     [[ -n "$running_pid" ]] || continue
     kill -TERM "$running_pid" >/dev/null 2>&1 || true
-  done < <(pgrep -f -x "$APP_BINARY" 2>/dev/null || true)
+  done < <(bundle_process_ids)
 
   for _ in {1..20}; do
-    if ! pgrep -f -x "$APP_BINARY" >/dev/null 2>&1; then
+    if ! bundle_process_ids | grep -q .; then
       return 0
     fi
     sleep 0.1
@@ -309,6 +324,10 @@ mkdir -p "$APP_RESOURCES/DreamSkinRuntime"
 rsync -a --delete --exclude '/presets/' "$DREAM_SKIN_RUNTIME_DIR/" "$APP_RESOURCES/DreamSkinRuntime/"
 mkdir -p "$APP_RESOURCES/DreamSkinRuntime/presets"
 COPYFILE_DISABLE=1 ditto --norsrc --noextattr --noqtn "$SPARKLE_FRAMEWORK" "$FRAMEWORKS_DIR/Sparkle.framework"
+if [[ ! -f "$FRAMEWORKS_DIR/Sparkle.framework/Versions/B/Sparkle" ]]; then
+  echo "Sparkle.framework did not stage its expected executable." >&2
+  exit 1
+fi
 COPYFILE_DISABLE=1 ditto --norsrc --noextattr --noqtn "$DOCKDOOR_LAUNCHER_DIR" "$APP_RESOURCES/CodexThemedLauncherTemplate"
 mkdir -p "$APP_RESOURCES/CodexThemedLauncherTemplate/Contents/Resources"
 COPYFILE_DISABLE=1 ditto --norsrc --noextattr --noqtn "$THEMED_LAUNCHER_ICON_FILE" "$APP_RESOURCES/CodexThemedLauncherTemplate/Contents/Resources/CodexDark.icns"
@@ -320,6 +339,12 @@ install_name_tool \
   -change "@rpath/Sparkle.framework/Versions/B/Sparkle" \
   "@loader_path/../Frameworks/Sparkle.framework/Versions/B/Sparkle" \
   "$APP_BINARY"
+
+EXPECTED_SPARKLE_LOAD_PATH="@loader_path/../Frameworks/Sparkle.framework/Versions/B/Sparkle"
+if ! otool -L "$APP_BINARY" | /usr/bin/grep -Fq "$EXPECTED_SPARKLE_LOAD_PATH"; then
+  echo "Sparkle load path was not embedded in the staged app executable." >&2
+  exit 1
+fi
 
 cat >"$INFO_PLIST" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -442,7 +467,7 @@ case "$MODE" in
   --verify|verify)
     open_app
     sleep 1
-    pgrep -x "$APP_NAME" >/dev/null
+    bundle_process_ids | grep -q .
     codesign --verify --deep --strict "$APP_BUNDLE"
     ;;
   *)

@@ -3,13 +3,11 @@ import Foundation
 enum ThemeOrigin: String, Codable, CaseIterable, Sendable {
     case curated
     case local
-    case wallBuddy
 
     var label: String {
         switch self {
         case .curated: "Curated"
         case .local: "Local library"
-        case .wallBuddy: "Local images"
         }
     }
 }
@@ -19,6 +17,7 @@ enum ThemeFilter: String, CaseIterable, Identifiable, Sendable {
     case curated
     case local
     case favorites
+    case recent
 
     var id: String { rawValue }
 
@@ -28,6 +27,7 @@ enum ThemeFilter: String, CaseIterable, Identifiable, Sendable {
         case .curated: "Curated"
         case .local: "Local"
         case .favorites: "Favorites"
+        case .recent: "Recent"
         }
     }
 }
@@ -250,7 +250,7 @@ struct Theme: Identifiable, Codable, Hashable, Sendable {
             return "Local-only · Apple wallpaper"
         }
         if isCurated { return isInstalled ? "Installed · Provenance verified" : "Provenance verified" }
-        if isInstalled && origin != .wallBuddy { return "Local · Provenance unverified" }
+        if isInstalled { return "Local · Provenance unverified" }
         return origin.label
     }
 

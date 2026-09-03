@@ -44,7 +44,11 @@ struct ThemeArtworkView: View {
         .task(id: artworkPath) {
             localImage = nil
             guard let artworkPath else { return }
-            let data = await ThemeImageCache.shared.data(atPath: artworkPath)
+            // Gallery surfaces rarely need the source image's full pixel
+            // dimensions. Downsample once off the main actor so large Apple
+            // wallpapers do not create a separate full-resolution allocation
+            // for every visible card.
+            let data = await ThemeImageCache.shared.data(atPath: artworkPath, maxPixelSize: 1600)
             guard !Task.isCancelled else { return }
             localImage = data.flatMap(NSImage.init(data:))
         }

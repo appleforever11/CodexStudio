@@ -14,6 +14,34 @@ enum RuntimeConnection: String, Sendable {
     }
 }
 
+enum RuntimePhase: String, Sendable {
+    case idle
+    case checking
+    case applying
+    case recovering
+    case failed
+
+    var label: String {
+        switch self {
+        case .idle: "Ready"
+        case .checking: "Checking"
+        case .applying: "Applying and verifying"
+        case .recovering: "Recovering"
+        case .failed: "Needs attention"
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .idle: "checkmark.circle"
+        case .checking: "arrow.triangle.2.circlepath"
+        case .applying: "bolt.horizontal.circle"
+        case .recovering: "arrow.counterclockwise.circle"
+        case .failed: "exclamationmark.triangle"
+        }
+    }
+}
+
 struct RuntimeStatus: Sendable {
     var connection: RuntimeConnection
     var activeThemeID: String?
@@ -48,8 +76,6 @@ struct ThemeLibraryResult: Sendable {
     var themes: [Theme]
     var curatedCount: Int
     var localCount: Int
-    var wallBuddyCount: Int
     var managedPath: String
-    var wallBuddyPath: String
     var message: String
 }

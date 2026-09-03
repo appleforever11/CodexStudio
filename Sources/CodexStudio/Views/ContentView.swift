@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject private var store: StudioStore
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         GeometryReader { viewport in
@@ -20,7 +21,7 @@ struct ContentView: View {
                     // and clips both the sidebar header/footer and the page header.
                     HStack(spacing: 0) {
                         StudioSidebar()
-                            .frame(width: 248)
+                            .frame(width: StudioLayoutMetrics.sidebarWidth)
 
                         Rectangle()
                             .fill(StudioColor.line)
@@ -61,6 +62,12 @@ struct ContentView: View {
         .task {
             await store.bootstrap()
             await store.monitorRuntime()
+        }
+        .onChange(of: scenePhase) { _, phase in
+            guard phase == .active else { return }
+            // A sleep, fast user switch, or Codex update can invalidate the
+            // loopback process while Studio itself remains open.
+            store.refreshRuntime()
         }
         .overlay(alignment: .bottomTrailing) {
             if let notice = store.notice {

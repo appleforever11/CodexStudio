@@ -12,7 +12,7 @@ struct CanvasPage: View {
                 quickSwitch
                 sourceFooter
             }
-            .padding(.horizontal, 30)
+            .padding(.horizontal, StudioLayoutMetrics.pageHorizontalPadding)
             .padding(.top, 26)
             .padding(.bottom, 34)
         }
@@ -46,23 +46,35 @@ struct CanvasPage: View {
     }
 
     private var hero: some View {
-        ZStack {
-            if let selectedTheme = store.selectedTheme {
-                ThemeAdaptiveGlow(theme: selectedTheme, height: 334, compact: false)
-            }
-
-            heroSurface
-        }
+        // Keep the aura in the background of a finite card. A sibling
+        // GeometryReader inside a vertical ScrollView is otherwise offered an
+        // unbounded height on macOS 26 and can paint the selected artwork over
+        // the rest of Canvas.
+        heroSurface
         .frame(maxWidth: .infinity)
-        .frame(height: 334)
+        .frame(height: StudioLayoutMetrics.canvasHeroHeight)
+        .background {
+            if let selectedTheme = store.selectedTheme {
+                ThemeAdaptiveGlow(
+                    theme: selectedTheme,
+                    height: StudioLayoutMetrics.canvasHeroHeight,
+                    compact: false
+                )
+            }
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
     }
 
     private var heroSurface: some View {
         ZStack {
             if let selectedTheme = store.selectedTheme {
                 ThemeArtworkView(theme: selectedTheme, animated: store.motionEnabled, showOverlay: false)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: StudioLayoutMetrics.canvasHeroHeight)
             } else {
                 LinearGradient(colors: [StudioColor.inkSoft, StudioColor.ink], startPoint: .topLeading, endPoint: .bottomTrailing)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: StudioLayoutMetrics.canvasHeroHeight)
             }
 
             LinearGradient(
@@ -71,11 +83,11 @@ struct CanvasPage: View {
                 endPoint: .bottomTrailing
             )
         }
-        // Apply the fixed card geometry before laying out the overlay. Canvas
-        // is inside a vertical ScrollView, so an overlay placed inside the
-        // unconstrained ZStack can otherwise resolve outside the clipped
-        // artwork on macOS 26.
-        .frame(maxWidth: .infinity, minHeight: 334, maxHeight: 334)
+        // Establish the card geometry before measuring the overlay. The
+        // artwork's GeometryReader must not receive the ScrollView's
+        // unbounded vertical proposal on macOS 26.
+        .frame(maxWidth: .infinity)
+        .frame(height: StudioLayoutMetrics.canvasHeroHeight)
         .overlay(alignment: .topLeading) {
             VStack(alignment: .leading, spacing: 0) {
                 HStack {
@@ -194,14 +206,7 @@ struct CanvasPage: View {
     private var quickSwitch: some View {
         VStack(alignment: .leading, spacing: 12) {
             sectionTitle(title: "Quick switch", detail: "Jump between installed themes without leaving Canvas")
-            LazyVGrid(
-                columns: [
-                    GridItem(.flexible(), spacing: 12),
-                    GridItem(.flexible(), spacing: 12),
-                    GridItem(.flexible(), spacing: 12)
-                ],
-                spacing: 12
-            ) {
+            LazyVGrid(columns: ThemeGalleryMetrics.columns, spacing: 12) {
                 ForEach(store.quickSwitchThemes) { theme in
                     QuickSwitchCard(
                         theme: theme,

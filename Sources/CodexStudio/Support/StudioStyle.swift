@@ -29,6 +29,16 @@ enum StudioColor {
     )
 }
 
+enum StudioLayoutMetrics {
+    static let sidebarWidth: CGFloat = 248
+    static let windowHeaderHeight: CGFloat = 36
+    static let pageHorizontalPadding: CGFloat = 28
+    static let pageVerticalPadding: CGFloat = 26
+    static let canvasHeroHeight: CGFloat = 334
+    static let canvasHeroMinimumHeight: CGFloat = 270
+    static let cardArtworkAspectRatio: CGFloat = 1.55
+}
+
 struct StudioPanelModifier: ViewModifier {
     var radius: CGFloat = 18
     var fill: Color = StudioColor.inkRaised.opacity(0.62)
@@ -69,9 +79,19 @@ extension View {
     }
 
     func studioHoverScale(_ isHovered: Bool) -> some View {
-        scaleEffect(isHovered ? 1.008 : 1)
-            .offset(y: isHovered ? -1 : 0)
-            .animation(.easeOut(duration: 0.18), value: isHovered)
+        modifier(StudioHoverModifier(isHovered: isHovered))
+    }
+}
+
+private struct StudioHoverModifier: ViewModifier {
+    let isHovered: Bool
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    func body(content: Content) -> some View {
+        content
+            .scaleEffect(reduceMotion ? 1 : (isHovered ? 1.008 : 1))
+            .offset(y: reduceMotion ? 0 : (isHovered ? -1 : 0))
+            .animation(reduceMotion ? nil : .easeOut(duration: 0.18), value: isHovered)
     }
 }
 

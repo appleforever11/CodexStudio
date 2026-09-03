@@ -9,6 +9,11 @@ final class ThemeModelTests: XCTestCase {
         XCTAssertEqual(ThemeLayout(rawValue: "unknown"), nil)
     }
 
+    func testRecentFilterIsAvailableForNavigation() {
+        XCTAssertTrue(ThemeFilter.allCases.contains(.recent))
+        XCTAssertEqual(ThemeFilter.recent.label, "Recent")
+    }
+
     func testPlatformReleaseParsesVersionFromCatalogMetadata() {
         let theme = makeTheme(category: "macOS Era", collection: "macOS Era · Golden Gate 27", platformVersion: "27.0")
 

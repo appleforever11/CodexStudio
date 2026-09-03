@@ -3,8 +3,8 @@ import SwiftUI
 enum ThemeGalleryMetrics {
     static let sectionSpacing: CGFloat = 28
     static let cardSpacing: CGFloat = 20
-    static let horizontalPadding: CGFloat = 28
-    static let verticalPadding: CGFloat = 26
+    static let horizontalPadding: CGFloat = StudioLayoutMetrics.pageHorizontalPadding
+    static let verticalPadding: CGFloat = StudioLayoutMetrics.pageVerticalPadding
 
     static var columns: [GridItem] {
         [GridItem(.adaptive(minimum: 264, maximum: 370), spacing: cardSpacing, alignment: .top)]

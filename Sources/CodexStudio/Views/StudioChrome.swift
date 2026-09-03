@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct StudioWindowHeader: View {
-    static let height: CGFloat = 36
+    static let height: CGFloat = StudioLayoutMetrics.windowHeaderHeight
 
     var body: some View {
         ZStack {

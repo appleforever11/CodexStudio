@@ -12,16 +12,25 @@ struct RuntimeHealthBanner: View {
     }
 
     private var title: String {
+        switch store.runtimePhase {
+        case .checking: return "Checking the local Codex runtime"
+        case .applying: return "Applying and verifying the selected theme"
+        case .recovering: return "Recovering the Codex runtime"
+        case .failed: break
+        case .idle: break
+        }
         switch store.runtime.connection {
-        case .offline: "Codex is waiting to reconnect"
-        case .unavailable: "Live Codex runtime needs attention"
-        case .connected: "Codex is ready"
+        case .offline: return "Codex is waiting to reconnect"
+        case .unavailable: return "Live Codex runtime needs attention"
+        case .connected: return "Codex is ready"
         }
     }
 
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: store.runtime.connection == .offline ? "wifi.exclamationmark" : "bolt.horizontal.circle")
+            Image(systemName: store.runtimePhase == .idle && store.runtime.connection == .offline
+                ? "wifi.exclamationmark"
+                : store.runtimePhase.symbol)
                 .font(.system(size: 16, weight: .semibold))
                 .foregroundStyle(tint)
                 .frame(width: 34, height: 34)
@@ -39,7 +48,7 @@ struct RuntimeHealthBanner: View {
 
             Spacer(minLength: 10)
 
-            if store.isRefreshingRuntime {
+            if store.isRefreshingRuntime || store.isApplying {
                 ProgressView()
                     .controlSize(.small)
                     .tint(tint)

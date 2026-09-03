@@ -61,6 +61,7 @@ struct ThemeAtlasCard: View {
         .accessibilityAddTraits(.isButton)
         .accessibilityLabel("\(theme.name), \(theme.category), \(theme.isInstalled ? "installed" : "preview")")
         .accessibilityHint("Select this theme. Use the star to save it to Favorites.")
+        .accessibilityIdentifier("theme-card.\(theme.id)")
     }
 
     private var artwork: some View {
@@ -72,7 +73,8 @@ struct ThemeAtlasCard: View {
                 endPoint: .bottomTrailing
             )
         }
-        .frame(height: 176)
+        .aspectRatio(StudioLayoutMetrics.cardArtworkAspectRatio, contentMode: .fit)
+        .frame(maxWidth: .infinity)
         .overlay(alignment: .topLeading) {
             categoryBadge
                 .padding(12)
@@ -144,6 +146,7 @@ struct ThemeAtlasCard: View {
         .help(theme.isFavorite ? "Remove from Favorites" : "Add to Favorites")
         .contentShape(Circle())
         .zIndex(2)
+        .accessibilityIdentifier("theme-card.\(theme.id).favorite")
     }
 
     private var metadata: some View {
@@ -159,7 +162,7 @@ struct ThemeAtlasCard: View {
                     Image(systemName: theme.isCurated ? "checkmark.seal.fill" : "internaldrive")
                         .font(.system(size: 9, weight: .semibold))
                         .foregroundStyle(theme.isCurated ? StudioColor.mint : StudioColor.textFaint)
-                    Text(theme.collection)
+                    Text(theme.platformRelease?.displayName ?? theme.collection)
                         .font(.system(size: 10, weight: .regular))
                         .foregroundStyle(StudioColor.textFaint)
                         .lineLimit(1)
@@ -186,6 +189,7 @@ struct ThemeAtlasCard: View {
                 .disabled(store.isApplying)
                 .help("Apply \(theme.name)")
                 .accessibilityLabel("Apply \(theme.name)")
+                .accessibilityIdentifier("theme-card.\(theme.id).apply")
             }
         }
         .padding(14)

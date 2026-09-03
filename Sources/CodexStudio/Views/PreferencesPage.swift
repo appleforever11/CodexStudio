@@ -71,6 +71,8 @@ struct PreferencesPage: View {
                         recoveryCard
                     }
                 }
+
+                diagnosticsCard
             }
             .padding(.horizontal, 28)
             .padding(.top, 26)
@@ -99,6 +101,7 @@ struct PreferencesPage: View {
             SettingLine(label: "Active theme", value: store.runtime.activeThemeName ?? "None")
             SettingLine(label: "Codex version", value: store.runtime.codexVersion ?? "Not reported")
             SettingLine(label: "Loopback port", value: store.runtime.port.map(String.init) ?? "—")
+            SettingLine(label: "Studio operation", value: store.runtimePhase.label)
             SettingLine(label: "Relaunch recovery", value: store.runtime.persistenceEnabled ? "Armed" : "Not armed")
             if let lastVerifiedAt = store.runtime.lastVerifiedAt {
                 SettingLine(label: "Last verification", value: lastVerifiedAt)
@@ -113,7 +116,10 @@ struct PreferencesPage: View {
         VStack(alignment: .leading, spacing: 15) {
             cardHeading("Local sources", symbol: "shippingbox.fill", tint: StudioColor.violet)
             SourceRow(title: "Managed Codex library", detail: "\(store.sourceSummary.localCount) themes", path: store.sourceSummary.managedPath)
-            SourceRow(title: "Local image sources", detail: store.sourceSummary.wallBuddyCount > 0 ? "\(store.sourceSummary.wallBuddyCount) discovered" : "No additional local images", path: store.sourceSummary.wallBuddyPath)
+            Text("Bundled Apple artwork and imported themes are kept in the managed library. No external image folders are scanned.")
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(StudioColor.textMuted)
+                .fixedSize(horizontal: false, vertical: true)
             Button {
                 Task { await store.bootstrap(force: true) }
             } label: {
@@ -182,6 +188,57 @@ struct PreferencesPage: View {
                     .foregroundStyle(StudioColor.textMuted)
             }
             .buttonStyle(StudioPressableButtonStyle())
+        }
+        .padding(18)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .studioPanel(radius: 18)
+    }
+
+    private var diagnosticsCard: some View {
+        VStack(alignment: .leading, spacing: 15) {
+            cardHeading("Diagnostics", symbol: "stethoscope", tint: StudioColor.cyan)
+            Text("Copy a safe summary of the local catalog and runtime state when troubleshooting. It excludes prompts, artwork bytes, and credentials.")
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(StudioColor.textMuted)
+                .lineSpacing(2)
+
+            VStack(alignment: .leading, spacing: 8) {
+                SettingLine(label: "Catalog", value: store.isScanningLibrary ? "Refreshing" : "Ready")
+                SettingLine(label: "Runtime", value: store.runtime.connection.label)
+                SettingLine(label: "Operation", value: store.runtimePhase.label)
+            }
+
+            HStack(spacing: 12) {
+                Button {
+                    store.copyDiagnostics()
+                } label: {
+                    Label("Copy diagnostics", systemImage: "doc.on.doc")
+                        .font(.system(size: 11, weight: .bold))
+                        .foregroundStyle(StudioColor.ink)
+                        .padding(.horizontal, 13)
+                        .frame(height: 36)
+                        .background(StudioColor.spectrum, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                }
+                .buttonStyle(StudioPressableButtonStyle())
+                .accessibilityIdentifier("settings.copy-diagnostics")
+
+                Button {
+                    store.openSupportFolder()
+                } label: {
+                    Label("Open support folder", systemImage: "folder")
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundStyle(StudioColor.textMuted)
+                        .padding(.horizontal, 13)
+                        .frame(height: 36)
+                        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                .strokeBorder(StudioColor.line, lineWidth: 1)
+                        }
+                }
+                .buttonStyle(StudioPressableButtonStyle())
+                .accessibilityIdentifier("settings.open-support-folder")
+            }
         }
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)

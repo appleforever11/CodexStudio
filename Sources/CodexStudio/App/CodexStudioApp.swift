@@ -52,6 +52,11 @@ struct CodexStudioApp: App {
                 }
                 .keyboardShortcut("5", modifiers: .command)
 
+                Button("Recently used") {
+                    store.selectRecent()
+                }
+                .keyboardShortcut("6", modifiers: .command)
+
                 Button("Settings") {
                     store.selectSection(.settings)
                 }

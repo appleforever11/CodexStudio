@@ -1,4 +1,4 @@
-// Theme discovery, manifest parsing, provenance, and local image sources.
+// Theme discovery, manifest parsing, provenance, and local theme sources.
 
 import Foundation
 
@@ -126,63 +126,6 @@ extension ThemeLibraryService {
         return object
     }
 
-    static func scanWallBuddyThemes() -> [Theme] {
-        let fileManager = FileManager.default
-        let bundle = wallBuddyBundle
-        let roots = [
-            bundle.appendingPathComponent("Contents/Resources", isDirectory: true),
-            bundle.deletingLastPathComponent().appendingPathComponent("assets", isDirectory: true)
-        ]
-        var candidates: [URL] = []
-        for root in roots {
-            guard let entries = try? fileManager.contentsOfDirectory(at: root, includingPropertiesForKeys: [.isRegularFileKey, .fileSizeKey], options: [.skipsHiddenFiles]) else { continue }
-            candidates.append(contentsOf: entries.filter { url in
-                guard supportedImageExtensions.contains(url.pathExtension.lowercased()), regularFile(at: url) else { return false }
-                let name = url.deletingPathExtension().lastPathComponent.lowercased()
-                if name.contains("icon") || name.contains("installer") || name.contains("pokopia") { return false }
-                let size = (try? url.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0
-                return size > 10_000
-            })
-        }
-
-        var seen = Set<String>()
-        return candidates.sorted { $0.path < $1.path }.compactMap { url in
-            guard seen.insert(url.path).inserted else { return nil }
-            let slug = slugify(url.deletingPathExtension().lastPathComponent)
-            return Theme(
-                id: "wallbuddy-\(slug)",
-                name: "Local · \(displayName(url.deletingPathExtension().lastPathComponent))",
-                author: "Local source",
-                description: "A local visual source discovered on this Mac.",
-                category: "Local source",
-                collection: "Local source",
-                appearance: "dark",
-                palette: ThemePalette(
-                    background: "#05060A",
-                    panel: "#10131B",
-                    panelAlt: "#1B2030",
-                    accent: "#D946EF",
-                    accentAlt: "#67E8F9",
-                    secondary: "#31517A",
-                    highlight: "#D8B4FE",
-                    text: "#F9FAFB",
-                    muted: "#A7B0C0",
-                    line: "rgba(217,70,239,0.34)"
-                ),
-                imagePath: url.path,
-                previewPath: url.path,
-                origin: .wallBuddy,
-                isInstalled: false,
-                isCurated: false,
-                isFavorite: false,
-                focusX: 0.5,
-                focusY: 0.5,
-                safeArea: "left",
-                taskMode: "ambient"
-            )
-        }
-    }
-
     static func regularFile(at url: URL) -> Bool {
         guard let values = try? url.resourceValues(forKeys: [.isRegularFileKey]) else { return false }
         return values.isRegularFile == true
@@ -218,19 +161,6 @@ extension ThemeLibraryService {
         return nil
     }
 
-    static func slugify(_ value: String) -> String {
-        let lowered = value.lowercased().map { character in
-            character.isLetter || character.isNumber ? String(character) : "-"
-        }.joined()
-        return lowered.split(separator: "-").joined(separator: "-").prefix(48).description
-    }
-
-    static func displayName(_ value: String) -> String {
-        value
-            .replacingOccurrences(of: "-", with: " ")
-            .replacingOccurrences(of: "_", with: " ")
-            .capitalized
-    }
 }
 
 private extension String {

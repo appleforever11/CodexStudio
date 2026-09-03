@@ -29,12 +29,8 @@ struct ThemeLibraryService {
         dockDoorLauncherCandidates.first(where: isManagedDockDoorLauncher)
     }
 
-    static var wallBuddyBundle: URL {
-        homeDirectory
-            .appendingPathComponent("Codex Projects Restored", isDirectory: true)
-            .appendingPathComponent("WallBuddy", isDirectory: true)
-            .appendingPathComponent("dist", isDirectory: true)
-            .appendingPathComponent("WallBuddy.app", isDirectory: true)
+    static func loadCachedSynchronously() -> ThemeLibraryResult? {
+        ThemeLibraryCache.load()
     }
 
     static func loadSynchronously() -> ThemeLibraryResult {
@@ -58,35 +54,22 @@ struct ThemeLibraryService {
             }
         }
 
-        for theme in scanWallBuddyThemes() {
-            themeByID[theme.id] = theme
-        }
-
         let themes = themeByID.values.sorted {
             if $0.isCurated != $1.isCurated { return $0.isCurated }
-            if $0.origin != $1.origin { return $0.origin == .wallBuddy }
             return $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
         }
 
         let curatedCount = themes.filter(\.isCurated).count
-        let localCount = themes.filter { $0.isInstalled && $0.origin != .wallBuddy }.count
-        let wallBuddyCount = themes.filter { $0.origin == .wallBuddy }.count
-        let wallBuddyPath = wallBuddyBundle.path
-        let message: String
-        if wallBuddyCount > 0 {
-            message = "\(themes.count) themes ready · \(wallBuddyCount) local image source\(wallBuddyCount == 1 ? "" : "s") found"
-        } else {
-            message = "\(themes.count) bundled and local themes ready"
-        }
+        let localCount = themes.filter(\.isInstalled).count
 
-        return ThemeLibraryResult(
+        let result = ThemeLibraryResult(
             themes: themes,
             curatedCount: curatedCount,
             localCount: localCount,
-            wallBuddyCount: wallBuddyCount,
             managedPath: managedThemesDirectory.path,
-            wallBuddyPath: wallBuddyPath,
-            message: message
+            message: "\(themes.count) bundled and local themes ready"
         )
+        ThemeLibraryCache.save(result)
+        return result
     }
 }

@@ -39,6 +39,36 @@ struct ThemeAtlasHeader: View {
     }
 }
 
+struct LibraryScanBadge: View {
+    @EnvironmentObject private var store: StudioStore
+
+    var body: some View {
+        HStack(spacing: 7) {
+            if store.isScanningLibrary {
+                ProgressView()
+                    .controlSize(.mini)
+                    .tint(StudioColor.cyan)
+            } else {
+                Image(systemName: "internaldrive.fill")
+                    .font(.system(size: 9, weight: .semibold))
+                    .foregroundStyle(StudioColor.mint)
+            }
+            Text(store.isScanningLibrary ? "Refreshing local index…" : "Local index ready")
+                .font(.system(size: 9.5, weight: .semibold))
+                .foregroundStyle(store.isScanningLibrary ? StudioColor.textMuted : StudioColor.mint)
+        }
+        .padding(.horizontal, 10)
+        .frame(height: 28)
+        .background(.thinMaterial, in: Capsule())
+        .overlay {
+            Capsule()
+                .strokeBorder(StudioColor.line, lineWidth: 1)
+        }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(store.isScanningLibrary ? "Refreshing local theme index" : "Local theme index ready")
+    }
+}
+
 struct ThemeSpotlight: View {
     @EnvironmentObject private var store: StudioStore
     let theme: Theme
@@ -234,9 +264,9 @@ struct ThemeSpotlight: View {
 
     private var spotlightDetails: some View {
         VStack(alignment: .trailing, spacing: 10) {
-            Text(theme.collection.uppercased())
+            Text((theme.platformRelease?.displayName ?? theme.collection).uppercased())
                 .font(.system(size: 9, weight: .semibold))
-                .tracking(0.9)
+                .tracking(0.65)
                 .foregroundStyle(.white.opacity(0.62))
                 .lineLimit(1)
             AtlasPaletteStrip(theme: theme)
@@ -250,13 +280,19 @@ struct ThemeSpotlight: View {
 
 struct ThemeAdaptiveGlow: View {
     let theme: Theme
-    let height: CGFloat
+    var height: CGFloat?
     let compact: Bool
 
     private var accent: Color { Color(hex: theme.palette.accent) }
     private var accentAlt: Color { Color(hex: theme.palette.accentAlt) }
     private var secondary: Color { Color(hex: theme.palette.secondary) }
     private var highlight: Color { Color(hex: theme.palette.highlight) }
+
+    init(theme: Theme, height: CGFloat? = nil, compact: Bool) {
+        self.theme = theme
+        self.height = height
+        self.compact = compact
+    }
 
     var body: some View {
         GeometryReader { proxy in
@@ -295,7 +331,7 @@ struct ThemeAdaptiveGlow: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .frame(height: height)
+        .modifier(ThemeAdaptiveGlowSize(height: height))
         // Contain the GeometryReader's artwork before the aura effects are
         // applied. Without this boundary, an unconstrained vertical scroll
         // proposal can let the blurred copy paint across the whole page.
@@ -309,6 +345,18 @@ struct ThemeAdaptiveGlow: View {
         )
         .allowsHitTesting(false)
         .accessibilityHidden(true)
+    }
+}
+
+private struct ThemeAdaptiveGlowSize: ViewModifier {
+    let height: CGFloat?
+
+    func body(content: Content) -> some View {
+        if let height {
+            content.frame(height: height)
+        } else {
+            content.aspectRatio(3.15, contentMode: .fit)
+        }
     }
 }
 
@@ -399,6 +447,7 @@ struct AtlasSearchField: View {
                 .textFieldStyle(.plain)
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(StudioColor.text)
+                .accessibilityIdentifier("themes.search-field")
             if !store.searchText.isEmpty {
                 Button {
                     store.searchText = ""
@@ -455,6 +504,7 @@ struct ThemeCategoryRail: View {
             .padding(.vertical, 1)
         }
         .scrollIndicators(.hidden)
+        .accessibilityIdentifier("themes.category-rail")
     }
 }
 

@@ -1,4 +1,6 @@
 import Foundation
+import ImageIO
+import UniformTypeIdentifiers
 
 /// Loads artwork off the main actor and keeps a bounded data cache. The theme
 /// gallery can contain hundreds of large images, so a card must never decode
@@ -7,30 +9,75 @@ actor ThemeImageCache {
     static let shared = ThemeImageCache()
 
     private let maximumBytes = 64 * 1024 * 1024
-    private var dataByPath: [String: Data] = [:]
-    private var cachedBytes = 0
+    private let defaultPixelSize = 1600
 
-    func data(atPath path: String) -> Data? {
-        if let cached = dataByPath[path] {
-            return cached
+    private struct CacheKey: Hashable {
+        let path: String
+        let pixelSize: Int
+    }
+
+    private struct Entry {
+        let data: Data
+        var lastAccess: UInt64
+    }
+
+    private var entries: [CacheKey: Entry] = [:]
+    private var cachedBytes = 0
+    private var accessCounter: UInt64 = 0
+
+    func data(atPath path: String, maxPixelSize: Int? = nil) -> Data? {
+        let pixelSize = max(320, maxPixelSize ?? defaultPixelSize)
+        let key = CacheKey(path: path, pixelSize: pixelSize)
+        accessCounter &+= 1
+        if var cached = entries[key] {
+            cached.lastAccess = accessCounter
+            entries[key] = cached
+            return cached.data
         }
 
-        let url = URL(fileURLWithPath: path)
-        guard let data = try? Data(contentsOf: url, options: [.mappedIfSafe]) else {
+        guard let data = Self.downsampledData(atPath: path, maxPixelSize: pixelSize) else {
             return nil
         }
 
-        dataByPath[path] = data
+        entries[key] = Entry(data: data, lastAccess: accessCounter)
         cachedBytes += data.count
         trimIfNeeded()
         return data
     }
 
     private func trimIfNeeded() {
-        while cachedBytes > maximumBytes, let path = dataByPath.keys.first {
-            if let data = dataByPath.removeValue(forKey: path) {
-                cachedBytes -= data.count
+        while cachedBytes > maximumBytes, let key = entries.min(by: { $0.value.lastAccess < $1.value.lastAccess })?.key {
+            if let entry = entries.removeValue(forKey: key) {
+                cachedBytes -= entry.data.count
             }
         }
+    }
+
+    private static func downsampledData(atPath path: String, maxPixelSize: Int) -> Data? {
+        let url = URL(fileURLWithPath: path) as CFURL
+        let options = [kCGImageSourceShouldCache: false] as CFDictionary
+        guard let source = CGImageSourceCreateWithURL(url, options) else { return nil }
+
+        let thumbnailOptions: [CFString: Any] = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceShouldCacheImmediately: false,
+            kCGImageSourceThumbnailMaxPixelSize: maxPixelSize
+        ]
+        guard let image = CGImageSourceCreateThumbnailAtIndex(source, 0, thumbnailOptions as CFDictionary),
+              let destinationData = NSMutableData(length: 0),
+              let destination = CGImageDestinationCreateWithData(
+                  destinationData,
+                  UTType.png.identifier as CFString,
+                  1,
+                  nil
+              )
+        else {
+            return try? Data(contentsOf: URL(fileURLWithPath: path), options: [.mappedIfSafe])
+        }
+
+        CGImageDestinationAddImage(destination, image, nil)
+        guard CGImageDestinationFinalize(destination) else { return nil }
+        return destinationData as Data
     }
 }

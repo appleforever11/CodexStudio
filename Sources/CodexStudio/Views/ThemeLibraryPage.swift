@@ -7,9 +7,16 @@ struct ThemesPage: View {
         store.themeFilter == .favorites
     }
 
+    private var isRecent: Bool {
+        store.themeFilter == .recent
+    }
+
     private var appleShelfEyebrow: String? {
         if isFavorites {
             return "FAVORITES · SAVED WORLDS"
+        }
+        if isRecent {
+            return "RECENT · LAST OPENED"
         }
         return switch store.selectedThemeCategory {
         case "macOS Era": "MACOS ERA · LOCAL SHELF"
@@ -25,6 +32,12 @@ struct ThemesPage: View {
             return store.filteredThemes.isEmpty
                 ? "Star any theme to keep it here for instant switching."
                 : "\(store.filteredThemes.count) saved \(noun), kept locally for instant switching."
+        }
+        if isRecent {
+            let noun = store.filteredThemes.count == 1 ? "theme" : "themes"
+            return store.filteredThemes.isEmpty
+                ? "Select a theme to start building your recent list."
+                : "Your \(store.filteredThemes.count) most recently selected \(noun), kept locally for quick return."
         }
         guard appleShelfEyebrow != nil else { return nil }
         let noun = store.filteredThemes.count == 1 ? "wallpaper" : "wallpapers"
@@ -45,13 +58,15 @@ struct ThemesPage: View {
                 ThemeAtlasHeader(
                     eyebrow: appleShelfEyebrow
                         ?? (store.sourceSummary.curatedCount > 0 ? "CURATED THEME LIBRARY" : "LOCAL THEME LIBRARY"),
-                    title: isFavorites ? "Your saved worlds." : "Find a world worth working in.",
+                    title: isFavorites ? "Your saved worlds." : (isRecent ? "Return to a recent world." : "Find a world worth working in."),
                     detail: appleShelfDetail
                         ?? (store.sourceSummary.curatedCount > 0
                             ? "\(store.filteredThemes.count) themes in this view. Every Curated entry includes its creator, source, and rights record."
                             : "\(store.filteredThemes.count) local themes in this view, ready without a network dependency."),
-                    symbol: isFavorites ? "star.fill" : "sparkles.rectangle.stack.fill"
+                    symbol: isFavorites ? "star.fill" : (isRecent ? "clock.arrow.circlepath" : "sparkles.rectangle.stack.fill")
                 )
+
+                LibraryScanBadge()
 
                 if let selectedTheme = spotlightTheme {
                     ThemeSpotlight(theme: selectedTheme)
@@ -64,7 +79,9 @@ struct ThemesPage: View {
                     VStack(alignment: .leading, spacing: 3) {
                         Text(isFavorites
                             ? "Favorites"
-                            : (store.selectedThemeCategory == "All" ? "All directions" : store.selectedThemeCategory))
+                            : (isRecent
+                                ? "Recently used"
+                                : (store.selectedThemeCategory == "All" ? "All directions" : store.selectedThemeCategory)))
                             .font(.system(size: 17, weight: .bold, design: .rounded))
                             .foregroundStyle(StudioColor.text)
                         Text("\(store.filteredThemes.count) distinct theme\(store.filteredThemes.count == 1 ? "" : "s")")
@@ -95,11 +112,13 @@ struct ThemesPage: View {
                     .frame(maxWidth: .infinity, minHeight: 300)
                 } else if store.filteredThemes.isEmpty {
                     ThemeAtlasEmptyState(
-                        title: isFavorites ? "No favorites yet" : "No worlds found",
+                        title: isFavorites ? "No favorites yet" : (isRecent ? "No recent themes yet" : "No worlds found"),
                         detail: isFavorites
                             ? "Click the star on any theme to save it here for quick access."
-                            : "Try another category, filter, or search phrase.",
-                        symbol: isFavorites ? "star" : "sparkle.magnifyingglass"
+                            : (isRecent
+                                ? "Select a theme from the library and it will appear here automatically."
+                                : "Try another category, filter, or search phrase."),
+                        symbol: isFavorites ? "star" : (isRecent ? "clock.arrow.circlepath" : "sparkle.magnifyingglass")
                     )
                     .frame(maxWidth: .infinity, minHeight: 300)
                 } else {
@@ -209,11 +228,12 @@ struct LibraryPage: View {
                     ThemeSpotlight(theme: selectedTheme, compact: true)
                 }
 
+                LibraryScanBadge()
+
                 ViewThatFits(in: .horizontal) {
                     HStack(spacing: 10) {
                         AtlasSearchField()
                         LibraryMetric(title: "\(store.sourceSummary.localCount) installed", symbol: "internaldrive.fill", tint: StudioColor.cyan)
-                        LibraryMetric(title: "\(store.sourceSummary.wallBuddyCount) local images", symbol: "photo.on.rectangle", tint: StudioColor.orchid)
                         Spacer()
                         Button {
                             store.revealManagedThemes()
@@ -229,7 +249,6 @@ struct LibraryPage: View {
                         AtlasSearchField()
                         HStack {
                             LibraryMetric(title: "\(store.sourceSummary.localCount) installed", symbol: "internaldrive.fill", tint: StudioColor.cyan)
-                            LibraryMetric(title: "\(store.sourceSummary.wallBuddyCount) local images", symbol: "photo.on.rectangle", tint: StudioColor.orchid)
                         }
                     }
                 }

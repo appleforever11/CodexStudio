@@ -1,5 +1,6 @@
 import AppKit
 import Foundation
+import OSLog
 import SwiftUI
 
 @MainActor
@@ -12,6 +13,7 @@ final class StudioStore: ObservableObject {
     @Published var themeLayout: ThemeLayout
     @Published var selectedThemeCategory = "All"
     @Published var searchText = ""
+    @Published private(set) var recentThemeIDs: [String]
     @Published var previewMode: PreviewMode = .home
     @Published var selectedSurface: PreviewSurface = .composer
     @Published var inspectorEnabled = true
@@ -20,6 +22,8 @@ final class StudioStore: ObservableObject {
     @Published var isApplying = false
     @Published var isRefreshingRuntime = false
     @Published var isOpeningCodex = false
+    @Published var isScanningLibrary = false
+    @Published private(set) var runtimePhase: RuntimePhase = .idle
     @Published private(set) var libraryError: String?
     @Published private(set) var lastLibraryScanDate: Date?
     @Published var notice: String?
@@ -27,9 +31,7 @@ final class StudioStore: ObservableObject {
         themes: [],
         curatedCount: 0,
         localCount: 0,
-        wallBuddyCount: 0,
         managedPath: ThemeLibraryService.managedThemesDirectory.path,
-        wallBuddyPath: ThemeLibraryService.wallBuddyBundle.path,
         message: "Preparing the studio…"
     )
 
@@ -47,10 +49,14 @@ final class StudioStore: ObservableObject {
     private var runtimeRefreshGeneration = UUID()
     private var applyGeneration = UUID()
     private var noticeToken = UUID()
+    private var runtimeCheckTask: Task<Void, Never>?
+    private var applyTask: Task<Void, Never>?
+    private let logger = Logger(subsystem: "local.kevinhowe.CodexStudio", category: "Studio")
 
     init() {
         motionEnabled = defaults.object(forKey: Keys.motionEnabled) as? Bool ?? true
         selectedThemeID = defaults.string(forKey: Keys.selectedThemeID)
+        recentThemeIDs = defaults.stringArray(forKey: Keys.recentThemeIDs) ?? []
         themeSortOrder = ThemeSortOrder(rawValue: defaults.string(forKey: Keys.themeSortOrder) ?? "") ?? .featured
         themeLayout = ThemeLayout(rawValue: defaults.string(forKey: Keys.themeLayout) ?? "") ?? .grid
     }
@@ -69,11 +75,20 @@ final class StudioStore: ObservableObject {
             case .curated: passesFilter = theme.isCurated
             case .local: passesFilter = theme.isInstalled
             case .favorites: passesFilter = theme.isFavorite
+            case .recent: passesFilter = recentThemeIDs.contains(theme.id)
             }
             guard passesFilter else { return false }
             guard selectedThemeCategory == "All" || theme.category == selectedThemeCategory else { return false }
             guard !query.isEmpty else { return true }
-            return [theme.name, theme.author, theme.category, theme.collection, theme.description]
+            return [
+                theme.name,
+                theme.author,
+                theme.category,
+                theme.collection,
+                theme.description,
+                theme.platformVersion ?? "",
+                theme.platformRelease?.displayName ?? ""
+            ]
                 .joined(separator: " ")
                 .lowercased()
                 .contains(query)
@@ -102,6 +117,7 @@ final class StudioStore: ObservableObject {
             case .curated: theme.isCurated
             case .local: theme.isInstalled
             case .favorites: theme.isFavorite
+            case .recent: recentThemeIDs.contains(theme.id)
             }
         }
         let categories = Set(visibleSource.map(\.category).filter { !$0.isEmpty })
@@ -128,6 +144,25 @@ final class StudioStore: ObservableObject {
         themes.reduce(into: 0) { count, theme in
             if theme.isFavorite { count += 1 }
         }
+    }
+
+    var recentThemes: [Theme] {
+        recentThemeIDs.compactMap { id in themes.first(where: { $0.id == id }) }
+    }
+
+    var diagnosticsSnapshot: StudioDiagnosticsSnapshot {
+        StudioDiagnosticsSnapshot(
+            themeCount: themes.count,
+            installedThemeCount: sourceSummary.localCount,
+            curatedThemeCount: sourceSummary.curatedCount,
+            favoriteCount: favoriteCount,
+            recentThemeCount: recentThemes.count,
+            selectedThemeName: selectedTheme?.name,
+            selectedThemeID: selectedTheme?.id,
+            runtime: runtime,
+            runtimePhase: runtimePhase,
+            lastLibraryScanDate: lastLibraryScanDate
+        )
     }
 
     var connectionColor: Color {
@@ -168,28 +203,57 @@ final class StudioStore: ObservableObject {
 
     func bootstrap(force: Bool = false) async {
         guard !didBootstrap || force else { return }
-        guard !bootstrapInFlight || force else { return }
+        guard !bootstrapInFlight else {
+            logger.debug("Skipped local catalog bootstrap because one is already running")
+            return
+        }
 
         let generation = UUID()
         bootstrapGeneration = generation
         bootstrapInFlight = true
         isLoading = true
+        isScanningLibrary = true
+        runtimePhase = .checking
+        logger.info("Starting local catalog bootstrap")
         libraryError = nil
         defer {
             if generation == bootstrapGeneration {
                 bootstrapInFlight = false
                 isLoading = false
+                isScanningLibrary = false
+                if runtimePhase == .checking {
+                    runtimePhase = themes.isEmpty ? .failed : .idle
+                }
             }
+        }
+
+        let cachedCatalog = await Task.detached(priority: .utility) {
+            ThemeLibraryService.loadCachedSynchronously()
+        }.value
+        guard generation == bootstrapGeneration else { return }
+
+        let initialStatus = await runtimeClient.status()
+        guard generation == bootstrapGeneration else { return }
+
+        if let cachedCatalog {
+            installCatalog(cachedCatalog, status: initialStatus, scannedAt: nil)
+            isLoading = false
         }
 
         let catalog: ThemeLibraryResult = await Task.detached(priority: .userInitiated) {
             ThemeLibraryService.loadSynchronously()
         }.value
         guard generation == bootstrapGeneration else { return }
-
         let status = await runtimeClient.status()
         guard generation == bootstrapGeneration else { return }
 
+        installCatalog(catalog, status: status, scannedAt: Date())
+        runtimePhase = catalog.themes.isEmpty ? .failed : .idle
+        logger.info("Local catalog ready: \(catalog.themes.count, privacy: .public) themes")
+        didBootstrap = true
+    }
+
+    private func installCatalog(_ catalog: ThemeLibraryResult, status: RuntimeStatus, scannedAt: Date?) {
         var hydratedThemes = catalog.themes
         let favoriteIDs = Set(defaults.stringArray(forKey: Keys.favoriteIDs) ?? [])
         for index in hydratedThemes.indices {
@@ -201,15 +265,15 @@ final class StudioStore: ObservableObject {
             themes: hydratedThemes,
             curatedCount: catalog.curatedCount,
             localCount: catalog.localCount,
-            wallBuddyCount: catalog.wallBuddyCount,
             managedPath: catalog.managedPath,
-            wallBuddyPath: catalog.wallBuddyPath,
             message: catalog.message
         )
         runtime = status
-        lastLibraryScanDate = Date()
+        if let scannedAt {
+            lastLibraryScanDate = scannedAt
+        }
         libraryError = hydratedThemes.isEmpty
-            ? "No readable theme packs were found. Re-scan the local sources or import a theme folder."
+            ? "No readable theme packs were found. Re-scan the local library or import a theme folder."
             : nil
 
         let preferred = defaults.string(forKey: Keys.selectedThemeID)
@@ -218,19 +282,19 @@ final class StudioStore: ObservableObject {
             ?? hydratedThemes.first(where: \.isCurated)?.id
             ?? hydratedThemes.first?.id
         if let selectedTheme { resetEditorControls(for: selectedTheme) }
-
-        didBootstrap = true
     }
 
     func monitorRuntime() async {
         while !Task.isCancelled {
-            try? await Task.sleep(for: .seconds(6))
+            let interval: Duration = runtime.connection == .connected ? .seconds(12) : .seconds(5)
+            try? await Task.sleep(for: interval)
             guard !Task.isCancelled else { return }
             refreshRuntime()
         }
     }
 
     func selectSection(_ nextSection: StudioSection) {
+        logger.debug("Selected section: \(nextSection.rawValue, privacy: .public)")
         section = nextSection
     }
 
@@ -242,6 +306,10 @@ final class StudioStore: ObservableObject {
 
     func selectFavorites() {
         selectThemes(filter: .favorites)
+    }
+
+    func selectRecent() {
+        selectThemes(filter: .recent)
     }
 
     func setThemeSortOrder(_ order: ThemeSortOrder) {
@@ -257,8 +325,17 @@ final class StudioStore: ObservableObject {
     func selectTheme(_ theme: Theme, openEditor: Bool = false) {
         selectedThemeID = theme.id
         defaults.set(theme.id, forKey: Keys.selectedThemeID)
+        recordRecentTheme(theme.id)
+        logger.debug("Selected theme: \(theme.id, privacy: .public)")
         resetEditorControls(for: theme)
         if openEditor { section = .canvas }
+    }
+
+    private func recordRecentTheme(_ id: String) {
+        recentThemeIDs.removeAll { $0 == id }
+        recentThemeIDs.insert(id, at: 0)
+        recentThemeIDs = Array(recentThemeIDs.prefix(8))
+        defaults.set(recentThemeIDs, forKey: Keys.recentThemeIDs)
     }
 
     func toggleFavorite(_ theme: Theme) {
@@ -266,6 +343,7 @@ final class StudioStore: ObservableObject {
         themes[index].isFavorite.toggle()
         let ids = themes.filter(\.isFavorite).map(\.id)
         defaults.set(ids, forKey: Keys.favoriteIDs)
+        logger.info("Favorite changed: \(theme.id, privacy: .public) -> \(self.themes[index].isFavorite, privacy: .public)")
         showNotice(
             themes[index].isFavorite
                 ? themes[index].name + " added to Favorites."
@@ -279,15 +357,19 @@ final class StudioStore: ObservableObject {
         applyGeneration = generation
         let requestedThemeID = selectedTheme.id
         isApplying = true
+        runtimePhase = .applying
         runtime.message = "Applying \(selectedTheme.name)…"
         showNotice("Applying \(selectedTheme.name)…")
 
-        Task { [weak self] in
+        applyTask?.cancel()
+        applyTask = Task { [weak self] in
             guard let self else { return }
             let result = await runtimeClient.apply(themeID: requestedThemeID)
-            guard generation == applyGeneration else { return }
+            guard !Task.isCancelled, generation == applyGeneration else { return }
             isApplying = false
             runtime = result.runtime
+            runtimePhase = result.verified ? .idle : .failed
+            logger.info("Theme apply finished: \(requestedThemeID, privacy: .public), verified=\(result.verified, privacy: .public)")
             showNotice(result.message)
         }
     }
@@ -297,13 +379,36 @@ final class StudioStore: ObservableObject {
         let generation = UUID()
         runtimeRefreshGeneration = generation
         isRefreshingRuntime = true
-        Task { [weak self] in
+        runtimePhase = .checking
+        runtimeCheckTask?.cancel()
+        logger.debug("Checking Codex runtime status")
+        runtimeCheckTask = Task { [weak self] in
             guard let self else { return }
             let status = await runtimeClient.status()
-            guard generation == runtimeRefreshGeneration else { return }
+            guard !Task.isCancelled, generation == runtimeRefreshGeneration else { return }
             runtime = status
             isRefreshingRuntime = false
+            runtimePhase = status.connection == .unavailable ? .failed : .idle
+            logger.info("Runtime check finished: \(status.connection.rawValue, privacy: .public)")
         }
+    }
+
+    func copyDiagnostics() {
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(diagnosticsSnapshot.text, forType: .string)
+        logger.info("Copied diagnostics summary")
+        showNotice("Copied a safe diagnostics summary.")
+    }
+
+    func openSupportFolder() {
+        let supportDirectory = ThemeLibraryService.managedThemesDirectory
+            .deletingLastPathComponent()
+        guard NSWorkspace.shared.open(supportDirectory) else {
+            showNotice("The support folder could not be opened.")
+            return
+        }
+        logger.info("Opened local support folder")
     }
 
     func openRuntimeLog() {
@@ -371,13 +476,19 @@ final class StudioStore: ObservableObject {
 
     func restoreOriginal() {
         guard !isApplying else { return }
+        let generation = UUID()
+        applyGeneration = generation
         isApplying = true
+        runtimePhase = .recovering
         showNotice("Restoring the original Codex appearance…")
-        Task { [weak self] in
+        applyTask?.cancel()
+        applyTask = Task { [weak self] in
             guard let self else { return }
             let result = await runtimeClient.restoreOriginal()
+            guard !Task.isCancelled, generation == applyGeneration else { return }
             isApplying = false
             runtime = result.runtime
+            runtimePhase = result.verified ? .idle : .failed
             showNotice(result.message)
         }
     }
@@ -440,6 +551,7 @@ final class StudioStore: ObservableObject {
     private enum Keys {
         static let selectedThemeID = "CodexStudio.selectedThemeID"
         static let favoriteIDs = "CodexStudio.favoriteIDs"
+        static let recentThemeIDs = "CodexStudio.recentThemeIDs"
         static let motionEnabled = "CodexStudio.motionEnabled"
         static let themeSortOrder = "CodexStudio.themeSortOrder"
         static let themeLayout = "CodexStudio.themeLayout"

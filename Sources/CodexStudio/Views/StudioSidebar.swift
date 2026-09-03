@@ -46,6 +46,7 @@ struct StudioSidebar: View {
                             }
                             .buttonStyle(StudioPressableButtonStyle())
                             .padding(.horizontal, 9)
+                            .accessibilityIdentifier("sidebar.\(section.rawValue)")
                         }
                     }
 
@@ -71,6 +72,22 @@ struct StudioSidebar: View {
                         }
                         .buttonStyle(StudioPressableButtonStyle())
                         .padding(.horizontal, 9)
+                        .accessibilityIdentifier("sidebar.favorites")
+
+                        Button {
+                            store.selectRecent()
+                        } label: {
+                            StudioNavigationRow(
+                                title: "Recently used",
+                                subtitle: "Last opened",
+                                systemImage: "clock.arrow.circlepath",
+                                count: store.recentThemes.count,
+                                isSelected: store.section == .themes && store.themeFilter == .recent
+                            )
+                        }
+                        .buttonStyle(StudioPressableButtonStyle())
+                        .padding(.horizontal, 9)
+                        .accessibilityIdentifier("sidebar.recent")
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .topLeading)
@@ -149,6 +166,9 @@ struct StudioSidebar: View {
                     Text(store.runtime.codexVersion.map { "Codex \($0)" } ?? "Local preview")
                         .font(.system(size: 9, weight: .medium))
                         .foregroundStyle(StudioColor.textFaint)
+                    Text(store.runtimePhase.label)
+                        .font(.system(size: 8.5, weight: .medium))
+                        .foregroundStyle(store.runtimePhase == .failed ? .orange : StudioColor.textFaint)
                 }
                 Spacer()
                 Button {
@@ -213,7 +233,14 @@ private struct StudioNavigationRow: View {
         self.systemImage = systemImage
         self.count = count
         self.isSelected = isSelected
-        self.accessibilityTitle = count.map { "\(title), \($0) saved themes" } ?? title
+        switch title {
+        case "Favorites":
+            self.accessibilityTitle = count.map { "Favorites, \($0) saved themes" } ?? title
+        case "Recently used":
+            self.accessibilityTitle = count.map { "Recently used, \($0) recently selected themes" } ?? title
+        default:
+            self.accessibilityTitle = count.map { "\(title), \($0) themes" } ?? title
+        }
     }
 
     var body: some View {
