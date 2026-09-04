@@ -3,6 +3,25 @@
     <channel>
         <title>CodexStudio</title>
         <item>
+            <title>0.1.17</title>
+            <pubDate>Fri, 04 Sep 2026 19:48:35 -0400</pubDate>
+            <link>https://github.com/appleforever11/CodexStudio</link>
+            <sparkle:version>1017000</sparkle:version>
+            <sparkle:shortVersionString>0.1.17</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.17
+
+- New rounded glass app icon with layered artwork and a luminous studio sparkle.
+- Existing Codex Studio pins in DockDoor Pro receive a content-versioned custom-icon path when Studio launches after updating, avoiding reuse of the previous image URL.
+- Preserves unrelated DockDoor pins, profile order, settings, and the separate themed Codex launcher icon.
+- Build staging now detects changed app-icon bytes instead of silently reusing an older local asset cache.
+
+If DockDoor Pro retains an in-memory image until relaunch, quit and reopen DockDoor Pro once. The app does not forcibly restart DockDoor or clear its settings.
+]]></description>
+            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.17/CodexStudio-0.1.17-arm64.zip" length="388636336" type="application/octet-stream" sparkle:edSignature="j+hPgyO7W8B1yN884DOF1ctHOv3pNXcIBawpy5Vfij6PzwQ0f0JfAn8bUVbf8qfEmUBofwVvsPv6wDYDw+beAA=="/>
+        </item>
+        <item>
             <title>0.1.16</title>
             <pubDate>Fri, 04 Sep 2026 18:10:43 -0400</pubDate>
             <link>https://github.com/appleforever11/CodexStudio</link>
@@ -43,27 +62,6 @@ Validation: 17 automated tests passed, with local interaction checks for favorit
 - Preserves the local Apple wallpaper library, Favorites and Recent collections, runtime recovery, diagnostics, and Sparkle update flow from 0.1.14.
 ]]></description>
             <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.15/CodexStudio-0.1.15-arm64.zip" length="387286363" type="application/octet-stream" sparkle:edSignature="3+YhsnMafwZPj363ak0kAAJRfokJG1tX/YgJjTvzhCvXN6QJhaesOB2J7gyTktyk4rese8isXFoOFUGRRwajCA=="/>
-        </item>
-        <item>
-            <title>0.1.14</title>
-            <pubDate>Thu, 03 Sep 2026 19:24:39 -0400</pubDate>
-            <link>https://github.com/appleforever11/CodexStudio</link>
-            <sparkle:version>1014000</sparkle:version>
-            <sparkle:shortVersionString>0.1.14</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.14
-
-## A steadier local studio
-
-- Re-checks the Codex runtime whenever the app returns to the foreground, so sleep, fast user switching, or a Codex update cannot leave the status surface stale.
-- Prevents overlapping local catalog scans and guards asynchronous theme apply and restore results against stale updates.
-- Adds a privacy-conscious Diagnostics panel with copyable runtime/catalog details and a shortcut to the local support folder.
-- Adds stable accessibility targets for sidebar destinations, theme actions, search, category filtering, and diagnostics controls.
-- Corrects the accessibility descriptions for Favorites and Recently used so their counts describe the right collection.
-- Preserves the contained adaptive Canvas glow, offline Apple wallpaper library, Favorites and Recent collections, unified window chrome, DockDoor relaunch recovery, and Sparkle updates.
-]]></description>
-            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.14/CodexStudio-0.1.14-arm64.zip" length="387284715" type="application/octet-stream" sparkle:edSignature="RoMdCZ86ks0HvOWFC37J/BjMAAWd6s4OjYk6qSyVMeY6FPc4I41hQYRnEpNbwgHghmOA1ahqtj5nFHGLiIbWBg=="/>
         </item>
     </channel>
 </rss>

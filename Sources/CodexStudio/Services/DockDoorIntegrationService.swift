@@ -1,4 +1,5 @@
 import Foundation
+import CryptoKit
 
 /// Keeps DockDoor's Codex shortcuts stable across Codex and Codex Studio
 /// updates. The themed pin launches the managed helper path but tracks the
@@ -40,7 +41,7 @@ struct DockDoorIntegrationService {
         )
         let studioIconDestination = dockDoorIconDestination(
             home: home,
-            fileName: studioDockDoorIconFileName
+            fileName: versionedIconFileName(source: bundledStudioDockDoorIcon())
         )
         var foundManagedPin = false
         var foundStudioPin = false
@@ -202,6 +203,16 @@ struct DockDoorIntegrationService {
         Bundle.main.resourceURL?.appendingPathComponent("CodexStudio.icns")
     }
 
+    // A new path invalidates consumers that cache custom images by URL. Keep
+    // old files intact for other saved profiles and never clear DockDoor caches.
+    static func versionedIconFileName(source: URL?) -> String {
+        guard let source, let data = try? Data(contentsOf: source), !data.isEmpty else {
+            return studioDockDoorIconFileName
+        }
+        let digest = SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
+        return "CodexStudio-AppIcon-\(digest).icns"
+    }
+
     @discardableResult
     private static func installDockDoorIcon(from source: URL?, to destination: URL) -> Bool {
         guard let source,
@@ -237,7 +248,7 @@ struct DockDoorIntegrationService {
         }
     }
 
-    private static func repairJSON(
+    static func repairJSON(
         _ value: inout Any,
         helperPaths: Set<String>,
         studioPaths: Set<String>,

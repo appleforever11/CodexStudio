@@ -153,7 +153,7 @@ if [[ "$REFRESH_LOCAL_BUILD_ASSETS" == "true" || ! -f "$LOCAL_LAUNCHER_DIR/Conte
   mkdir -p "$LOCAL_LAUNCHER_DIR"
   rsync -a --delete "$DOCKDOOR_LAUNCHER_DIR/" "$LOCAL_LAUNCHER_DIR/"
 fi
-if [[ "$REFRESH_LOCAL_BUILD_ASSETS" == "true" || ! -f "$LOCAL_ICON_FILE" ]]; then
+if [[ "$REFRESH_LOCAL_BUILD_ASSETS" == "true" || ! -f "$LOCAL_ICON_FILE" ]] || ! cmp -s "$ICON_FILE" "$LOCAL_ICON_FILE"; then
   if [[ ! -f "$ICON_FILE" ]]; then
     echo "The Codex Studio app icon was not found at $ICON_FILE." >&2
     exit 1
