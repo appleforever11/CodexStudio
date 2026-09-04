@@ -46,14 +46,11 @@ struct CanvasPage: View {
     }
 
     private var hero: some View {
-        // Keep the aura in the background of a finite card. A sibling
-        // GeometryReader inside a vertical ScrollView is otherwise offered an
-        // unbounded height on macOS 26 and can paint the selected artwork over
-        // the rest of Canvas.
-        heroSurface
-        .frame(maxWidth: .infinity)
-        .frame(height: StudioLayoutMetrics.canvasHeroHeight)
-        .background {
+        // Keep the aura as a sibling behind the finite card, matching the
+        // Themes spotlight. Putting it on the card's background and clipping
+        // the result traps the blurred artwork underneath the opaque preview,
+        // which removes the visible glow around the card.
+        ZStack {
             if let selectedTheme = store.selectedTheme {
                 ThemeAdaptiveGlow(
                     theme: selectedTheme,
@@ -61,8 +58,11 @@ struct CanvasPage: View {
                     compact: false
                 )
             }
+
+            heroSurface
         }
-        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .frame(maxWidth: .infinity)
+        .frame(height: StudioLayoutMetrics.canvasHeroHeight)
     }
 
     private var heroSurface: some View {
