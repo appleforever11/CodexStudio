@@ -7,7 +7,7 @@ enum ThemeGalleryMetrics {
     static let verticalPadding: CGFloat = StudioLayoutMetrics.pageVerticalPadding
 
     static var columns: [GridItem] {
-        [GridItem(.adaptive(minimum: 264, maximum: 370), spacing: cardSpacing, alignment: .top)]
+        [GridItem(.adaptive(minimum: 280, maximum: 520), spacing: cardSpacing, alignment: .top)]
     }
 }
 

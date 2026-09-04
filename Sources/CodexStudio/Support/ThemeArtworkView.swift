@@ -5,13 +5,15 @@ struct ThemeArtworkView: View {
     let theme: Theme
     var animated = false
     var showOverlay = true
+    var maxPixelSize = 800
+    var preferOriginal = false
 
     @State private var localImage: NSImage?
     @State private var hasAppeared = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var artworkPath: String? {
-        theme.previewPath ?? theme.imagePath
+        preferOriginal ? (theme.imagePath ?? theme.previewPath) : (theme.previewPath ?? theme.imagePath)
     }
 
     var body: some View {
@@ -41,14 +43,14 @@ struct ThemeArtworkView: View {
         }
         .clipped()
         .contentShape(Rectangle())
-        .task(id: artworkPath) {
+        .task(id: "\(artworkPath ?? "")-\(maxPixelSize)") {
             localImage = nil
             guard let artworkPath else { return }
             // Gallery surfaces rarely need the source image's full pixel
             // dimensions. Downsample once off the main actor so large Apple
             // wallpapers do not create a separate full-resolution allocation
             // for every visible card.
-            let data = await ThemeImageCache.shared.data(atPath: artworkPath, maxPixelSize: 1600)
+            let data = await ThemeImageCache.shared.data(atPath: artworkPath, maxPixelSize: maxPixelSize)
             guard !Task.isCancelled else { return }
             localImage = data.flatMap(NSImage.init(data:))
         }
@@ -57,6 +59,12 @@ struct ThemeArtworkView: View {
             withAnimation(.easeInOut(duration: 12).repeatForever(autoreverses: true)) {
                 hasAppeared = true
             }
+        }
+        .onDisappear {
+            // Lazy galleries retain view identity offscreen. Release decoded
+            // images there; the bounded shared thumbnail cache handles return.
+            localImage = nil
+            hasAppeared = false
         }
     }
 }

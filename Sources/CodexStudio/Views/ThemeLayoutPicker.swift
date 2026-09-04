@@ -32,6 +32,5 @@ struct ThemeLayoutPicker: View {
                 .strokeBorder(StudioColor.line, lineWidth: 1)
         }
         .help("Choose grid or list view")
-        .accessibilityLabel("Gallery layout")
     }
 }

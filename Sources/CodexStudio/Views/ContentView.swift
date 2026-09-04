@@ -115,6 +115,7 @@ struct ContentView: View {
 }
 
 struct NoticeToast: View {
+    @EnvironmentObject private var store: StudioStore
     let message: String
 
     var body: some View {
@@ -123,14 +124,18 @@ struct NoticeToast: View {
                 .font(.system(size: 12, weight: .medium))
                 .lineLimit(2)
         } icon: {
-            Image(systemName: "checkmark.circle.fill")
-                .foregroundStyle(StudioColor.mint)
+            if store.isApplying || store.isOpeningCodex {
+                ProgressView().controlSize(.small)
+            } else {
+                Image(systemName: store.runtimePhase == .failed ? "exclamationmark.circle" : "info.circle")
+                    .foregroundStyle(store.runtimePhase == .failed ? .orange : StudioColor.cyan)
+            }
         }
         .foregroundStyle(StudioColor.text)
         .padding(.horizontal, 15)
         .padding(.vertical, 12)
         .frame(maxWidth: 360, alignment: .leading)
-        .studioPanel(radius: 14, fill: StudioColor.inkRaised.opacity(0.78))
+        .studioGlass(radius: 18)
         .shadow(color: .black.opacity(0.32), radius: 20, y: 8)
     }
 }

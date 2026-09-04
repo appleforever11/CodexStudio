@@ -1,333 +1,112 @@
 import SwiftUI
 
 struct ThemesPage: View {
-    @EnvironmentObject private var store: StudioStore
-
-    private var isFavorites: Bool {
-        store.themeFilter == .favorites
-    }
-
-    private var isRecent: Bool {
-        store.themeFilter == .recent
-    }
-
-    private var appleShelfEyebrow: String? {
-        if isFavorites {
-            return "FAVORITES · SAVED WORLDS"
-        }
-        if isRecent {
-            return "RECENT · LAST OPENED"
-        }
-        return switch store.selectedThemeCategory {
-        case "macOS Era": "MACOS ERA · LOCAL SHELF"
-        case "iOS": "IOS · LOCAL SHELF"
-        case "iPadOS": "IPADOS · LOCAL SHELF"
-        default: nil
-        }
-    }
-
-    private var appleShelfDetail: String? {
-        if isFavorites {
-            let noun = store.filteredThemes.count == 1 ? "theme" : "themes"
-            return store.filteredThemes.isEmpty
-                ? "Star any theme to keep it here for instant switching."
-                : "\(store.filteredThemes.count) saved \(noun), kept locally for instant switching."
-        }
-        if isRecent {
-            let noun = store.filteredThemes.count == 1 ? "theme" : "themes"
-            return store.filteredThemes.isEmpty
-                ? "Select a theme to start building your recent list."
-                : "Your \(store.filteredThemes.count) most recently selected \(noun), kept locally for quick return."
-        }
-        guard appleShelfEyebrow != nil else { return nil }
-        let noun = store.filteredThemes.count == 1 ? "wallpaper" : "wallpapers"
-        return "\(store.filteredThemes.count) official Apple \(store.selectedThemeCategory) \(noun) adapted for Mac and kept local for personal use."
-    }
-
-    private var spotlightTheme: Theme? {
-        if let selected = store.selectedTheme,
-           store.filteredThemes.contains(where: { $0.id == selected.id }) {
-            return selected
-        }
-        return store.filteredThemes.first
-    }
-
-    var body: some View {
-        ScrollView {
-            LazyVStack(alignment: .leading, spacing: ThemeGalleryMetrics.sectionSpacing) {
-                ThemeAtlasHeader(
-                    eyebrow: appleShelfEyebrow
-                        ?? (store.sourceSummary.curatedCount > 0 ? "CURATED THEME LIBRARY" : "LOCAL THEME LIBRARY"),
-                    title: isFavorites ? "Your saved worlds." : (isRecent ? "Return to a recent world." : "Find a world worth working in."),
-                    detail: appleShelfDetail
-                        ?? (store.sourceSummary.curatedCount > 0
-                            ? "\(store.filteredThemes.count) themes in this view. Every Curated entry includes its creator, source, and rights record."
-                            : "\(store.filteredThemes.count) local themes in this view, ready without a network dependency."),
-                    symbol: isFavorites ? "star.fill" : (isRecent ? "clock.arrow.circlepath" : "sparkles.rectangle.stack.fill")
-                )
-
-                LibraryScanBadge()
-
-                if let selectedTheme = spotlightTheme {
-                    ThemeSpotlight(theme: selectedTheme)
-                }
-
-                ThemeAtlasControls()
-                ThemeCategoryRail()
-
-                HStack(alignment: .firstTextBaseline) {
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text(isFavorites
-                            ? "Favorites"
-                            : (isRecent
-                                ? "Recently used"
-                                : (store.selectedThemeCategory == "All" ? "All directions" : store.selectedThemeCategory)))
-                            .font(.system(size: 17, weight: .bold, design: .rounded))
-                            .foregroundStyle(StudioColor.text)
-                        Text("\(store.filteredThemes.count) distinct theme\(store.filteredThemes.count == 1 ? "" : "s")")
-                            .font(.system(size: 10, weight: .medium))
-                            .foregroundStyle(StudioColor.textFaint)
-                    }
-                    Spacer()
-                    Text(store.themeSortOrder == .platformRelease
-                        ? "OLDEST → NEWEST · PLATFORM RELEASE"
-                        : "SELECT A CARD TO CHANGE THE STAGE")
-                        .font(.system(size: 8, weight: .bold, design: .rounded))
-                        .tracking(1.25)
-                        .foregroundStyle(StudioColor.textFaint)
-                }
-
-                if store.isLoading {
-                    ThemeAtlasLoadingState(
-                        title: "Loading local worlds",
-                        detail: "Reading bundled and installed themes…"
-                    )
-                    .frame(maxWidth: .infinity, minHeight: 300)
-                } else if store.themes.isEmpty, let libraryError = store.libraryError {
-                    ThemeAtlasErrorState(
-                        title: "The local catalog needs attention",
-                        detail: libraryError,
-                        retry: { Task { await store.bootstrap(force: true) } }
-                    )
-                    .frame(maxWidth: .infinity, minHeight: 300)
-                } else if store.filteredThemes.isEmpty {
-                    ThemeAtlasEmptyState(
-                        title: isFavorites ? "No favorites yet" : (isRecent ? "No recent themes yet" : "No worlds found"),
-                        detail: isFavorites
-                            ? "Click the star on any theme to save it here for quick access."
-                            : (isRecent
-                                ? "Select a theme from the library and it will appear here automatically."
-                                : "Try another category, filter, or search phrase."),
-                        symbol: isFavorites ? "star" : (isRecent ? "clock.arrow.circlepath" : "sparkle.magnifyingglass")
-                    )
-                    .frame(maxWidth: .infinity, minHeight: 300)
-                } else {
-                    if store.themeSortOrder == .platformRelease {
-                        LazyVStack(alignment: .leading, spacing: 24) {
-                            ForEach(releaseGroups) { group in
-                                VStack(alignment: .leading, spacing: 12) {
-                                    HStack(alignment: .firstTextBaseline, spacing: 10) {
-                                        Text(group.title)
-                                            .font(.system(size: 14, weight: .bold, design: .rounded))
-                                            .foregroundStyle(StudioColor.text)
-                                        Text(group.detail)
-                                            .font(.system(size: 10, weight: .medium))
-                                            .foregroundStyle(StudioColor.textFaint)
-                                    }
-
-                                    ThemeCollectionView(themes: group.themes, layout: store.themeLayout)
-                                }
-                            }
-                        }
-                    } else {
-                        ThemeCollectionView(themes: store.filteredThemes, layout: store.themeLayout)
-                    }
-                }
-            }
-            .padding(.horizontal, ThemeGalleryMetrics.horizontalPadding)
-            .padding(.vertical, ThemeGalleryMetrics.verticalPadding)
-            .padding(.bottom, 18)
-        }
-        .scrollIndicators(.hidden)
-        .background(Color.clear)
-    }
-
-    private var releaseGroups: [ThemeReleaseGroup] {
-        var groups: [ThemeReleaseGroup] = []
-
-        for theme in store.filteredThemes {
-            let release = theme.platformRelease
-            // Keep the release sort order inside each platform shelf. Grouping by
-            // the exact release made the gallery render one card per section,
-            // which turned a dense catalog into a long, mostly empty column.
-            let id = release?.platform.rawValue ?? "other"
-            if let lastIndex = groups.indices.last, groups[lastIndex].id == id {
-                groups[lastIndex].themes.append(theme)
-            } else {
-                groups.append(
-                    ThemeReleaseGroup(
-                        id: id,
-                        title: release?.platform.rawValue ?? "Other themes",
-                        detail: "",
-                        themes: [theme]
-                    )
-                )
-            }
-        }
-
-        for index in groups.indices {
-            let count = groups[index].themes.count
-            groups[index].detail = "\(count) wallpaper\(count == 1 ? "" : "s") · oldest to newest"
-        }
-        return groups
-    }
-}
-
-private struct ThemeReleaseGroup: Identifiable {
-    let id: String
-    let title: String
-    var detail: String
-    var themes: [Theme]
+    var body: some View { StudioCatalogPage(installedOnly: false) }
 }
 
 struct LibraryPage: View {
+    var body: some View { StudioCatalogPage(installedOnly: true) }
+}
+
+private struct StudioCatalogPage: View {
     @EnvironmentObject private var store: StudioStore
+    @AppStorage("studio.catalogPreviewVisible") private var showPreview = true
+    let installedOnly: Bool
 
-    private var localThemes: [Theme] {
-        let query = store.searchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        return store.themes
-            .filter(\.isInstalled)
-            .filter { theme in
-                let categoryMatches = store.selectedThemeCategory == "All" || theme.category == store.selectedThemeCategory
-                let queryMatches = query.isEmpty || [theme.name, theme.category, theme.collection, theme.description]
-                    .joined(separator: " ")
-                    .lowercased()
-                    .contains(query)
-                return categoryMatches && queryMatches
-            }
-            .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+    private var title: String {
+        if installedOnly { return "Local library" }
+        if store.themeFilter == .favorites { return "Favorites" }
+        if store.themeFilter == .recent { return "Recently used" }
+        if store.selectedThemeCategory == "macOS Era" { return "macOS" }
+        return store.selectedThemeCategory == "All" ? "Explore" : store.selectedThemeCategory
+    }
+
+    private var subtitle: String {
+        if store.themeFilter == .favorites { return "The themes you love, together in one place." }
+        if store.themeFilter == .recent { return "Your last eight selections, newest first." }
+        if installedOnly { return "Your collection is stored on this Mac, ready offline." }
+        return "Find a new perspective. Every selection starts as a preview."
     }
 
     var body: some View {
-        ScrollView {
-            LazyVStack(alignment: .leading, spacing: ThemeGalleryMetrics.sectionSpacing) {
-                ViewThatFits(in: .horizontal) {
-                    HStack(alignment: .bottom, spacing: 18) {
-                        installedHeader
-                        Spacer(minLength: 10)
-                        importButton
-                    }
-
-                    VStack(alignment: .leading, spacing: 14) {
-                        installedHeader
-                        importButton
-                    }
-                }
-
-                if let selectedTheme = store.selectedTheme, selectedTheme.isInstalled {
-                    ThemeSpotlight(theme: selectedTheme, compact: true)
-                }
-
-                LibraryScanBadge()
-
-                ViewThatFits(in: .horizontal) {
-                    HStack(spacing: 10) {
-                        AtlasSearchField()
-                        LibraryMetric(title: "\(store.sourceSummary.localCount) installed", symbol: "internaldrive.fill", tint: StudioColor.cyan)
-                        Spacer()
-                        Button {
-                            store.revealManagedThemes()
-                        } label: {
-                            Label("Reveal folder", systemImage: "folder")
-                                .font(.system(size: 10.5, weight: .semibold))
-                                .foregroundStyle(StudioColor.textMuted)
-                        }
-                        .buttonStyle(StudioPressableButtonStyle())
-                    }
-
-                    VStack(alignment: .leading, spacing: 10) {
-                        AtlasSearchField()
-                        HStack {
-                            LibraryMetric(title: "\(store.sourceSummary.localCount) installed", symbol: "internaldrive.fill", tint: StudioColor.cyan)
-                        }
-                    }
-                }
-
-                ThemeCategoryRail()
-
+        VStack(spacing: 0) {
+            VStack(alignment: .leading, spacing: 18) {
                 HStack {
-                    Text("Installed worlds")
-                        .font(.system(size: 17, weight: .bold, design: .rounded))
-                        .foregroundStyle(StudioColor.text)
-                    Spacer()
-                    Text("\(localThemes.count) visible")
-                        .font(.system(size: 10, weight: .semibold, design: .monospaced))
-                        .foregroundStyle(StudioColor.textFaint)
+                    StudioSectionHeading(title: title, detail: subtitle)
+                    Spacer(minLength: 8)
+                    if installedOnly {
+                        StudioActionButton(title: "Import", symbol: "plus") { store.importThemeFolder() }
+                        StudioIconButton(symbol: "folder", help: "Open local themes folder") { store.revealManagedThemes() }
+                    }
+                    Button { showPreview.toggle() } label: {
+                        Image(systemName: showPreview ? "rectangle.topthird.inset.filled" : "rectangle")
+                            .font(.system(size: 14)).frame(width: 36, height: 36)
+                    }.buttonStyle(.plain).studioGlass(radius: 12)
+                        .help(showPreview ? "Hide preview" : "Show preview")
+                        .accessibilityLabel(showPreview ? "Hide preview" : "Show preview")
                 }
-
-                if store.isLoading {
-                    ThemeAtlasLoadingState(
-                        title: "Loading installed worlds",
-                        detail: "Checking the local theme library…"
-                    )
-                    .frame(maxWidth: .infinity, minHeight: 280)
-                } else if store.themes.isEmpty, let libraryError = store.libraryError {
-                    ThemeAtlasErrorState(
-                        title: "The local catalog needs attention",
-                        detail: libraryError,
-                        retry: { Task { await store.bootstrap(force: true) } }
-                    )
-                    .frame(maxWidth: .infinity, minHeight: 280)
-                } else if localThemes.isEmpty {
-                    ThemeAtlasEmptyState(
-                        title: "Nothing matches this view",
-                        detail: "Clear the search or choose another category."
-                    )
-                    .frame(maxWidth: .infinity, minHeight: 280)
-                } else {
-                    ThemeCollectionView(themes: localThemes, layout: store.themeLayout)
-                }
+                CatalogToolbar(installedOnly: installedOnly)
             }
-            .padding(.horizontal, ThemeGalleryMetrics.horizontalPadding)
-            .padding(.vertical, ThemeGalleryMetrics.verticalPadding)
-            .padding(.bottom, 18)
+            .padding(.horizontal, 28).padding(.top, 24).padding(.bottom, 16)
+
+            ScrollViewReader { scroller in
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 24) {
+                    Color.clear.frame(height: 0).id("catalog.top")
+                    if showPreview, let theme = previewTheme {
+                        ThemeHero(theme: theme, height: 300, compact: true)
+                            .padding(.top, 8)
+                    }
+                    HStack {
+                        Text("\(store.filteredThemes.count) \(store.filteredThemes.count == 1 ? "theme" : "themes")")
+                            .font(.system(size: 12, weight: .semibold))
+                        if let release = store.availableReleases.first(where: { $0.id == store.selectedReleaseID }) {
+                            Text("· \(release.displayName)").font(.system(size: 12)).foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        if store.isScanningLibrary { ProgressView().controlSize(.small) }
+                        else { Label("Available offline", systemImage: "internaldrive").font(.system(size: 10)).foregroundStyle(.secondary) }
+                    }
+                    catalogContent
+                }
+                .padding(.horizontal, 28).padding(.bottom, 28)
+            }
+            .scrollIndicators(.hidden)
+            .onChange(of: filterKey) { _, _ in scroller.scrollTo("catalog.top", anchor: .top) }
+            }
         }
-        .scrollIndicators(.hidden)
-        .background(Color.clear)
-    }
-}
-
-private extension LibraryPage {
-    var installedHeader: some View {
-        ThemeAtlasHeader(
-            eyebrow: "INSTALLED LIBRARY",
-            title: "Every world, ready at hand.",
-            detail: "Bundled and imported themes live locally, remain reversible, and switch without a network dependency.",
-            symbol: "square.stack.3d.up.fill"
-        )
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier(installedOnly ? "page.library" : "page.explore")
     }
 
-    var importButton: some View {
-        Button {
-            store.importThemeFolder()
-        } label: {
-            Label("Import theme", systemImage: "plus")
-                .font(.system(size: 11, weight: .bold))
-                .foregroundStyle(StudioColor.ink)
-                .padding(.horizontal, 13)
-                .frame(height: 38)
-                .background(StudioColor.spectrum, in: RoundedRectangle(cornerRadius: 11, style: .continuous))
+    private var previewTheme: Theme? {
+        if let selected = store.selectedTheme, store.filteredThemes.contains(where: { $0.id == selected.id }) { return selected }
+        return store.filteredThemes.first
+    }
+
+    private var filterKey: [String] {
+        [store.themeFilter.rawValue, store.selectedThemeCategory, store.selectedReleaseID ?? "",
+         store.searchText, store.themeSortOrder.rawValue, String(showPreview)]
+    }
+
+    @ViewBuilder private var catalogContent: some View {
+        if store.isLoading && store.themes.isEmpty {
+            ThemeAtlasLoadingState(title: "Opening your library", detail: "Loading local artwork…").frame(height: 260)
+        } else if let error = store.libraryError, store.themes.isEmpty {
+            ThemeAtlasErrorState(title: "Library unavailable", detail: error,
+                retry: { Task { await store.bootstrap(force: true) } }).frame(height: 260)
+        } else if store.filteredThemes.isEmpty {
+            VStack(spacing: 14) {
+                ThemeAtlasEmptyState(title: store.themeFilter == .favorites ? "Your next favorite is waiting" : "No matching themes",
+                    detail: store.themeFilter == .favorites ? "Star a theme in Explore to save it here." : "Try a different search, platform, or release.",
+                    symbol: store.themeFilter == .favorites ? "star" : "magnifyingglass")
+                StudioActionButton(title: "Clear filters", symbol: "line.3.horizontal.decrease") { store.resetCatalogFilters() }
+                if store.themeFilter == .favorites || store.themeFilter == .recent {
+                    Button("Explore all themes") { store.selectThemes() }.buttonStyle(.plain).foregroundStyle(StudioColor.cyan)
+                }
+            }.frame(maxWidth: .infinity).padding(.vertical, 20)
+        } else {
+            ThemeCollectionView(themes: store.filteredThemes, layout: store.themeLayout)
         }
-        .buttonStyle(StudioPressableButtonStyle())
-    }
-}
-
-private struct LibraryMetric: View {
-    let title: String
-    let symbol: String
-    let tint: Color
-
-    var body: some View {
-        StudioPill(title: title, tint: tint, symbol: symbol)
     }
 }

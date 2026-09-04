@@ -26,7 +26,7 @@ actor ThemeImageCache {
     private var accessCounter: UInt64 = 0
 
     func data(atPath path: String, maxPixelSize: Int? = nil) -> Data? {
-        let pixelSize = max(320, maxPixelSize ?? defaultPixelSize)
+        let pixelSize = min(3200, max(96, maxPixelSize ?? defaultPixelSize))
         let key = CacheKey(path: path, pixelSize: pixelSize)
         accessCounter &+= 1
         if var cached = entries[key] {
@@ -73,7 +73,9 @@ actor ThemeImageCache {
                   nil
               )
         else {
-            return try? Data(contentsOf: URL(fileURLWithPath: path), options: [.mappedIfSafe])
+            // Never fall back to an unbounded full-resolution decode in a
+            // scrolling gallery. An unreadable asset gets the safe placeholder.
+            return nil
         }
 
         CGImageDestinationAddImage(destination, image, nil)

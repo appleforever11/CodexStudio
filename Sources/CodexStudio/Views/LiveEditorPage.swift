@@ -4,65 +4,27 @@ struct LiveEditorPage: View {
     @EnvironmentObject private var store: StudioStore
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            HStack(alignment: .bottom, spacing: 20) {
-                ThemeAtlasHeader(
-                    eyebrow: "LIVE THEME LAB",
-                    title: "Design against a living Codex.",
-                    detail: "Select any surface inside the emulator, tune it in context, and keep every experiment local until you deliberately apply it.",
-                    symbol: "slider.horizontal.below.square.filled.and.square"
-                )
-                Spacer()
-                if let theme = store.selectedTheme {
-                    VStack(alignment: .trailing, spacing: 8) {
-                        StudioPill(title: "Editing live", tint: StudioColor.mint, symbol: "waveform.path.ecg")
-                        HStack(spacing: 9) {
-                            ThemeSwatch(theme: theme, size: 30)
-                            VStack(alignment: .trailing, spacing: 2) {
-                                Text(theme.name)
-                                    .font(.system(size: 12, weight: .semibold))
-                                    .foregroundStyle(StudioColor.text)
-                                    .lineLimit(1)
-                                Text(theme.collection)
-                                    .font(.system(size: 9, weight: .medium))
-                                    .foregroundStyle(StudioColor.textFaint)
-                                    .lineLimit(1)
-                            }
+        GeometryReader { geometry in
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
+                    HStack(alignment: .center) {
+                        StudioSectionHeading(title: "Live editor", detail: store.selectedTheme?.name ?? "Choose a theme to start")
+                        Spacer()
+                        StudioActionButton(title: "Change theme", symbol: "square.grid.2x2") { store.selectThemes() }
+                    }
+                    if geometry.size.width >= 1000 {
+                        HStack(alignment: .top, spacing: 20) {
+                            previewColumn
+                                .frame(maxWidth: .infinity)
+                            EditorInspector().frame(width: 292, height: 650)
                         }
-                    }
-                }
-            }
-            .padding(.horizontal, 24)
-            .padding(.top, 22)
-            .padding(.bottom, 18)
-
-            ViewThatFits(in: .horizontal) {
-                HStack(spacing: 17) {
-                    previewColumn
-                        .frame(minWidth: 0, maxWidth: .infinity, alignment: .topLeading)
-                    EditorInspector()
-                        .frame(width: 296)
-                }
-
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 17) {
+                    } else {
                         previewColumn
-                        EditorInspector()
-                            .frame(maxWidth: .infinity)
+                        EditorInspector().frame(height: 560)
                     }
-                }
-                .scrollIndicators(.hidden)
-            }
-            .padding(.horizontal, 24)
-            .padding(.bottom, 24)
+                }.padding(28)
+            }.scrollIndicators(.hidden)
         }
-        .background(
-            LinearGradient(
-                colors: [StudioColor.cyan.opacity(0.025), .clear, StudioColor.violet.opacity(0.035)],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        )
         .onChange(of: store.previewMode) { _, mode in
             store.selectedSurface = switch mode {
             case .home: .composer
@@ -70,50 +32,29 @@ struct LiveEditorPage: View {
             case .settings: .settingsPanel
             }
         }
+        .accessibilityIdentifier("page.editor")
     }
 
     private var previewColumn: some View {
-        VStack(alignment: .leading, spacing: 11) {
-            HStack {
-                HStack(spacing: 7) {
-                    ZStack {
-                        Circle().fill(StudioColor.cyan.opacity(0.13))
-                        Image(systemName: "macwindow.on.rectangle")
-                            .font(.system(size: 11, weight: .semibold))
-                            .foregroundStyle(StudioColor.cyan)
-                    }
-                    .frame(width: 29, height: 29)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Interactive Codex emulator")
-                            .font(.system(size: 12, weight: .semibold))
-                        Text("Click a surface to inspect its tokens")
-                            .font(.system(size: 9, weight: .medium))
-                            .foregroundStyle(StudioColor.textFaint)
-                    }
-                        .foregroundStyle(StudioColor.text)
-                }
+        VStack(alignment: .leading, spacing: 16) {
+            HStack(spacing: 12) {
+                Label("Codex preview", systemImage: "macwindow").font(.system(size: 12, weight: .semibold))
                 Spacer()
-                Picker(selection: $store.previewMode) {
-                    ForEach(PreviewMode.allCases) { mode in
-                        Text(mode.label).tag(mode)
-                    }
-                } label: {
-                    EmptyView()
+                Picker("Preview mode", selection: $store.previewMode) {
+                    ForEach(PreviewMode.allCases) { mode in Text(mode.label).tag(mode) }
                 }
-                .pickerStyle(.segmented)
-                .labelsHidden()
-                .accessibilityLabel("Preview mode")
-                .frame(width: 220)
-            }
-            .padding(.horizontal, 12)
-            .frame(height: 49)
-            .studioPanel(radius: 14, fill: Color.white.opacity(0.035))
+                .pickerStyle(.segmented).labelsHidden().frame(width: 220)
+            }.padding(12).studioGlass(radius: 16)
             if let theme = store.selectedTheme {
                 CodexLivePreview(theme: theme)
+                    .frame(height: 580)
+                    .background { ThemeAmbientGlow(theme: theme).opacity(0.45) }
             } else {
-                ContentUnavailableView("Choose a theme", systemImage: "paintpalette")
-                    .frame(maxWidth: .infinity, minHeight: 530)
+                ThemeAtlasEmptyState(title: "Choose a theme", detail: "Open Explore to find artwork for your workspace.")
+                    .frame(height: 400)
             }
+            Label("Preview only · Changes stay local until you save a draft or apply a theme.", systemImage: "lock")
+                .font(.system(size: 10)).foregroundStyle(StudioColor.textMuted)
         }
     }
 }

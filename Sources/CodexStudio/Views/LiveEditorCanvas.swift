@@ -11,15 +11,15 @@ struct CodexLivePreview: View {
     }
 
     var body: some View {
+        GeometryReader { viewport in
         ZStack {
             values.background
-            if theme.imagePath != nil {
+                .overlay {
                 ThemeArtworkView(theme: theme, animated: store.motionEnabled, showOverlay: false)
-                    .opacity(0.24)
-            } else {
-                ThemeArtworkView(theme: theme, animated: store.motionEnabled, showOverlay: false)
-                    .opacity(0.38)
-            }
+                    .frame(width: viewport.size.width, height: viewport.size.height)
+                    .clipped()
+                    .opacity(theme.imagePath != nil ? 0.24 : 0.38)
+                }
             LinearGradient(colors: [values.background.opacity(0.48), values.background.opacity(0.80)], startPoint: .top, endPoint: .bottom)
 
             VStack(spacing: 0) {
@@ -28,16 +28,19 @@ struct CodexLivePreview: View {
                     let railWidth = min(126, max(88, proxy.size.width * 0.22))
                     HStack(spacing: 0) {
                         previewRail
-                            .frame(width: railWidth)
+                            .frame(width: railWidth, height: proxy.size.height)
                         Rectangle()
                             .fill(values.line)
                             .frame(width: 1)
                         previewMain
-                            .frame(width: max(0, proxy.size.width - railWidth - 1), alignment: .topLeading)
+                            .frame(width: max(0, proxy.size.width - railWidth - 1), height: proxy.size.height, alignment: .topLeading)
                     }
+                    .frame(width: proxy.size.width, height: proxy.size.height, alignment: .topLeading)
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        }
+        .frame(width: viewport.size.width, height: viewport.size.height, alignment: .topLeading)
         }
         .frame(minWidth: 0, idealWidth: 600, maxWidth: .infinity, minHeight: 530, maxHeight: .infinity, alignment: .topLeading)
         .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
@@ -122,7 +125,7 @@ struct CodexLivePreview: View {
                 .padding(12)
             }
         }
-        .frame(width: 126)
+        .frame(maxWidth: .infinity)
         .padding(.vertical, 13)
         .background(values.panel.opacity(0.62))
     }

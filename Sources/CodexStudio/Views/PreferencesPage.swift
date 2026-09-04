@@ -5,81 +5,26 @@ struct PreferencesPage: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 22) {
-                HStack(alignment: .center, spacing: 14) {
-                    ZStack {
-                        Circle()
-                            .fill(StudioColor.cyan.opacity(0.13))
-                        Image(systemName: "slider.horizontal.3")
-                            .font(.system(size: 16, weight: .medium))
-                            .foregroundStyle(StudioColor.cyan)
-                    }
-                    .frame(width: 42, height: 42)
-
-                    VStack(alignment: .leading, spacing: 5) {
-                        Text("SETTINGS")
-                            .font(.system(size: 10, weight: .semibold))
-                            .tracking(0.8)
-                            .foregroundStyle(StudioColor.cyan)
-                        Text("Keep the studio quiet and dependable.")
-                            .font(.system(size: 26, weight: .bold))
-                            .foregroundStyle(StudioColor.text)
-                            .lineLimit(2)
-                        Text("Runtime details, local sources, and recovery controls live here—not in the way of the work.")
-                            .font(.system(size: 12, weight: .regular))
-                            .foregroundStyle(StudioColor.textMuted)
-                            .lineLimit(2)
-                    }
+            VStack(alignment: .leading, spacing: 24) {
+                HStack {
+                    StudioSectionHeading(title: "Settings", detail: "Appearance, local storage, and a dependable connection.")
                     Spacer()
-                    Button {
-                        store.refreshRuntime()
-                    } label: {
-                        Label("Refresh status", systemImage: "arrow.clockwise")
-                            .font(.system(size: 11, weight: .semibold))
-                            .foregroundStyle(StudioColor.textMuted)
-                            .padding(.horizontal, 12)
-                            .frame(height: 34)
-                            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 9, style: .continuous))
-                            .overlay {
-                                RoundedRectangle(cornerRadius: 9, style: .continuous)
-                                    .strokeBorder(StudioColor.line, lineWidth: 1)
-                            }
-                    }
-                    .buttonStyle(StudioPressableButtonStyle())
+                    StudioActionButton(title: "Refresh status", symbol: "arrow.clockwise",
+                        busy: store.isRefreshingRuntime) { store.refreshRuntime() }
+                        .disabled(store.isRefreshingRuntime || store.isApplying)
                 }
-
-                ViewThatFits(in: .horizontal) {
-                    HStack(alignment: .top, spacing: 14) {
-                        runtimeCard
-                        sourceCard
-                    }
-
-                    VStack(alignment: .leading, spacing: 14) {
-                        runtimeCard
-                        sourceCard
-                    }
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 350), spacing: 18, alignment: .top)], spacing: 18) {
+                    behaviorCard
+                    runtimeCard
+                    sourceCard
+                    recoveryCard
                 }
-
-                ViewThatFits(in: .horizontal) {
-                    HStack(alignment: .top, spacing: 14) {
-                        behaviorCard
-                        recoveryCard
-                    }
-
-                    VStack(alignment: .leading, spacing: 14) {
-                        behaviorCard
-                        recoveryCard
-                    }
-                }
-
                 diagnosticsCard
             }
-            .padding(.horizontal, 28)
-            .padding(.top, 26)
-            .padding(.bottom, 32)
+            .padding(28)
         }
         .scrollIndicators(.hidden)
-        .background(Color.clear)
+        .accessibilityIdentifier("page.settings")
     }
 
     private var runtimeCard: some View {
@@ -178,7 +123,7 @@ struct PreferencesPage: View {
                     .background(Color.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
             }
             .buttonStyle(StudioPressableButtonStyle())
-            .disabled(store.isApplying)
+            .disabled(!store.canApply)
 
             Button {
                 store.openRuntimeLog()

@@ -37,7 +37,7 @@ struct CodexStudioApp: App {
                 }
                 .keyboardShortcut("2", modifiers: .command)
 
-                Button("Themes") {
+                Button("Explore") {
                     store.selectThemes()
                 }
                 .keyboardShortcut("3", modifiers: .command)

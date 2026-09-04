@@ -6,14 +6,19 @@ import SwiftUI
 @MainActor
 final class StudioStore: ObservableObject {
     @Published var section: StudioSection = .canvas
-    @Published var themes: [Theme] = []
+    @Published var themes: [Theme] = [] { didSet { updateCatalog() } }
     @Published var selectedThemeID: String?
-    @Published var themeFilter: ThemeFilter = .all
-    @Published var themeSortOrder: ThemeSortOrder
+    @Published var themeFilter: ThemeFilter = .all { didSet { updateCatalog() } }
+    @Published var themeSortOrder: ThemeSortOrder { didSet { updateCatalog() } }
     @Published var themeLayout: ThemeLayout
-    @Published var selectedThemeCategory = "All"
-    @Published var searchText = ""
-    @Published private(set) var recentThemeIDs: [String]
+    @Published var selectedThemeCategory = "All" {
+        didSet { selectedReleaseID = nil; updateCatalog() }
+    }
+    @Published var selectedReleaseID: String? { didSet { updateCatalog() } }
+    @Published var searchText = "" { didSet { updateCatalog() } }
+    @Published private(set) var recentThemeIDs: [String] { didSet { updateCatalog() } }
+    @Published private(set) var filteredThemes: [Theme] = []
+    @Published private(set) var availableReleases: [ThemePlatformRelease] = []
     @Published var previewMode: PreviewMode = .home
     @Published var selectedSurface: PreviewSurface = .composer
     @Published var inspectorEnabled = true
@@ -66,48 +71,13 @@ final class StudioStore: ObservableObject {
         return themes.first(where: { $0.id == selectedThemeID }) ?? themes.first
     }
 
-    var filteredThemes: [Theme] {
-        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        let filtered = themes.filter { theme in
-            let passesFilter: Bool
-            switch themeFilter {
-            case .all: passesFilter = true
-            case .curated: passesFilter = theme.isCurated
-            case .local: passesFilter = theme.isInstalled
-            case .favorites: passesFilter = theme.isFavorite
-            case .recent: passesFilter = recentThemeIDs.contains(theme.id)
-            }
-            guard passesFilter else { return false }
-            guard selectedThemeCategory == "All" || theme.category == selectedThemeCategory else { return false }
-            guard !query.isEmpty else { return true }
-            return [
-                theme.name,
-                theme.author,
-                theme.category,
-                theme.collection,
-                theme.description,
-                theme.platformVersion ?? "",
-                theme.platformRelease?.displayName ?? ""
-            ]
-                .joined(separator: " ")
-                .lowercased()
-                .contains(query)
-        }
-        switch themeSortOrder {
-        case .featured:
-            return filtered.sorted(by: isFeaturedBefore)
-        case .name:
-            return filtered.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
-        case .category:
-            return filtered.sorted {
-                if $0.category != $1.category {
-                    return $0.category.localizedCaseInsensitiveCompare($1.category) == .orderedAscending
-                }
-                return $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
-            }
-        case .platformRelease:
-            return filtered.sorted(by: isPlatformReleaseBefore)
-        }
+    var canApply: Bool { !isApplying && !isLoading && !isOpeningCodex }
+
+    private func updateCatalog() {
+        let query = ThemeCatalogQuery(filter: themeFilter, category: selectedThemeCategory,
+            releaseID: selectedReleaseID, search: searchText, order: themeSortOrder, recentIDs: recentThemeIDs)
+        filteredThemes = query.results(in: themes)
+        availableReleases = query.releases(in: themes)
     }
 
     var themeCategories: [String] {
@@ -179,29 +149,8 @@ final class StudioStore: ObservableObject {
         return lhs.name.localizedCaseInsensitiveCompare(rhs.name) == .orderedAscending
     }
 
-    private func isPlatformReleaseBefore(_ lhs: Theme, _ rhs: Theme) -> Bool {
-        switch (lhs.platformRelease, rhs.platformRelease) {
-        case let (left?, right?):
-            if left.platform.sortIndex != right.platform.sortIndex {
-                return left.platform.sortIndex < right.platform.sortIndex
-            }
-            if left.versionComponents != right.versionComponents {
-                return left.versionComponents.lexicographicallyPrecedes(right.versionComponents)
-            }
-            if left.versionLabel != right.versionLabel {
-                return left.versionLabel.localizedCaseInsensitiveCompare(right.versionLabel) == .orderedAscending
-            }
-            return lhs.name.localizedCaseInsensitiveCompare(rhs.name) == .orderedAscending
-        case (.some, .none):
-            return true
-        case (.none, .some):
-            return false
-        case (.none, .none):
-            return isFeaturedBefore(lhs, rhs)
-        }
-    }
-
     func bootstrap(force: Bool = false) async {
+        guard !isApplying else { return }
         guard !didBootstrap || force else { return }
         guard !bootstrapInFlight else {
             logger.debug("Skipped local catalog bootstrap because one is already running")
@@ -296,12 +245,28 @@ final class StudioStore: ObservableObject {
     func selectSection(_ nextSection: StudioSection) {
         logger.debug("Selected section: \(nextSection.rawValue, privacy: .public)")
         section = nextSection
+        if nextSection == .library {
+            themeFilter = .local
+            resetCatalogFilters()
+        }
     }
 
     func selectThemes(filter: ThemeFilter = .all) {
         section = .themes
         themeFilter = filter
+        resetCatalogFilters()
+    }
+
+    func resetCatalogFilters() {
+        searchText = ""
         selectedThemeCategory = "All"
+        selectedReleaseID = nil
+    }
+
+    func selectPlatform(_ platform: StudioPlatform) {
+        selectThemes()
+        selectedThemeCategory = platform.category
+        setThemeSortOrder(.platformRelease)
     }
 
     func selectFavorites() {
@@ -328,7 +293,7 @@ final class StudioStore: ObservableObject {
         recordRecentTheme(theme.id)
         logger.debug("Selected theme: \(theme.id, privacy: .public)")
         resetEditorControls(for: theme)
-        if openEditor { section = .canvas }
+        if openEditor { section = .editor }
     }
 
     private func recordRecentTheme(_ id: String) {
@@ -352,10 +317,11 @@ final class StudioStore: ObservableObject {
     }
 
     func applySelectedTheme() {
-        guard !isApplying, let selectedTheme else { return }
+        guard canApply, let selectedTheme else { return }
         let generation = UUID()
         applyGeneration = generation
         let requestedThemeID = selectedTheme.id
+        cancelRuntimeRefresh()
         isApplying = true
         runtimePhase = .applying
         runtime.message = "Applying \(selectedTheme.name)…"
@@ -374,8 +340,15 @@ final class StudioStore: ObservableObject {
         }
     }
 
+    private func cancelRuntimeRefresh() {
+        runtimeRefreshGeneration = UUID()
+        runtimeCheckTask?.cancel()
+        runtimeCheckTask = nil
+        isRefreshingRuntime = false
+    }
+
     func refreshRuntime() {
-        guard !isRefreshingRuntime else { return }
+        guard !isRefreshingRuntime, !isApplying, !isLoading else { return }
         let generation = UUID()
         runtimeRefreshGeneration = generation
         isRefreshingRuntime = true
@@ -425,7 +398,7 @@ final class StudioStore: ObservableObject {
     }
 
     func openCodex() {
-        guard !isOpeningCodex else { return }
+        guard !isOpeningCodex, !isApplying else { return }
         isOpeningCodex = true
         showNotice("Preparing themed Codex…")
         Task { [weak self] in
@@ -475,7 +448,8 @@ final class StudioStore: ObservableObject {
     }
 
     func restoreOriginal() {
-        guard !isApplying else { return }
+        guard canApply else { return }
+        cancelRuntimeRefresh()
         let generation = UUID()
         applyGeneration = generation
         isApplying = true

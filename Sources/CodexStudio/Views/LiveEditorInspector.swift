@@ -95,7 +95,7 @@ struct EditorInspector: View {
                             .background(StudioColor.spectrum, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
                     }
                     .buttonStyle(StudioPressableButtonStyle())
-                    .disabled(store.isApplying || store.selectedTheme?.isInstalled != true)
+                    .disabled(!store.canApply || store.selectedTheme?.isInstalled != true)
                     .opacity(store.selectedTheme?.isInstalled == true ? 1 : 0.45)
                 }
 

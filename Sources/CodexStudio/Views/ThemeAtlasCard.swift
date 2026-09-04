@@ -6,229 +6,97 @@ struct ThemeAtlasCard: View {
     let isSelected: Bool
     @State private var isHovered = false
 
-    private var themeAccent: Color { Color(hex: theme.palette.accent) }
-    private var cardShape: RoundedRectangle { RoundedRectangle(cornerRadius: 18, style: .continuous) }
+    private var active: Bool { store.runtime.activeThemeID == theme.id }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            artwork
-            metadata
-        }
-        .background(Color.white.opacity(isSelected ? 0.075 : isHovered ? 0.055 : 0.035), in: cardShape)
-        .background(.thinMaterial, in: cardShape)
-        .overlay {
-            cardShape
-                .strokeBorder(
-                    isSelected ? themeAccent.opacity(0.82) : (isHovered ? StudioColor.lineStrong : StudioColor.line),
-                    lineWidth: isSelected ? 1.5 : 1
-                )
-        }
-        .shadow(
-            color: isSelected ? themeAccent.opacity(0.16) : .black.opacity(isHovered ? 0.18 : 0.09),
-            radius: isSelected ? 20 : 12,
-            y: 8
-        )
-        .studioHoverScale(isHovered)
-        .contentShape(cardShape)
-        .onTapGesture {
-            store.selectTheme(theme)
-        }
-        .onHover { isHovered = $0 }
-        .contextMenu {
-            Button(theme.isFavorite ? "Remove from Favorites" : "Add to Favorites") {
-                store.toggleFavorite(theme)
+            // A real selection button behind sibling controls: favoriting never
+            // falls through to selection, applying, or the card's context menu.
+            Button { store.selectTheme(theme) } label: {
+                Color.clear.aspectRatio(1.42, contentMode: .fit)
+                    .overlay {
+                        GeometryReader { geometry in
+                            ThemeArtworkView(theme: theme, showOverlay: false, maxPixelSize: 900)
+                                .frame(width: geometry.size.width, height: geometry.size.height)
+                        }
+                    }
+                    .clipped()
+                    .contentShape(Rectangle())
             }
-            if theme.isInstalled {
-                Button("Apply to Codex") {
-                    store.selectTheme(theme)
-                    store.applySelectedTheme()
+            .buttonStyle(.plain)
+            .accessibilityLabel("Preview \(theme.name)")
+            .accessibilityIdentifier("theme-card.\(theme.id).select")
+            .overlay(alignment: .topLeading) {
+                if active {
+                    Label("Active", systemImage: "checkmark.circle.fill")
+                        .font(.system(size: 10, weight: .semibold)).foregroundStyle(.white)
+                        .padding(.horizontal, 10).frame(height: 30)
+                        .studioGlass(radius: 16).environment(\.colorScheme, .dark)
+                        .padding(14).allowsHitTesting(false)
                 }
             }
-            Button("Open in Live Lab") {
-                store.selectTheme(theme)
-                store.selectSection(.editor)
-            }
-            if let sourceURL = theme.sourceURL.flatMap(URL.init(string:)) {
-                Button("View artwork source") {
-                    NSWorkspace.shared.open(sourceURL)
-                }
-            }
-        }
-        // Keep the card discoverable as a selectable element while allowing
-        // the nested favorite/apply buttons to remain independently clickable
-        // in VoiceOver and in macOS's accessibility tree.
-        .accessibilityElement(children: .contain)
-        .accessibilityAddTraits(.isButton)
-        .accessibilityLabel("\(theme.name), \(theme.category), \(theme.isInstalled ? "installed" : "preview")")
-        .accessibilityHint("Select this theme. Use the star to save it to Favorites.")
-        .accessibilityIdentifier("theme-card.\(theme.id)")
-    }
+            .overlay(alignment: .topTrailing) { ThemeFavoriteButton(theme: theme).padding(14) }
+            .clipShape(UnevenRoundedRectangle(topLeadingRadius: 21, topTrailingRadius: 21))
 
-    private var artwork: some View {
-        ZStack {
-            ThemeArtworkView(theme: theme, animated: isHovered && store.motionEnabled, showOverlay: false)
-            LinearGradient(
-                colors: [.black.opacity(0.10), .clear, .black.opacity(0.58)],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        }
-        .aspectRatio(StudioLayoutMetrics.cardArtworkAspectRatio, contentMode: .fit)
-        .frame(maxWidth: .infinity)
-        .overlay(alignment: .topLeading) {
-            categoryBadge
-                .padding(12)
-        }
-        .overlay(alignment: .topTrailing) {
-            HStack(spacing: 6) {
-                if store.runtime.activeThemeID == theme.id {
-                    installedBadge(tint: StudioColor.mint, background: StudioColor.mint.opacity(0.18))
-                } else if theme.isInstalled {
-                    installedBadge(tint: .white.opacity(0.90), background: .black.opacity(0.38))
-                }
-                favoriteButton
-            }
-            .padding(12)
-        }
-        .clipShape(UnevenRoundedRectangle(topLeadingRadius: 18, topTrailingRadius: 18))
-    }
-
-    private var categoryBadge: some View {
-        Text(theme.category)
-            .font(.system(size: 9, weight: .semibold))
-            .foregroundStyle(.white.opacity(0.92))
-            .lineLimit(1)
-            .padding(.horizontal, 10)
-            .frame(height: 26)
-            .background(.black.opacity(0.42), in: Capsule())
-            .overlay {
-                Capsule()
-                    .strokeBorder(.white.opacity(0.18), lineWidth: 1)
-            }
-    }
-
-    private func installedBadge(tint: Color, background: Color) -> some View {
-        Image(systemName: "checkmark")
-            .font(.system(size: 10, weight: .bold))
-            .foregroundStyle(tint)
-            .frame(width: 30, height: 30)
-            .background(background, in: Circle())
-            .overlay {
-                Circle()
-                    .strokeBorder(tint.opacity(0.34), lineWidth: 1)
-            }
-            .accessibilityLabel(store.runtime.activeThemeID == theme.id ? "Active in Codex" : "Installed")
-    }
-
-    private var favoriteButton: some View {
-        Button {
-            store.toggleFavorite(theme)
-        } label: {
-            Image(systemName: theme.isFavorite ? "star.fill" : "star")
-                .font(.system(size: 12, weight: .bold))
-                .foregroundStyle(theme.isFavorite ? StudioColor.amber : .white.opacity(0.92))
-                .frame(width: 30, height: 30)
-                .background(
-                    theme.isFavorite ? StudioColor.amber.opacity(0.20) : .black.opacity(0.38),
-                    in: Circle()
-                )
-                .overlay {
-                    Circle()
-                        .strokeBorder(
-                            theme.isFavorite ? StudioColor.amber.opacity(0.58) : .white.opacity(0.22),
-                            lineWidth: 1
-                        )
-                }
-        }
-        .buttonStyle(StudioPressableButtonStyle())
-        .accessibilityLabel(theme.isFavorite ? "Remove \(theme.name) from favorites" : "Add \(theme.name) to favorites")
-        .accessibilityValue(theme.isFavorite ? "Saved" : "Not saved")
-        .help(theme.isFavorite ? "Remove from Favorites" : "Add to Favorites")
-        .contentShape(Circle())
-        .zIndex(2)
-        .accessibilityIdentifier("theme-card.\(theme.id).favorite")
-    }
-
-    private var metadata: some View {
-        HStack(alignment: .center, spacing: 12) {
-            VStack(alignment: .leading, spacing: 6) {
-                Text(theme.name)
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(StudioColor.text)
-                    .lineLimit(1)
-
-                HStack(spacing: 6) {
-                    ThemeSwatch(theme: theme, size: 17)
-                    Image(systemName: theme.isCurated ? "checkmark.seal.fill" : "internaldrive")
-                        .font(.system(size: 9, weight: .semibold))
-                        .foregroundStyle(theme.isCurated ? StudioColor.mint : StudioColor.textFaint)
-                    Text(theme.platformRelease?.displayName ?? theme.collection)
-                        .font(.system(size: 10, weight: .regular))
-                        .foregroundStyle(StudioColor.textFaint)
-                        .lineLimit(1)
-                }
-            }
-
-            Spacer(minLength: 0)
-
-            if theme.isInstalled {
+            HStack(spacing: 8) {
+                Button { store.selectTheme(theme) } label: {
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text(theme.name).font(.system(size: 13, weight: .semibold))
+                            .foregroundStyle(StudioColor.text).lineLimit(1)
+                        Text(theme.platformRelease?.displayName ?? theme.category)
+                            .font(.system(size: 10)).foregroundStyle(StudioColor.textMuted).lineLimit(1)
+                    }.frame(maxWidth: .infinity, alignment: .leading).contentShape(Rectangle())
+                }.buttonStyle(.plain)
                 Button {
                     store.selectTheme(theme)
                     store.applySelectedTheme()
                 } label: {
-                    Image(systemName: store.runtime.activeThemeID == theme.id ? "checkmark" : "arrow.up.right")
-                        .font(.system(size: 10, weight: .bold))
-                        .foregroundStyle(store.runtime.activeThemeID == theme.id ? StudioColor.mint : themeAccent)
-                        .frame(width: 30, height: 30)
-                        .background(themeAccent.opacity(0.10), in: Circle())
-                        .overlay {
-                            Circle().strokeBorder(themeAccent.opacity(0.24), lineWidth: 1)
-                        }
+                    Image(systemName: active ? "checkmark.circle.fill" : "arrow.up.right")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(active ? StudioColor.mint : StudioColor.textMuted)
+                        .frame(width: 32, height: 32)
                 }
-                .buttonStyle(StudioPressableButtonStyle())
-                .disabled(store.isApplying)
-                .help("Apply \(theme.name)")
+                .buttonStyle(.plain)
+                .disabled(!store.canApply || !theme.isInstalled || active)
+                .help(active ? "Active in Codex" : "Apply \(theme.name)")
                 .accessibilityLabel("Apply \(theme.name)")
                 .accessibilityIdentifier("theme-card.\(theme.id).apply")
             }
+            .padding(16)
         }
-        .padding(14)
-        .frame(minHeight: 78)
+        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 21))
+        .overlay {
+            RoundedRectangle(cornerRadius: 21)
+                .strokeBorder(isSelected ? StudioColor.cyan.opacity(0.8) : .white.opacity(isHovered ? 0.24 : 0.10),
+                    lineWidth: isSelected ? 1.5 : 1)
+                .allowsHitTesting(false)
+        }
+        .onHover { isHovered = $0 }
+        .contextMenu {
+            Button(theme.isFavorite ? "Remove from Favorites" : "Add to Favorites") { store.toggleFavorite(theme) }
+            Button("Customize in Live Editor") { store.selectTheme(theme, openEditor: true) }
+            if let url = theme.sourceURL.flatMap(URL.init(string:)), ["https", "http"].contains(url.scheme ?? "") {
+                Link("View artwork source", destination: url)
+            }
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("theme-card.\(theme.id)")
     }
 }
 
 struct ThemeAtlasEmptyState: View {
     let title: String
     let detail: String
-    let symbol: String
-
-    init(title: String, detail: String, symbol: String = "sparkle.magnifyingglass") {
-        self.title = title
-        self.detail = detail
-        self.symbol = symbol
-    }
+    var symbol = "sparkle.magnifyingglass"
 
     var body: some View {
         VStack(spacing: 12) {
-            ZStack {
-                Circle()
-                    .fill(StudioColor.cyan.opacity(0.10))
-                Image(systemName: symbol)
-                    .font(.system(size: 22, weight: .semibold))
-                    .foregroundStyle(StudioColor.cyan)
-            }
-            .frame(width: 54, height: 54)
-            Text(title)
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(StudioColor.text)
-            Text(detail)
-                .font(.system(size: 11, weight: .regular))
-                .foregroundStyle(StudioColor.textMuted)
-                .multilineTextAlignment(.center)
+            Image(systemName: symbol).font(.system(size: 28, weight: .light)).foregroundStyle(StudioColor.cyan)
+                .frame(width: 64, height: 64).studioGlass(radius: 22)
+            Text(title).font(.system(size: 17, weight: .semibold)).foregroundStyle(StudioColor.text)
+            Text(detail).font(.system(size: 12)).foregroundStyle(StudioColor.textMuted).multilineTextAlignment(.center)
         }
-        .padding(28)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .studioPanel(radius: 18, fill: Color.white.opacity(0.025))
+        .padding(28).frame(maxWidth: .infinity)
     }
 }
 
@@ -239,22 +107,9 @@ struct ThemeAtlasLoadingState: View {
     var body: some View {
         VStack(spacing: 12) {
             ProgressView()
-                .controlSize(.regular)
-                .tint(StudioColor.cyan)
-                .frame(width: 54, height: 54)
-                .background(StudioColor.cyan.opacity(0.10), in: Circle())
-            Text(title)
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(StudioColor.text)
-            Text(detail)
-                .font(.system(size: 11, weight: .regular))
-                .foregroundStyle(StudioColor.textMuted)
-                .multilineTextAlignment(.center)
-        }
-        .padding(28)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .studioPanel(radius: 18, fill: Color.white.opacity(0.025))
+            Text(title).font(.system(size: 16, weight: .semibold))
+            Text(detail).font(.system(size: 12)).foregroundStyle(.secondary)
+        }.frame(maxWidth: .infinity)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(title). \(detail)")
     }
 }
