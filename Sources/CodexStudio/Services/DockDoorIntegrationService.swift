@@ -200,7 +200,7 @@ struct DockDoorIntegrationService {
     }
 
     private static func bundledStudioDockDoorIcon() -> URL? {
-        Bundle.main.resourceURL?.appendingPathComponent("CodexStudio.icns")
+        Bundle.main.resourceURL?.appendingPathComponent("CodexStudioDockDoor.icns")
     }
 
     // A new path invalidates consumers that cache custom images by URL. Keep

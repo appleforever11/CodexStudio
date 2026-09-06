@@ -99,7 +99,7 @@ struct StudioSectionHeading: View {
     var detail: String? = nil
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
-            Text(title).font(.system(size: 23, weight: .bold)).foregroundStyle(StudioColor.text)
+            Text(title).font(.system(size: 28, weight: .semibold)).foregroundStyle(StudioColor.text)
                 .accessibilityAddTraits(.isHeader)
             if let detail {
                 Text(detail).font(.system(size: 12)).foregroundStyle(StudioColor.textMuted)

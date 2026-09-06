@@ -3,6 +3,34 @@
     <channel>
         <title>CodexStudio</title>
         <item>
+            <title>0.1.18</title>
+            <pubDate>Sat, 05 Sep 2026 22:59:41 -0400</pubDate>
+            <link>https://github.com/appleforever11/CodexStudio</link>
+            <sparkle:version>1018000</sparkle:version>
+            <sparkle:shortVersionString>0.1.18</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.18
+
+## A more immersive Studio
+
+- Larger Canvas artwork, wallpaper-derived ambient color, glass controls, and a selection inspector on wider windows.
+- Platform shortcuts in Explore, clearer navigation, and a larger bottom-anchored preview.
+- Settings organized into General, Connection, Library, and Recovery.
+- Tighter DockDoor artwork for a more consistent icon footprint.
+
+## Reliability and maintainability
+
+- Separate catalog, library, navigation, editor, and runtime responsibilities; smaller editor and Settings components.
+- Catalog refreshes preserve edits to the selected theme.
+- Bounded script timeouts and output collection prevent inherited pipes or ignored termination from holding an operation open indefinitely.
+- Runtime 1.9.2 reconciles completed operations after renderer setup and retries status delivery.
+- Runtime version changes refresh the build cache automatically.
+- Local Apple wallpaper packs remain available offline.
+]]></description>
+            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.18/CodexStudio-0.1.18-arm64.zip" length="391594125" type="application/octet-stream" sparkle:edSignature="XZbrHegcOa1tJyeslkPt0N+EPiZV0weqeZDYFFR6L58xwQguY8DAFpq5iXmXVSiwG2ZBvmSJlMNuur+WPD2OBg=="/>
+        </item>
+        <item>
             <title>0.1.17</title>
             <pubDate>Fri, 04 Sep 2026 19:48:35 -0400</pubDate>
             <link>https://github.com/appleforever11/CodexStudio</link>
@@ -44,24 +72,6 @@ If DockDoor Pro retains an in-memory image until relaunch, quit and reopen DockD
 Validation: 17 automated tests passed, with local interaction checks for favorites, release filtering, search, artwork preview, and editor layout. Other macOS versions were not independently exercised for this release.
 ]]></description>
             <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.16/CodexStudio-0.1.16-arm64.zip" length="387182270" type="application/octet-stream" sparkle:edSignature="Ron1uH7mTliXYzzld4AX3+1rzflCg4FZGyx9o7/QyxJIst9/BH6+HeVBUhirMkuh2iWbd3pHXFpBzbKoomt+DQ=="/>
-        </item>
-        <item>
-            <title>0.1.15</title>
-            <pubDate>Fri, 04 Sep 2026 13:00:07 -0400</pubDate>
-            <link>https://github.com/appleforever11/CodexStudio</link>
-            <sparkle:version>1015000</sparkle:version>
-            <sparkle:shortVersionString>0.1.15</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.15
-
-## Canvas glow restored
-
-- Restores the adaptive wallpaper-colored glow behind the Canvas hero preview.
-- Keeps the hero artwork and controls cleanly clipped while allowing the glow to breathe around the card, matching the Themes spotlight.
-- Preserves the local Apple wallpaper library, Favorites and Recent collections, runtime recovery, diagnostics, and Sparkle update flow from 0.1.14.
-]]></description>
-            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.15/CodexStudio-0.1.15-arm64.zip" length="387286363" type="application/octet-stream" sparkle:edSignature="3+YhsnMafwZPj363ak0kAAJRfokJG1tX/YgJjTvzhCvXN6QJhaesOB2J7gyTktyk4rese8isXFoOFUGRRwajCA=="/>
         </item>
     </channel>
 </rss>

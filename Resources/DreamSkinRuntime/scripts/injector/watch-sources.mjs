@@ -95,8 +95,8 @@ export async function watchOperationState(statePath, onState) {
       if (!/^\d{1,12}:\d{13}:\d{1,8}$/.test(operation.token)) return;
       const snapshotKey = `${operation.token}:${operation.status}:${operation.updatedAt}`;
       if (snapshotKey === lastSnapshotKey) return;
-      lastSnapshotKey = snapshotKey;
       await onState(operation);
+      lastSnapshotKey = snapshotKey;
     } catch (error) {
       if (!closed && error?.code !== "ENOENT") {
         console.error(`[dream-skin] operation state unavailable: ${error.message}`);
@@ -124,8 +124,12 @@ export async function watchOperationState(statePath, onState) {
   }
   readChain = readChain.then(readLatest);
   await readChain;
+  // Atomic replacements and temporary watcher errors must not lose completion.
+  const poll = setInterval(scheduleRead, 2000);
+  poll.unref();
   return () => {
     closed = true;
+    clearInterval(poll);
     if (readTimer) clearTimeout(readTimer);
     watcher?.close();
   };

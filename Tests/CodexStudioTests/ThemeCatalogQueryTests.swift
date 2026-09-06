@@ -87,6 +87,20 @@ final class ThemeCatalogQueryTests: XCTestCase {
         XCTAssertFalse(store.isRefreshingRuntime)
     }
 
+    @MainActor func testCatalogRefreshPreservesCurrentDraft() {
+        let store = StudioStore()
+        let artwork = theme("draft-fixture")
+        store.themes = [artwork]
+        store.selectedThemeID = artwork.id
+        store.draftBlur = 37
+        store.draftRadius = 31
+        let catalog = ThemeLibraryResult(themes: [artwork], curatedCount: 0, localCount: 1,
+                                         managedPath: "/tmp/fixture", message: "Test")
+        store.installCatalog(catalog, status: .unknown, scannedAt: Date())
+        XCTAssertEqual(store.draftBlur, 37)
+        XCTAssertEqual(store.draftRadius, 31)
+    }
+
     @MainActor func testApplyingIsBlockedWhileCatalogLoadsOrCodexOpens() {
         let store = StudioStore()
         store.themes = [theme("preview")]

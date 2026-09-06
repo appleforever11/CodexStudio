@@ -12,12 +12,17 @@ struct CanvasPage: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 30) {
                     HStack {
-                        StudioSectionHeading(title: "Your canvas", detail: "A space that feels like you.")
+                        StudioSectionHeading(title: "Make space for inspiration.", detail: "CANVAS / YOUR PERSONAL STUDIO")
                         Spacer()
                         StudioActionButton(title: "Explore themes", symbol: "square.grid.2x2") { store.selectThemes() }
                     }
                     if let theme = store.selectedTheme {
-                        ThemeHero(theme: theme, height: min(520, max(380, geometry.size.width * 0.38)))
+                        HStack(alignment: .top, spacing: 20) {
+                            ThemeHero(theme: theme, height: 460)
+                            if geometry.size.width > 1120 {
+                                ThemeDetailsPanel(theme: theme).frame(width: 250, height: 460)
+                            }
+                        }
                     } else if store.isLoading {
                         ThemeAtlasLoadingState(title: "Preparing your canvas", detail: "Reading your local artwork library…")
                             .frame(height: 380)
@@ -25,6 +30,7 @@ struct CanvasPage: View {
                         ThemeAtlasErrorState(title: "Your canvas is waiting", detail: store.libraryError ?? "Import a theme to get started.",
                             retry: { Task { await store.bootstrap(force: true) } }).frame(height: 380)
                     }
+                    StudioCollectionSummary(total: store.themes.count, favorites: store.favoriteCount, recent: store.recentThemes.count)
                     VStack(alignment: .leading, spacing: 16) {
                         shelfHeading("The Apple collection", detail: "Explore by platform and release")
                         HStack(spacing: 16) {

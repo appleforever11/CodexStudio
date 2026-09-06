@@ -200,87 +200,11 @@ struct CodexRuntimeClient: Sendable {
     }
 
     private static func run(script: URL, arguments: [String], timeout: TimeInterval) -> ProcessOutput {
-        let process = Process()
-        let standardOutput = Pipe()
-        let standardError = Pipe()
-        let stdoutCollector = ProcessDataCollector()
-        let stderrCollector = ProcessDataCollector()
-        process.executableURL = URL(fileURLWithPath: "/bin/bash")
-        process.arguments = [script.path] + arguments
-        process.standardOutput = standardOutput
-        process.standardError = standardError
-        var environment = ProcessInfo.processInfo.environment
-        environment["PATH"] = "/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/homebrew/bin"
-        process.environment = environment
-
-        do {
-            try process.run()
-        } catch {
-            return ProcessOutput(completed: false, exitCode: -1, detail: "Could not start the Codex runtime: \(error.localizedDescription)")
-        }
-
-        standardOutput.fileHandleForReading.readabilityHandler = { handle in
-            stdoutCollector.append(handle.availableData)
-        }
-        standardError.fileHandleForReading.readabilityHandler = { handle in
-            stderrCollector.append(handle.availableData)
-        }
-
-        let deadline = Date().addingTimeInterval(timeout)
-        while process.isRunning && Date() < deadline {
-            Thread.sleep(forTimeInterval: 0.05)
-        }
-        var didTimeOut = false
-        if process.isRunning {
-            didTimeOut = true
-            process.terminate()
-            process.waitUntilExit()
-        }
-
-        standardOutput.fileHandleForReading.readabilityHandler = nil
-        standardError.fileHandleForReading.readabilityHandler = nil
-        stdoutCollector.append(standardOutput.fileHandleForReading.readDataToEndOfFile())
-        stderrCollector.append(standardError.fileHandleForReading.readDataToEndOfFile())
-        if didTimeOut {
-            return ProcessOutput(completed: false, exitCode: -1, detail: "The Codex theme runtime timed out before verification.")
-        }
-
-        let stdout = String(data: stdoutCollector.data, encoding: .utf8) ?? ""
-        let stderr = String(data: stderrCollector.data, encoding: .utf8) ?? ""
-        let detail = (stderr.isEmpty ? stdout : stderr)
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-            .split(separator: "\n")
-            .last
-            .map(String.init) ?? ""
-        return ProcessOutput(completed: true, exitCode: process.terminationStatus, detail: detail)
+        RuntimeProcessRunner.run(script: script, arguments: arguments, timeout: timeout)
     }
 
     private static func isSafeThemeID(_ id: String) -> Bool {
         guard !id.isEmpty, id.count <= 80, id.first?.isLetter == true || id.first?.isNumber == true else { return false }
         return id.allSatisfy { $0.isLetter || $0.isNumber || $0 == "." || $0 == "_" || $0 == "-" }
     }
-}
-
-private final class ProcessDataCollector: @unchecked Sendable {
-    private let lock = NSLock()
-    private var storage = Data()
-
-    func append(_ data: Data) {
-        guard !data.isEmpty else { return }
-        lock.lock()
-        storage.append(data)
-        lock.unlock()
-    }
-
-    var data: Data {
-        lock.lock()
-        defer { lock.unlock() }
-        return storage
-    }
-}
-
-private struct ProcessOutput: Sendable {
-    let completed: Bool
-    let exitCode: Int32
-    let detail: String
 }

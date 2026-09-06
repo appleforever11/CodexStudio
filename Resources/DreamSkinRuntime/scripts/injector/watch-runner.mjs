@@ -21,6 +21,7 @@ import {
   writeModeAck,
 } from "./watch-sources.mjs";
 import { createEarlyScriptManager, createTargetSetupTracker } from "./watch-support.mjs";
+import { terminalOperation } from "./operation-state.mjs";
 
 const applyToSession = (session, payload) => session.evaluate(payload);
 
@@ -35,6 +36,7 @@ export async function runWatch(options) {
   let lastListErrorAt = 0;
   let operationSignalChain = Promise.resolve();
   let activeOperation = null;
+  let latestOperation = null;
   let pauseRecovery = null;
   let controlOnly = false;
   let mutationEpoch = 0;
@@ -161,6 +163,7 @@ export async function runWatch(options) {
   const closePayloadWatchers = watchPayloadSources(options.themeDir, queuePayloadRefresh);
   const closeOperationWatcher = await watchOperationState(options.operationState, (operation) => {
     operationSignalChain = operationSignalChain.then(async () => {
+      latestOperation = operation;
       const previousOperation = activeOperation?.token === operation.token ? activeOperation : null;
       const busy = isFreshBusyOperation(operation);
       if (pauseRecovery && pauseRecovery.token !== operation.token) pauseRecovery = null;
@@ -379,6 +382,13 @@ export async function runWatch(options) {
             recoveredPauseThisCycle = true;
           } else if (!record.operationExternal) {
             await presentOperationUi(session, record.operationToken, "success", `Applied “${current.theme.name}”`);
+          } else {
+            // Setup may outlive the completion event. Reconcile only the same
+            // token so an older completion cannot dismiss a newer operation.
+            const terminal = terminalOperation(latestOperation, record.operationToken);
+            if (terminal) {
+              await presentOperationUi(session, record.operationToken, terminal.state, terminal.message);
+            }
           }
           console.log(`[dream-skin] injected verified ChatGPT target ${target.id}`);
         } catch (error) {

@@ -77,7 +77,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     override init() {
         updaterController = SPUStandardUpdaterController(
-            startingUpdater: true,
+            startingUpdater: Bundle.main.bundleIdentifier?.hasSuffix(".review") != true && Bundle.main.object(forInfoDictionaryKey: "CodexStudioReviewMode") as? String != "true",
             updaterDelegate: nil,
             userDriverDelegate: nil
         )

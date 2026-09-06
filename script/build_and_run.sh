@@ -3,7 +3,7 @@ set -euo pipefail
 
 MODE="${1:-run}"
 APP_NAME="CodexStudio"
-BUNDLE_ID="local.kevinhowe.CodexStudio"
+BUNDLE_ID="${CODEX_STUDIO_BUNDLE_ID:-local.kevinhowe.CodexStudio}"
 MIN_SYSTEM_VERSION="14.0"
 BUILD_CONFIGURATION="${CODEX_STUDIO_BUILD_CONFIGURATION:-debug}"
 APP_VERSION="${CODEX_STUDIO_VERSION:-0.1.0}"
@@ -137,7 +137,7 @@ fi
 # local mirror and never wait for File Provider to hydrate old assets.
 REFRESH_LOCAL_BUILD_ASSETS="${CODEX_STUDIO_REFRESH_LOCAL_BUILD_ASSETS:-false}"
 mkdir -p "$LOCAL_BUILD_ASSETS_DIR"
-if [[ "$REFRESH_LOCAL_BUILD_ASSETS" == "true" || ! -d "$LOCAL_RUNTIME_DIR/scripts" ]]; then
+if [[ "$REFRESH_LOCAL_BUILD_ASSETS" == "true" || ! -d "$LOCAL_RUNTIME_DIR/scripts" ]] || ! cmp -s "$DREAM_SKIN_RUNTIME_DIR/VERSION" "$LOCAL_RUNTIME_DIR/VERSION"; then
   if [[ ! -d "$DREAM_SKIN_RUNTIME_DIR/scripts" ]]; then
     echo "Bundled Codex theme runtime was not found at $DREAM_SKIN_RUNTIME_DIR." >&2
     exit 1
@@ -185,6 +185,7 @@ rm -rf "$APP_BUNDLE"
 mkdir -p "$APP_MACOS" "$APP_RESOURCES" "$FRAMEWORKS_DIR"
 cp "$BUILD_BINARY" "$APP_BINARY"
 COPYFILE_DISABLE=1 ditto --norsrc --noextattr --noqtn "$ICON_FILE" "$APP_RESOURCES/CodexStudio.icns"
+COPYFILE_DISABLE=1 ditto --norsrc --noextattr --noqtn "$ROOT_DIR/Resources/CodexStudioDockDoor.icns" "$APP_RESOURCES/CodexStudioDockDoor.icns"
 mkdir -p "$APP_RESOURCES/ThemePacks"
 # Only provenance-verified, non-AI packs enter an app or DMG. Legacy local
 # packages remain available in the source tree and user library without being
@@ -196,6 +197,15 @@ mkdir -p "$APP_RESOURCES/ThemePacks"
 # CODEX_STUDIO_REFRESH_THEME_CACHE=true when deliberately replacing an
 # existing pack.
 mkdir -p "$THEME_CACHE_DIR"
+# Opt-in for UI-only debug iterations: the existing local catalog is the input.
+# Never use this shortcut for a release or when importing/replacing artwork.
+if [[ "${CODEX_STUDIO_USE_CACHED_CATALOG:-false}" == "true" ]]; then
+  if [[ "$BUILD_CONFIGURATION" != "debug" ]]; then
+    echo "Cached-catalog staging is supported only for debug builds." >&2
+    exit 1
+  fi
+  THEME_PACKS_DIR="$THEME_CACHE_DIR"
+fi
 CANDIDATE_THEME_NAMES=()
 THEME_SYNC_SOURCES=()
 REFRESH_THEME_CACHE="${CODEX_STUDIO_REFRESH_THEME_CACHE:-false}"
@@ -359,6 +369,8 @@ cat >"$INFO_PLIST" <<PLIST
   <string>CodexStudio</string>
   <key>CFBundleIdentifier</key>
   <string>$BUNDLE_ID</string>
+  <key>CodexStudioReviewMode</key>
+  <string>${CODEX_STUDIO_REVIEW_MODE:-false}</string>
   <key>CFBundleName</key>
   <string>Codex Studio</string>
   <key>CFBundlePackageType</key>

@@ -28,6 +28,10 @@ extension ThemeLibraryService {
 
     @discardableResult
     static func installBundledRuntimeIfNeeded() -> Bool {
+        // A side-by-side visual review must not replace the production injector
+        // or rewrite DockDoor pins merely by opening its library.
+        guard Bundle.main.bundleIdentifier?.hasSuffix(".review") != true,
+              Bundle.main.object(forInfoDictionaryKey: "CodexStudioReviewMode") as? String != "true" else { return false }
         let fileManager = FileManager.default
         guard let bundledRuntimeDirectory,
               fileManager.fileExists(atPath: bundledRuntimeDirectory.appendingPathComponent("scripts/switch-theme-macos.sh").path)

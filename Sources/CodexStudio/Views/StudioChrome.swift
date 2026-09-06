@@ -44,7 +44,7 @@ struct StudioBackdrop: View {
                 }
                 LinearGradient(
                     colors: colorScheme == .dark
-                        ? [StudioColor.ink.opacity(0.64), StudioColor.ink.opacity(0.72), StudioColor.ink.opacity(0.94)]
+                        ? [StudioColor.ink.opacity(0.42), StudioColor.ink.opacity(0.60), StudioColor.ink.opacity(0.86)]
                         : [Color.white.opacity(0.62), Color.white.opacity(0.74), Color.white.opacity(0.91)],
                     startPoint: .topLeading, endPoint: .bottomTrailing)
             }.frame(width: geometry.size.width, height: geometry.size.height).clipped()

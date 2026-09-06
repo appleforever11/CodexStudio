@@ -46,6 +46,9 @@ private struct StudioCatalogPage: View {
                         .accessibilityLabel(showPreview ? "Hide preview" : "Show preview")
                 }
                 CatalogToolbar(installedOnly: installedOnly)
+                if !installedOnly && store.themeFilter == .all {
+                    CatalogPlatformStrip()
+                }
             }
             .padding(.horizontal, 28).padding(.top, 24).padding(.bottom, 16)
 

@@ -8,7 +8,7 @@ struct LiveEditorPage: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     HStack(alignment: .center) {
-                        StudioSectionHeading(title: "Live editor", detail: store.selectedTheme?.name ?? "Choose a theme to start")
+                        StudioSectionHeading(title: "Design your workspace", detail: store.selectedTheme?.name ?? "Choose a theme to start")
                         Spacer()
                         StudioActionButton(title: "Change theme", symbol: "square.grid.2x2") { store.selectThemes() }
                     }

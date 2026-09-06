@@ -37,11 +37,6 @@ struct ThemeHero: View {
                             .font(.system(size: compact ? 30 : 42, weight: .bold))
                             .foregroundStyle(.white).lineLimit(2).minimumScaleFactor(0.75)
                             .accessibilityAddTraits(.isHeader)
-                        if !compact {
-                            Text(theme.isInstalled ? "Ready in your local library. Preview freely, apply when it feels right."
-                                : "Explore this artwork before adding it to your workspace.")
-                                .font(.system(size: 12)).foregroundStyle(.white.opacity(0.78)).lineLimit(2)
-                        }
                     }
                     StudioGlassGroup {
                         HStack(spacing: 10) {
@@ -58,7 +53,10 @@ struct ThemeHero: View {
                     }
                     .environment(\.colorScheme, .dark)
                 }
-                .padding(compact ? 24 : 30)
+                .padding(20)
+                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 22))
+                .environment(\.colorScheme, .dark)
+                .padding(compact ? 18 : 24)
             }
             .overlay {
                 RoundedRectangle(cornerRadius: 26).strokeBorder(.white.opacity(0.18), lineWidth: 1)
