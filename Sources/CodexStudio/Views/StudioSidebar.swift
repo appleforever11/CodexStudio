@@ -24,6 +24,7 @@ struct StudioSidebar: View {
                     }
                     VStack(alignment: .leading, spacing: 4) {
                         sectionLabel("Collection")
+                        navigation("Abstract", symbol: "play.rectangle", selected: store.section == .abstract) { store.selectSection(.abstract) }
                         navigation("Favorites", symbol: "star", count: store.favoriteCount, selected: store.section == .themes && store.themeFilter == .favorites) { store.selectFavorites() }
                         navigation("Recently used", symbol: "clock", selected: store.section == .themes && store.themeFilter == .recent) { store.selectRecent() }
                         navigation("Local library", symbol: "internaldrive", selected: store.section == .library) { store.selectSection(.library) }

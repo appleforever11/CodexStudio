@@ -33,6 +33,7 @@ const STATIC_RENDERER_FILES = [
   "renderer/bootstrap.js",
   "renderer/palette.js",
   "renderer/art-analysis.js",
+  "renderer/animation.js",
   "renderer/style.js",
   "renderer/parts.js",
   "renderer/scope.js",
@@ -341,6 +342,7 @@ export async function loadPayload(themeDir) {
   const artMetadata = readImageMetadata(art, extension);
   if (!artMetadata) throw new Error("Theme image metadata is invalid or exceeds the 16384px / 50MP safety limit");
   const artKey = createHash("sha256").update(art).digest("hex").slice(0, 20);
+  theme.animatedArtwork = extension === ".webp" && art.subarray(12, 16).toString("ascii") === "VP8X" && Boolean(art[20] & 2);
   theme.artMetadata = artMetadata;
   theme.artKey = artKey;
   const mime = extension === ".jpg" || extension === ".jpeg" ? "image/jpeg"

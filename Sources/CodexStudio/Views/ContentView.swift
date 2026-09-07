@@ -100,6 +100,8 @@ struct ContentView: View {
     @ViewBuilder
     private var pageContent: some View {
         switch store.section {
+        case .abstract:
+            AbstractWallpapersPage()
         case .canvas:
             CanvasPage()
         case .editor:

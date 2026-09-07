@@ -50,7 +50,7 @@
     const shell = resolvedShell();
     setAttribute(root, "data-dream-skin", "active");
     setAttribute(root, SHELL_ATTR, shell);
-    setStyleProperty(root, "--dream-skin-art", `url("${artUrl}")`);
+    setStyleProperty(root, "--dream-skin-art", artworkValue());
     applyTheme(root, shell);
     applyArtMetadata(root);
     return shell;
