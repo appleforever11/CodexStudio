@@ -6,10 +6,19 @@ struct AbstractWallpaper: Codable, Identifiable, Sendable {
     let thumbnail: URL
     let images: String?
     var id: String { "moewalls-" + url.deletingPathExtension().lastPathComponent }
+    var previewImageURL: URL {
+        let candidates = (images ?? "").split(separator: ",").compactMap { entry -> (URL, Int)? in
+            let parts = entry.split(whereSeparator: { $0.isWhitespace })
+            guard parts.count == 2, parts[1].hasSuffix("w"), let width = Int(parts[1].dropLast()),
+                  let url = URL(string: String(parts[0])), url.scheme == "https", url.host == "moewalls.com" else { return nil }
+            return (url, width)
+        }
+        return candidates.max(by: { $0.1 < $1.1 })?.0 ?? thumbnail
+    }
     var name: String { title.replacingOccurrences(of: " Live Wallpaper", with: "") }
 }
 
-struct AbstractCatalog: Codable {
+struct AbstractCatalog: Codable, Sendable {
     let retrievedAt: String
     let count: Int
     let items: [AbstractWallpaper]

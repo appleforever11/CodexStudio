@@ -1,4 +1,5 @@
 import Foundation
+import CryptoKit
 
 /// Personal-use imports stay in the local library; the bundled catalog contains links only.
 struct AbstractWallpaperService {
@@ -33,26 +34,31 @@ struct AbstractWallpaperService {
         return url
     }
 
-    static func importAnimation(_ item: AbstractWallpaper) async throws -> String {
-        let root = ThemeLibraryService.managedThemesDirectory
-        let destination = root.appendingPathComponent(item.id)
-        if FileManager.default.fileExists(atPath: destination.path) { return item.id }
-        guard let converter = Bundle.main.url(forResource: "convert-wallpaper", withExtension: "sh") else {
+    static func options(for item: AbstractWallpaper) async throws -> [MoeDownloadOption] {
+        let html = try await download(item.url, limit: 2 * 1024 * 1024)
+        return try MoeSourceParser.options(html: String(decoding: html, as: UTF8.self), page: item.url)
+    }
+
+    static func importAnimation(_ item: AbstractWallpaper, option: MoeDownloadOption, libraryRoot: URL? = nil, converterURL: URL? = nil) async throws -> String {
+        let root = libraryRoot ?? ThemeLibraryService.managedThemesDirectory
+        let digest = SHA256.hash(data: Data(item.url.absoluteString.utf8)).prefix(6).map { String(format: "%02x", $0) }.joined()
+        let themeID = String(item.id.prefix(48)) + "-" + digest + "-" + option.id
+        let destination = root.appendingPathComponent(themeID)
+        if FileManager.default.fileExists(atPath: destination.path) { return themeID }
+        guard let converter = converterURL ?? Bundle.main.url(forResource: "convert-wallpaper", withExtension: "sh") else {
             throw ThemeImportError.invalidSource("The animation converter is missing from this build.")
         }
-        let htmlData = try await download(item.url, limit: 2 * 1024 * 1024)
-        let mediaURL = try previewURL(html: String(decoding: htmlData, as: UTF8.self), page: item.url)
-        let media = try await download(mediaURL, limit: 32 * 1024 * 1024)
+        let mediaURL = option.url
         let poster = try await download(item.thumbnail, limit: 4 * 1024 * 1024)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
         let stage = root.appendingPathComponent(".abstract-\(UUID().uuidString)")
         try FileManager.default.createDirectory(at: stage, withIntermediateDirectories: false)
         defer { try? FileManager.default.removeItem(at: stage) }
-        let input = stage.appendingPathComponent("preview.\(mediaURL.pathExtension)")
-        try media.write(to: input)
+        let input = stage.appendingPathComponent("source.media")
+        try await MoeMediaDownload.save(mediaURL, to: input)
         try poster.write(to: stage.appendingPathComponent("preview.jpg"))
         let result = await Task.detached {
-            RuntimeProcessRunner.run(script: converter, arguments: [input.path, stage.appendingPathComponent("background.webp").path], timeout: 90)
+            RuntimeProcessRunner.run(script: converter, arguments: [input.path, stage.appendingPathComponent("background.webp").path, option.original ? "original" : "preview"], timeout: 240)
         }.value
         guard result.completed, result.exitCode == 0 else {
             throw ThemeImportError.invalidSource("Animation conversion failed. \(result.detail)")
@@ -60,19 +66,19 @@ struct AbstractWallpaperService {
         let size = try stage.appendingPathComponent("background.webp").resourceValues(forKeys: [.fileSizeKey]).fileSize ?? 0
         guard size > 0, size <= 10 * 1024 * 1024 else { throw ThemeImportError.invalidSource("The converted animation exceeds 10 MB.") }
         try FileManager.default.removeItem(at: input)
-        let theme: [String: Any] = ["schemaVersion": 1, "id": item.id, "name": item.name,
+        let theme: [String: Any] = ["schemaVersion": 1, "id": themeID, "name": item.name + (option.original ? " · Original" : " · Preview"),
             "image": "background.webp", "preview": "preview.jpg", "category": "Abstract",
             "collection": "MoeWalls Abstract", "author": "See original creator on MoeWalls", "appearance": "dark",
-            "description": "Animated preview loop from MoeWalls. Personal-use local import.", "promoUrl": item.url.absoluteString,
+            "description": "Source: \(option.label). Short animated WebP loop. Personal-use local import.", "promoUrl": item.url.absoluteString,
             "art": ["taskMode": "full", "safeArea": "auto"]]
         let catalog: [String: Any] = ["schemaVersion": 1, "localOnly": true, "category": "Abstract",
             "collection": "MoeWalls Abstract", "sourceURL": item.url.absoluteString, "imageURL": mediaURL.absoluteString,
             "rightsStatus": "Personal, non-commercial use; rights remain with original owners",
-            "summary": "Animated preview loop, converted to WebP; not the full-resolution video."]
+            "summary": "\(option.label). Converted on demand; original dimensions retained for Original quality. Loop duration and frame rate are reduced."]
         try JSONSerialization.data(withJSONObject: theme, options: .prettyPrinted).write(to: stage.appendingPathComponent("theme.json"))
         try JSONSerialization.data(withJSONObject: catalog, options: .prettyPrinted).write(to: stage.appendingPathComponent("catalog.json"))
         try "Source: \(item.url)\nMedia: \(mediaURL)\nRights remain with original owners. Personal, non-commercial use. Local only.\n".write(to: stage.appendingPathComponent("LICENSE.txt"), atomically: true, encoding: .utf8)
         try FileManager.default.moveItem(at: stage, to: destination)
-        return item.id
+        return themeID
     }
 }
