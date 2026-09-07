@@ -1,5 +1,9 @@
 # Codex Studio handoff
 
+## 2026-09-07 — Preserve running development sessions
+
+Build-only and launch workflows now preserve active Studio sessions instead of terminating them before compilation. Literal, canonical executable-path checks run before work and before bundle replacement; verification checks the same exact instance. The installed CodexStudio process remained running. Signed-process fixtures and shell validation passed.
+
 Updated 2026-09-05 by the Codex workspace audit.
 
 Existing work includes store/view modularization, bounded runtime process execution, operation completion handling, and layout refinements. Preserve the pre-existing diff; a separate recovery ref records it. No claim of a full current live Apply/Restore check is made by this setup task.
