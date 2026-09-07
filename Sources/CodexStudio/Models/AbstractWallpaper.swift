@@ -15,7 +15,51 @@ struct AbstractWallpaper: Codable, Identifiable, Sendable {
         }
         return candidates.max(by: { $0.1 < $1.1 })?.0 ?? thumbnail
     }
+    var previewWidth: Int? {
+        let widths = (images ?? "").split(separator: ",").compactMap { entry -> Int? in
+            let parts = entry.split(whereSeparator: { $0.isWhitespace })
+            guard parts.count == 2, parts[1].hasSuffix("w") else { return nil }
+            return Int(parts[1].dropLast())
+        }
+        return widths.max()
+    }
     var name: String { title.replacingOccurrences(of: " Live Wallpaper", with: "") }
+}
+
+enum AbstractSortOption: String, CaseIterable, Identifiable {
+    case recommended
+    case newest
+    case name
+    case largestPreview
+    case recentlyViewed
+
+    var id: String { rawValue }
+    var title: String {
+        switch self {
+        case .recommended: "Recommended"
+        case .newest: "Newest"
+        case .name: "Name"
+        case .largestPreview: "Largest preview"
+        case .recentlyViewed: "Recently viewed"
+        }
+    }
+}
+
+enum AbstractFilterOption: String, CaseIterable, Identifiable {
+    case all
+    case imported
+    case favorites
+    case largePreview
+
+    var id: String { rawValue }
+    var title: String {
+        switch self {
+        case .all: "All wallpapers"
+        case .imported: "Imported"
+        case .favorites: "Favorites"
+        case .largePreview: "Large previews"
+        }
+    }
 }
 
 struct AbstractCatalog: Codable, Sendable {

@@ -113,6 +113,17 @@ final class AbstractWallpaperTests: XCTestCase {
         XCTAssertEqual(fallback.previewImageURL, thumbnail)
     }
 
+    func testAbstractLibrarySortAndFilterOptionsRemainStable() {
+        XCTAssertEqual(AbstractSortOption.allCases.map(\.rawValue), [
+            "recommended", "newest", "name", "largestPreview", "recentlyViewed"
+        ])
+        XCTAssertEqual(AbstractFilterOption.allCases.map(\.rawValue), [
+            "all", "imported", "favorites", "largePreview"
+        ])
+        XCTAssertEqual(AbstractSortOption.largestPreview.title, "Largest preview")
+        XCTAssertEqual(AbstractFilterOption.largePreview.title, "Large previews")
+    }
+
     @MainActor func testAnimationPreviewDocumentStaysIsolated() {
         let html = MoeAnimationPreview.document(url: URL(string: "https://moewalls.com/wp-content/uploads/preview/test.webm?a=1&b=2")!)
         XCTAssertTrue(html.contains("<video"))
