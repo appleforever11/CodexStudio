@@ -2,6 +2,7 @@
 set -euo pipefail
 
 MODE="${1:-run}"
+case "$MODE" in build|--build|run|--debug|debug|--logs|logs|--telemetry|telemetry|--verify|verify) ;; *) echo 'Unknown launch mode.' >&2; exit 2 ;; esac
 APP_NAME="CodexStudio"
 BUNDLE_ID="${CODEX_STUDIO_BUNDLE_ID:-local.kevinhowe.CodexStudio}"
 MIN_SYSTEM_VERSION="14.0"
@@ -68,44 +69,8 @@ if [[ -z "$SIGNING_IDENTITY" ]]; then
 fi
 SIGNING_IDENTITY="${SIGNING_IDENTITY:--}"
 
-# Stop only the bundle this build will replace. A name-only kill can miss a
-# path-launched process, while rebuilding a live executable can leave dyld
-# reading a partially replaced code page and surface as "Code Signature
-# Invalid" on the next launch.
-bundle_process_ids() {
-  local -a binary_paths=("$APP_BINARY")
-  # macOS can report a temporary-directory executable with the canonical
-  # /private prefix even when TMPDIR expanded to /var. Treat both spellings
-  # as the same exact bundle so an older local instance cannot survive into a
-  # newly staged build.
-  if [[ "$APP_BINARY" == /var/* ]]; then
-    binary_paths+=("/private$APP_BINARY")
-  fi
-
-  for binary_path in "${binary_paths[@]}"; do
-    pgrep -f -x "$binary_path" 2>/dev/null || true
-  done | sort -u
-}
-
-stop_existing_bundle_process() {
-  local running_pid
-  while IFS= read -r running_pid; do
-    [[ -n "$running_pid" ]] || continue
-    kill -TERM "$running_pid" >/dev/null 2>&1 || true
-  done < <(bundle_process_ids)
-
-  for _ in {1..20}; do
-    if ! bundle_process_ids | grep -q .; then
-      return 0
-    fi
-    sleep 0.1
-  done
-
-  echo "The existing $APP_NAME process did not exit before its bundle was rebuilt." >&2
-  exit 1
-}
-
-stop_existing_bundle_process
+source "$ROOT_DIR/script/app_instance.sh"
+require_app_stopped "$APP_BINARY"
 
 cd "$ROOT_DIR"
 if [[ "${CODEX_STUDIO_SKIP_BUILD:-false}" == "true" ]]; then
@@ -181,6 +146,7 @@ DOCKDOOR_ICON_FILE="$LOCAL_DOCKDOOR_ICON_FILE"
 DREAM_SKIN_RUNTIME_DIR="$LOCAL_RUNTIME_DIR"
 DOCKDOOR_LAUNCHER_DIR="$LOCAL_LAUNCHER_DIR"
 
+require_app_stopped "$APP_BINARY"
 rm -rf "$APP_BUNDLE"
 mkdir -p "$APP_MACOS" "$APP_RESOURCES" "$FRAMEWORKS_DIR"
 cp "$BUILD_BINARY" "$APP_BINARY"
@@ -480,7 +446,7 @@ case "$MODE" in
   --verify|verify)
     open_app
     sleep 1
-    bundle_process_ids | grep -q .
+    [[ -n "$(app_instance_pids "$APP_BINARY")" ]]
     codesign --verify --deep --strict "$APP_BUNDLE"
     ;;
   *)
