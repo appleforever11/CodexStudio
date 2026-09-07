@@ -2,6 +2,7 @@ import SwiftUI
 
 struct AbstractWallpaperPreview: View {
     let item: AbstractWallpaper
+    var importError: String? = nil
     let onImport: (MoeDownloadOption) -> Void
     @Environment(\.dismiss) private var dismiss
     @AppStorage("moePreferredQuality") private var preferredQuality = "original"
@@ -52,6 +53,10 @@ struct AbstractWallpaperPreview: View {
                     Text("Download quality").font(.headline)
                     Spacer()
                     Link("Creator & source", destination: item.url).font(.callout)
+                }
+                if let importError {
+                    Label(importError, systemImage: "exclamationmark.triangle")
+                        .font(.callout).foregroundStyle(.orange).fixedSize(horizontal: false, vertical: true)
                 }
                 if loading { ProgressView("Checking available source resolutions…").controlSize(.small) }
                 if let error { Text(error).foregroundStyle(.secondary).font(.callout) }

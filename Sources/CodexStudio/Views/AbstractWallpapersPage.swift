@@ -7,6 +7,7 @@ struct AbstractWallpapersPage: View {
     @State private var busyID: String?
     @State private var message: String?
     @State private var selected: AbstractWallpaper?
+    @State private var previewError: String?
     @State private var checked = ""
     @State private var refreshing = false
     private var filtered: [AbstractWallpaper] {
@@ -30,7 +31,7 @@ struct AbstractWallpapersPage: View {
             ScrollView {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 320, maximum: 480), spacing: 28)], spacing: 32) {
                     ForEach(filtered) { item in
-                        Button { selected = item } label: {
+                        Button { previewError = nil; selected = item } label: {
                             VStack(alignment: .leading, spacing: 0) {
                                 Color.clear.aspectRatio(16 / 9, contentMode: .fit)
                                     .overlay {
@@ -70,7 +71,7 @@ struct AbstractWallpapersPage: View {
             refresh(force: false)
         }
         .sheet(item: $selected) { item in
-            AbstractWallpaperPreview(item: item) { option in
+            AbstractWallpaperPreview(item: item, importError: previewError) { option in
                 selected = nil
                 importItem(item, option: option)
             }
@@ -92,6 +93,7 @@ struct AbstractWallpapersPage: View {
         }
     }
     private func importItem(_ item: AbstractWallpaper, option: MoeDownloadOption) {
+        previewError = nil
         busyID = item.id
         message = "Downloading and preparing \(item.name) · \(option.label)…"
         Task {
@@ -101,7 +103,12 @@ struct AbstractWallpapersPage: View {
                 await store.bootstrap(force: true)
                 if let theme = store.themes.first(where: { $0.id == id }) { store.selectTheme(theme) }
                 message = "Imported \(item.name). Open Local library to preview and apply it."
-            } catch { message = error.localizedDescription }
+            } catch {
+                let detail = "\(option.label): \(error.localizedDescription)"
+                message = detail
+                previewError = detail
+                selected = item
+            }
         }
     }
 }

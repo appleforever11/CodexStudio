@@ -122,4 +122,17 @@ final class AbstractWallpaperTests: XCTestCase {
         XCTAssertTrue(html.contains("video.addEventListener('error'"))
         XCTAssertEqual(MoeAnimationPreview.document(url: URL(string: "https://example.com/test.webm")!), "")
     }
+
+    func testMissingSourceIsNotReportedAsSizeLimit() throws {
+        let response = HTTPURLResponse(url: URL(string: "https://moewalls.com/error-file?err=1005")!, statusCode: 200, httpVersion: nil, headerFields: ["Content-Type": "text/html"])!
+        XCTAssertThrowsError(try MoeMediaDownload.validate(response: response, size: 4096)) { error in
+            XCTAssertEqual(error as? MoeMediaError, .unavailable)
+            XCTAssertFalse(error.localizedDescription.contains("512"))
+        }
+        let media = HTTPURLResponse(url: URL(string: "https://moewalls.com/wp-content/uploads/test.webm")!, statusCode: 200, httpVersion: nil, headerFields: ["Content-Type": "video/webm"])!
+        XCTAssertNoThrow(try MoeMediaDownload.validate(response: media, size: 951235))
+        XCTAssertThrowsError(try MoeMediaDownload.validate(response: media, size: MoeMediaDownload.maximumBytes + 1)) { error in
+            XCTAssertEqual(error as? MoeMediaError, .tooLarge)
+        }
+    }
 }
