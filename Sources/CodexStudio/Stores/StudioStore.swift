@@ -23,9 +23,11 @@ final class StudioStore: ObservableObject {
     @Published var selectedSurface: PreviewSurface = .composer
     @Published var inspectorEnabled = true
     @Published var runtime = RuntimeStatus.unknown
+    @Published var capabilities = CodexCapabilitySnapshot.unknown
     @Published var isLoading = true
     @Published var isApplying = false
     @Published var isRefreshingRuntime = false
+    @Published var isInspectingCapabilities = false
     @Published var isOpeningCodex = false
     @Published var isScanningLibrary = false
     @Published var runtimePhase: RuntimePhase = .idle
@@ -52,11 +54,14 @@ final class StudioStore: ObservableObject {
     var bootstrapInFlight = false
     var bootstrapGeneration = UUID()
     var runtimeRefreshGeneration = UUID()
+    var capabilityGeneration = UUID()
     var applyGeneration = UUID()
     var noticeToken = UUID()
     var runtimeCheckTask: Task<Void, Never>?
+    var capabilityTask: Task<Void, Never>?
     var applyTask: Task<Void, Never>?
     let logger = Logger(subsystem: "local.kevinhowe.CodexStudio", category: "Studio")
+    let capabilityService = CodexCapabilityService()
 
     init() {
         motionEnabled = defaults.object(forKey: Keys.motionEnabled) as? Bool ?? true
@@ -84,7 +89,8 @@ final class StudioStore: ObservableObject {
             selectedThemeID: selectedTheme?.id,
             runtime: runtime,
             runtimePhase: runtimePhase,
-            lastLibraryScanDate: lastLibraryScanDate
+            lastLibraryScanDate: lastLibraryScanDate,
+            capabilities: capabilities
         )
     }
 

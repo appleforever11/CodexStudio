@@ -7,7 +7,11 @@ const moduleDirectory = path.dirname(modulePath);
 
 export const runtimeRoot = path.resolve(moduleDirectory, "../..");
 export const assetsRoot = path.join(runtimeRoot, "assets");
-export const runtimeVersion = "1.6.0";
+const versionPath = path.join(runtimeRoot, "VERSION");
+export const runtimeVersion = (await fs.readFile(versionPath, "utf8")).trim();
+if (!/^\d+\.\d+\.\d+$/.test(runtimeVersion)) {
+  throw new Error(`VERSION has an unsupported runtime version: ${runtimeVersion || "<empty>"}`);
+}
 
 const selectorContract = JSON.parse(await fs.readFile(
   path.join(assetsRoot, "selectors.json"),

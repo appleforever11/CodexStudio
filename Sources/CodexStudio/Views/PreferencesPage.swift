@@ -11,8 +11,11 @@ struct PreferencesPage: View {
                     StudioSectionHeading(title: "Studio settings", detail: "Your space. Your preferences. Everything on this Mac.")
                     Spacer()
                     StudioActionButton(title: "Refresh status", symbol: "arrow.clockwise",
-                        busy: store.isRefreshingRuntime) { store.refreshRuntime() }
-                        .disabled(store.isRefreshingRuntime || store.isApplying)
+                        busy: store.isRefreshingRuntime || store.isInspectingCapabilities) {
+                            store.refreshRuntime()
+                            store.refreshCapabilities()
+                        }
+                        .disabled(store.isRefreshingRuntime || store.isInspectingCapabilities || store.isApplying)
                 }
                 Picker("Settings area", selection: $selection) {
                     ForEach(SettingsArea.allCases) { area in Text(area.rawValue).tag(area) }
@@ -20,7 +23,9 @@ struct PreferencesPage: View {
                 VStack(alignment: .leading, spacing: 18) {
                     switch selection {
                     case .general: AppearanceSettingsCard()
-                    case .connection: RuntimeSettingsCard()
+                    case .connection:
+                        RuntimeSettingsCard()
+                        CodexCapabilitiesSettingsCard()
                     case .library: LibrarySettingsCard()
                     case .recovery: RecoverySettingsCard()
                     }

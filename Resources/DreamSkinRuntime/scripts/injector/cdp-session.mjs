@@ -5,6 +5,11 @@ import {
   stableTestidLiteral,
 } from "./config.mjs";
 import { cleanupExcludedSurface } from "./renderer-verification.mjs";
+import {
+  classifyCodexTarget,
+  isCodexPageTarget,
+  summarizeCodexTargets,
+} from "./target-contract.mjs";
 
 function validatedDebuggerUrl(target, port) {
   const url = new URL(target.webSocketDebuggerUrl);
@@ -17,7 +22,7 @@ function validatedDebuggerUrl(target, port) {
 }
 
 function isValidCdpPageTarget(item, port) {
-  if (item?.type !== "page" || !item.url?.startsWith("app://")
+  if (!isCodexPageTarget(item)
     || typeof item.id !== "string" || !CDP_ID_PATTERN.test(item.id) || !item.webSocketDebuggerUrl) return false;
   try {
     const debuggerUrl = new URL(validatedDebuggerUrl(item, port));
@@ -136,7 +141,7 @@ export class CdpSession {
   }
 }
 
-async function listAppTargets(port) {
+async function fetchTargetList(port) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 2000);
   try {
@@ -146,10 +151,15 @@ async function listAppTargets(port) {
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const targets = await response.json();
     if (!Array.isArray(targets)) throw new Error("CDP target list was not an array");
-    return targets.filter((item) => isValidCdpPageTarget(item, port));
+    return targets;
   } finally {
     clearTimeout(timeout);
   }
+}
+
+async function listAppTargets(port) {
+  const targets = await fetchTargetList(port);
+  return targets.filter((item) => isValidCdpPageTarget(item, port));
 }
 
 async function probeSession(session) {
@@ -202,6 +212,10 @@ export async function connectTarget(target, port) {
 
 export async function listVerifiedTargets(port) {
   return listAppTargets(port);
+}
+
+export async function listTargetInventory(port) {
+  return summarizeCodexTargets(await fetchTargetList(port));
 }
 
 export async function connectCodexTargets(port, timeoutMs) {

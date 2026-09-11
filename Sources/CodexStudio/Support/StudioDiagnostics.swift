@@ -18,6 +18,7 @@ struct StudioDiagnosticsSnapshot: Sendable {
     let runtime: RuntimeStatus
     let runtimePhase: RuntimePhase
     let lastLibraryScanDate: Date?
+    let capabilities: CodexCapabilitySnapshot
 
     init(
         generatedAt: Date = Date(),
@@ -33,7 +34,8 @@ struct StudioDiagnosticsSnapshot: Sendable {
         selectedThemeID: String?,
         runtime: RuntimeStatus,
         runtimePhase: RuntimePhase,
-        lastLibraryScanDate: Date?
+        lastLibraryScanDate: Date?,
+        capabilities: CodexCapabilitySnapshot
     ) {
         self.generatedAt = generatedAt
         self.appVersion = appVersion
@@ -53,6 +55,7 @@ struct StudioDiagnosticsSnapshot: Sendable {
         self.runtime = runtime
         self.runtimePhase = runtimePhase
         self.lastLibraryScanDate = lastLibraryScanDate
+        self.capabilities = capabilities
     }
 
     var text: String {
@@ -64,6 +67,9 @@ struct StudioDiagnosticsSnapshot: Sendable {
             selectedThemeID.map { "\(name) [\($0)]" } ?? name
         } ?? "None"
         let diagnosticLog = redactedPath(runtime.diagnosticLogPath)
+        let app = capabilities.appVersion ?? "Not found"
+        let appBuild = capabilities.appBuild.map { " (\($0))" } ?? ""
+        let bundle = redactedPath(capabilities.bundlePath)
 
         return [
             "Codex Studio diagnostics",
@@ -79,6 +85,11 @@ struct StudioDiagnosticsSnapshot: Sendable {
             "Loopback port: \(runtime.port.map(String.init) ?? "Not reported")",
             "Relaunch recovery: \(runtime.persistenceEnabled ? "Armed" : "Not armed")",
             "Last runtime verification: \(lastVerification)",
+            "Codex app: \(app)\(appBuild)",
+            "Codex capability health: \(capabilities.health.label)",
+            "Renderer: \(capabilities.targets.displayValue) · CDP \(capabilities.cdpProtocol ?? "Not reported")",
+            "Capabilities: \(capabilities.enabledFeatureCount)/\(capabilities.featureCount) enabled · App-server \(capabilities.appServerAvailable ? "available" : "not detected")",
+            "Codex app bundle: \(bundle)",
             "Last library scan: \(lastScan)",
             "Recovery log: \(diagnosticLog)"
         ].joined(separator: "\n")

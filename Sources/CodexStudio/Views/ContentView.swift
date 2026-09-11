@@ -61,6 +61,7 @@ struct ContentView: View {
         .frame(minWidth: 1120, minHeight: 700)
         .task {
             await store.bootstrap()
+            store.refreshCapabilities()
             await store.monitorRuntime()
         }
         .onChange(of: scenePhase) { _, phase in
@@ -68,6 +69,7 @@ struct ContentView: View {
             // A sleep, fast user switch, or Codex update can invalidate the
             // loopback process while Studio itself remains open.
             store.refreshRuntime()
+            store.refreshCapabilities()
         }
         .overlay(alignment: .bottomTrailing) {
             if let notice = store.notice {

@@ -1,5 +1,25 @@
 # Codex Studio handoff
 
+## 2026-09-10 — Capability-aware 0.1.20 release preparation
+
+The runtime now reads its JavaScript version from the bundled `VERSION` file,
+and the CDP layer classifies Codex pages, avatar composition surfaces, external
+pages, and embedded webviews separately. Studio adds a read-only Connection
+capability panel that reports the installed ChatGPT app/build, loopback/CDP
+health, bundled Node and CLI versions, app-server support, and feature flags.
+The navigation rail is opaque to prevent the Codex window behind it from
+bleeding through, and the sidebar branding now identifies Codex Studio.
+
+Review bundle: `/tmp/codex-studio-capability-review/CodexStudio.app`, bundle ID
+`local.kevinhowe.CodexStudio.review`, app version `0.1.20`, runtime `1.9.3`.
+The review bundle was launched and the Canvas plus Settings > Connection
+surfaces were inspected. It reported ChatGPT `26.903.71938` / build `8576`,
+CDP `1.3`, one or more Codex renderer targets, bundled Node `v24.20.0`, CLI
+`0.153.4`, and 49 enabled flags. The active production Codex runtime remained
+at 1.9.2; no production runtime replacement or theme change was performed.
+The isolated native-engine fallback build passed 38 Swift tests (2 opt-in live
+tests skipped) and the Node runtime suite passed 8 tests.
+
 ## 2026-09-07 — Preserve running development sessions
 
 Build-only and launch workflows now preserve active Studio sessions instead of terminating them before compilation. Literal, canonical executable-path checks run before work and before bundle replacement; verification checks the same exact instance. The installed CodexStudio process remained running. Signed-process fixtures and shell validation passed.

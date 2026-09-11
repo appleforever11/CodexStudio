@@ -1,9 +1,10 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { runCli } from "./injector/cli.mjs";
+import { runtimeVersion } from "./injector/config.mjs";
 
 const scriptPath = fileURLToPath(import.meta.url);
-const SKIN_VERSION = "1.6.0";
+const SKIN_VERSION = runtimeVersion;
 // Keep this literal export in the executable facade for the release workflow's
 // version-consistency check. The implementation modules consume the same
 // runtime version from injector/config.mjs.

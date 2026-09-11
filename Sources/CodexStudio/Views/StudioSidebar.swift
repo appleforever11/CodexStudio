@@ -11,9 +11,10 @@ struct StudioSidebar: View {
                     HStack(spacing: 10) {
                         Image(systemName: "sparkles.rectangle.stack.fill")
                             .font(.system(size: 20)).foregroundStyle(StudioColor.spectrum)
+                            .frame(width: 28, height: 28)
                         VStack(alignment: .leading, spacing: 3) {
-                            Text("Studio").font(.system(size: 23, weight: .semibold))
-                            Text("Make it yours").font(.system(size: 11)).foregroundStyle(StudioColor.textMuted)
+                            Text("Codex Studio").font(.system(size: 18, weight: .semibold))
+                            Text("Visual systems for Codex").font(.system(size: 10, weight: .medium)).foregroundStyle(StudioColor.textMuted)
                         }
                     }.padding(.horizontal, 12).padding(.top, 10)
 
@@ -49,7 +50,10 @@ struct StudioSidebar: View {
             connectionFooter
         }
         .foregroundStyle(StudioColor.text)
-        .background(.ultraThinMaterial)
+        // Keep the navigation rail opaque. A translucent material here lets
+        // the Codex window behind Studio bleed through the sidebar, making
+        // labels and selection states look like they belong to two apps.
+        .background(StudioColor.inkSoft)
         .frame(maxHeight: .infinity, alignment: .top)
         .frame(width: geometry.size.width, height: geometry.size.height)
         }
