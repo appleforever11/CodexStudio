@@ -3,6 +3,31 @@
     <channel>
         <title>CodexStudio</title>
         <item>
+            <title>0.1.20</title>
+            <pubDate>Thu, 10 Sep 2026 20:53:08 -0400</pubDate>
+            <link>https://github.com/appleforever11/CodexStudio</link>
+            <sparkle:version>1020000</sparkle:version>
+            <sparkle:shortVersionString>0.1.20</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.20
+
+## Capability-aware runtime
+
+- Aligns the injector's reported version with the bundled `DreamSkinRuntime/VERSION` file so shell, payload, and renderer diagnostics share one source of truth.
+- Adds explicit DevTools target classification so the main Codex page, avatar composition surface, external pages, and embedded webviews stay separate.
+- Adds a read-only Codex capability check for the installed app version/build, loopback renderer, bundled Node and CLI versions, app-server support, and declared feature flags.
+- Keeps runtime inspection bounded and local-only; it never attaches to a renderer, starts app-server, or reads account content.
+
+## Studio polish
+
+- Adds a Connection settings capability panel with clearer health, renderer, package, and feature status.
+- Makes the navigation rail opaque so the Codex window behind Studio cannot bleed through its labels and selection states.
+- Extends safe diagnostics with compatibility and renderer-target context without including prompts, artwork bytes, or credentials.
+]]></description>
+            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.20/CodexStudio-0.1.20-arm64.zip" length="11765517" type="application/octet-stream" sparkle:edSignature="ItzR+EBptDFGTbIRkoF8hic6RT7BMZA2qm0WFnvAeS+QtMI2V888kZRD1AOX0i0w/rCLfCwh+TukEPa0EteNAw=="/>
+        </item>
+        <item>
             <title>0.1.19</title>
             <pubDate>Mon, 07 Sep 2026 12:01:28 -0400</pubDate>
             <link>https://github.com/appleforever11/CodexStudio</link>
@@ -54,25 +79,6 @@
 - Local Apple wallpaper packs remain available offline.
 ]]></description>
             <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.18/CodexStudio-0.1.18-arm64.zip" length="391594125" type="application/octet-stream" sparkle:edSignature="XZbrHegcOa1tJyeslkPt0N+EPiZV0weqeZDYFFR6L58xwQguY8DAFpq5iXmXVSiwG2ZBvmSJlMNuur+WPD2OBg=="/>
-        </item>
-        <item>
-            <title>0.1.17</title>
-            <pubDate>Fri, 04 Sep 2026 19:48:35 -0400</pubDate>
-            <link>https://github.com/appleforever11/CodexStudio</link>
-            <sparkle:version>1017000</sparkle:version>
-            <sparkle:shortVersionString>0.1.17</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.17
-
-- New rounded glass app icon with layered artwork and a luminous studio sparkle.
-- Existing Codex Studio pins in DockDoor Pro receive a content-versioned custom-icon path when Studio launches after updating, avoiding reuse of the previous image URL.
-- Preserves unrelated DockDoor pins, profile order, settings, and the separate themed Codex launcher icon.
-- Build staging now detects changed app-icon bytes instead of silently reusing an older local asset cache.
-
-If DockDoor Pro retains an in-memory image until relaunch, quit and reopen DockDoor Pro once. The app does not forcibly restart DockDoor or clear its settings.
-]]></description>
-            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.17/CodexStudio-0.1.17-arm64.zip" length="388636336" type="application/octet-stream" sparkle:edSignature="j+hPgyO7W8B1yN884DOF1ctHOv3pNXcIBawpy5Vfij6PzwQ0f0JfAn8bUVbf8qfEmUBofwVvsPv6wDYDw+beAA=="/>
         </item>
     </channel>
 </rss>

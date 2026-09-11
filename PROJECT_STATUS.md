@@ -20,6 +20,20 @@ at 1.9.2; no production runtime replacement or theme change was performed.
 The isolated native-engine fallback build passed 38 Swift tests (2 opt-in live
 tests skipped) and the Node runtime suite passed 8 tests.
 
+The 0.1.20 arm64 release artifact is staged at
+`/tmp/codexstudio-release-0.1.20.BShyWG/CodexStudio.app`. Its release bundle
+reports app version `0.1.20`, build `1020000`, runtime `1.9.3`, and is signed
+with `Kevin Howe (6TYPWRK7SN)`. The ZIP and DMG were each accepted by Apple
+notarization, stapled, and validated; Gatekeeper reports `source=Notarized
+Developer ID` for the staged app. ZIP SHA-256 is
+`ebf6b49e1bac2aaedc76a8b39d59ad371266dca989eb44d9ecddf7d5b0b72837` and DMG
+SHA-256 is `23ae1e109079e640fe4db1a8806542c7853e7ff9b7198a1ac75832ddf90b83c0`.
+The Sparkle feed was generated from that final notarized ZIP, advertises
+`0.1.20` / build `1020000`, and has SHA-256
+`ea853836faf37ca5f78428d8d1b60bd7995e9727a5b4190359e03c048ad4d74f`.
+GitHub publication and hosted-asset verification follow after the release
+commit is tagged.
+
 ## 2026-09-07 — Preserve running development sessions
 
 Build-only and launch workflows now preserve active Studio sessions instead of terminating them before compilation. Literal, canonical executable-path checks run before work and before bundle replacement; verification checks the same exact instance. The installed CodexStudio process remained running. Signed-process fixtures and shell validation passed.
