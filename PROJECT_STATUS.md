@@ -31,8 +31,15 @@ SHA-256 is `23ae1e109079e640fe4db1a8806542c7853e7ff9b7198a1ac75832ddf90b83c0`.
 The Sparkle feed was generated from that final notarized ZIP, advertises
 `0.1.20` / build `1020000`, and has SHA-256
 `ea853836faf37ca5f78428d8d1b60bd7995e9727a5b4190359e03c048ad4d74f`.
-GitHub publication and hosted-asset verification follow after the release
-commit is tagged.
+Published as commit `778e4ef` / tag `v0.1.20` at
+https://github.com/appleforever11/CodexStudio/releases/tag/v0.1.20 with the
+arm64 ZIP, DMG, and appcast assets. The hosted appcast is valid XML and the
+hosted SHA-256 values match the local artifacts: ZIP
+`ebf6b49e1bac2aaedc76a8b39d59ad371266dca989eb44d9ecddf7d5b0b72837`, DMG
+`23ae1e109079e640fe4db1a8806542c7853e7ff9b7198a1ac75832ddf90b83c0`, and
+appcast `ea853836faf37ca5f78428d8d1b60bd7995e9727a5b4190359e03c048ad4d74f`.
+The active production app and installed runtime were not replaced during this
+publication.
 
 ## 2026-09-07 — Preserve running development sessions
 
