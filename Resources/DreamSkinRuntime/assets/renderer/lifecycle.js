@@ -15,12 +15,41 @@
     if (scheduler.timeout) return;
     scheduler.timeout = setTimeout(flushScheduledEnsure, delay);
   };
+  const PART_RECONCILE_TIMEOUT = 250;
+  let partReconcileHandle = null;
+  let partReconcileUsesIdleCallback = false;
+  const cancelPartReconcile = () => {
+    if (partReconcileHandle === null) return;
+    if (partReconcileUsesIdleCallback && typeof window.cancelIdleCallback === "function") {
+      window.cancelIdleCallback(partReconcileHandle);
+    } else {
+      clearTimeout(partReconcileHandle);
+    }
+    partReconcileHandle = null;
+    partReconcileUsesIdleCallback = false;
+  };
+  const schedulePartReconcile = () => {
+    if (partReconcileHandle !== null) return;
+    const flush = () => {
+      partReconcileHandle = null;
+      partReconcileUsesIdleCallback = false;
+      scheduleEnsure({ scope: true, parts: true }, 0);
+    };
+    if (typeof window.requestIdleCallback === "function") {
+      partReconcileUsesIdleCallback = true;
+      partReconcileHandle = window.requestIdleCallback(flush, {
+        timeout: PART_RECONCILE_TIMEOUT,
+      });
+    } else {
+      partReconcileHandle = setTimeout(flush, PART_RECONCILE_TIMEOUT);
+    }
+  };
   if (typeof MutationObserver === "function") {
     rootObserver = new MutationObserver(() => scheduleEnsure({ root: true }));
     // SPA route changes are observable as DOM mutations even when Chromium's
     // Navigation API emits no event. Keep verification scope and public parts
     // derived from the same post-mutation tree.
-    partObserver = new MutationObserver(() => scheduleEnsure({ scope: true, parts: true }, 80));
+    partObserver = new MutationObserver(() => schedulePartReconcile());
   }
 
   let mediaQuery = null;
@@ -44,6 +73,7 @@
     partObserver,
     timer: null,
     scheduler,
+    cancelPartReconcile,
     mediaQuery,
     mediaHandler,
     navigation: navigationApi,

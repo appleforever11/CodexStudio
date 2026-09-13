@@ -1,5 +1,33 @@
 # Codex Studio handoff
 
+## 2026-09-13 — Contain task-render flashing
+
+The supplied recording `/Users/kevinhowe/Desktop/Screen Recording 2026-09-13
+at 12.34.21 PM.mov` captures a real three-frame, approximately 50 ms blanking
+event in the central task thread. The sidebar, header, composer, and window
+remain visible while the immersive artwork shows through the native thread
+handoff; the artwork itself is static and is not the source of the flash.
+
+The source DreamSkin runtime is now `1.9.4`. Active task threads keep a stable
+themed buffer behind the thread, the main surface falls back to the same solid
+theme color if the thread node is briefly detached, and DOM part reconciliation
+is deferred to browser idle time with a 250 ms deadline so streaming updates do
+not compete with the native paint. The change is covered by the runtime guard
+tests.
+
+Validation: the Node runtime suite passed 10 tests; the isolated Swift build
+completed and the isolated Swift suite passed 38 tests with 2 opt-in live tests
+skipped. The signed review bundle is
+`/var/folders/n6/h7crmjt511jbvj_5qznm5z5r0000gn/T/codex-studio-local-build/CodexStudio.app`,
+bundle ID `local.kevinhowe.CodexStudio.review`, app version `0.1.20`, and
+runtime `1.9.4`. Its task-mode preview was inspected and the bundle passed
+strict code-signature verification.
+
+The active production ChatGPT/Codex session was not restarted or replaced. It
+still uses the previously installed runtime, so the source fix is not yet a
+live-production verification. Installing the runtime requires an explicit
+follow-up and a controlled restart of the active session.
+
 ## 2026-09-10 — Capability-aware 0.1.20 release preparation
 
 The runtime now reads its JavaScript version from the bundled `VERSION` file,

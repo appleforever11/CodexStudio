@@ -35,6 +35,6 @@ CODEX_STUDIO_USE_CACHED_CATALOG=true avoids repository catalog reads for debug-o
 
 - Swift tests and Node operation tests must pass.
 - Verify Canvas at narrow and wide window sizes, Explore filters, favorite toggles, editor controls, and each Settings section visually.
-- Confirm the packaged runtime is 1.9.2 and contains the modular operation-state reconciliation.
+- Confirm the packaged runtime matches `Resources/DreamSkinRuntime/VERSION` and contains the modular operation-state reconciliation.
 - Verify a real apply/relaunch completion before claiming the stuck-overlay issue fixed in deployment.
 - Only then sign, notarize, publish GitHub artifacts, and update the Sparkle appcast.

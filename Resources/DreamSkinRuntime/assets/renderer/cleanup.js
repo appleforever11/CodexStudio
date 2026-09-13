@@ -30,6 +30,7 @@
       document.removeEventListener("DOMContentLoaded", bodyReadyHandler);
     }
     if (state?.timer) clearInterval(state.timer);
+    state?.cancelPartReconcile?.();
     if (state?.scheduler?.timeout) clearTimeout(state.scheduler.timeout);
     if (analysisTimer) clearTimeout(analysisTimer);
     if (state?.mediaHandler && state?.mediaQuery) {
