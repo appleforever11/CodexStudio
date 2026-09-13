@@ -275,27 +275,17 @@ html[data-dream-skin="active"] .thread-scroll-container
   opacity: 1 !important;
 }
 
-/* An active task can detach and reattach its virtualized thread while a turn
-   is being replaced. The immersive layout otherwise lets the window artwork
-   show through that compositor handoff as a visible flash. Keep a stable
-   themed buffer behind the live thread, and cover the short state where the
-   thread node itself is absent. */
+/* Codex wraps the active conversation in a native content-visibility:auto
+   host. Chromium can skip painting that host for one compositor frame while
+   streaming updates replace its children, exposing the artwork underneath.
+   Keep the host paintable only while a turn is active. This preserves the
+   normal themed artwork/gradient instead of covering it with a solid veil. */
 html[data-dream-skin="active"]
   main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):not(:has([role="main"])):has(button[aria-label="Stop"])
-  .thread-scroll-container {
-  background: rgb(var(--ds-bg-rgb) / .94) !important;
-  background-image: none !important;
-}
-
-html[data-dream-skin="active"]
-  main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):not(:has([role="main"])):has(button[aria-label="Stop"]):not(:has(.thread-scroll-container)) {
-  background: var(--ds-bg) !important;
-  background-image: none !important;
-}
-
-html[data-dream-skin="active"]
-  main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):not(:has([role="main"])):has(button[aria-label="Stop"]):not(:has(.thread-scroll-container))::before {
-  content: none !important;
+  [class*="content-visibility:auto"] {
+  content-visibility: visible !important;
+  contain: none !important;
+  contain-intrinsic-size: none !important;
 }
 
 /* Search routes ship an opaque sticky band and input surface. Keep the

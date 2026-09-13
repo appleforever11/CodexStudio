@@ -11,11 +11,13 @@ const lifecycle = await fs.readFile(
   "utf8",
 );
 
-test("active task threads retain a stable surface during native swaps", () => {
+test("active task hosts remain paintable without replacing the themed backdrop", () => {
   assert.match(taskCss, /:has\(button\[aria-label="Stop"\]\)/);
-  assert.match(taskCss, /background: rgb\(var\(--ds-bg-rgb\) \/ \.94\) !important;/);
-  assert.match(taskCss, /:not\(:has\(\.thread-scroll-container\)\)/);
-  assert.match(taskCss, /::before \{\n  content: none !important;/);
+  assert.match(taskCss, /\[class\*="content-visibility:auto"\]/);
+  assert.match(taskCss, /content-visibility: visible !important;/);
+  assert.match(taskCss, /contain: none !important;/);
+  assert.match(taskCss, /contain-intrinsic-size: none !important;/);
+  assert.doesNotMatch(taskCss, /background: rgb\(var\(--ds-bg-rgb\) \/ \.94\) !important;/);
 });
 
 test("streaming DOM changes defer parts reconciliation to idle time", () => {

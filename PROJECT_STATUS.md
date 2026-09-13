@@ -1,6 +1,6 @@
 # Codex Studio handoff
 
-## 2026-09-13 — Contain task-render flashing
+## 2026-09-13 — Keep active task surfaces paintable
 
 The supplied recording `/Users/kevinhowe/Desktop/Screen Recording 2026-09-13
 at 12.34.21 PM.mov` captures a real three-frame, approximately 50 ms blanking
@@ -8,25 +8,27 @@ event in the central task thread. The sidebar, header, composer, and window
 remain visible while the immersive artwork shows through the native thread
 handoff; the artwork itself is static and is not the source of the flash.
 
-The source DreamSkin runtime is now `1.9.4`. Active task threads keep a stable
-themed buffer behind the thread, the main surface falls back to the same solid
-theme color if the thread node is briefly detached, and DOM part reconciliation
-is deferred to browser idle time with a 250 ms deadline so streaming updates do
-not compete with the native paint. The change is covered by the runtime guard
-tests.
+The first mitigation in runtime `1.9.4` used a dark opaque thread overlay and
+did not stop the flashing. Live inspection then identified the stronger cause:
+Codex wraps the active conversation in a `[content-visibility:auto]` host, which
+can skip the whole subtree for a compositor frame while streaming children are
+replaced. Runtime `1.9.5` removes the ineffective dark veil and forces that
+host to remain paintable only while a task is active, preserving the normal
+themed artwork/gradient. The 250 ms idle-time parts reconciliation remains in
+place so streaming updates do not compete with native paint.
 
-Validation: the Node runtime suite passed 10 tests; the isolated Swift build
-completed and the isolated Swift suite passed 38 tests with 2 opt-in live tests
-skipped. The signed review bundle is
-`/var/folders/n6/h7crmjt511jbvj_5qznm5z5r0000gn/T/codex-studio-local-build/CodexStudio.app`,
-bundle ID `local.kevinhowe.CodexStudio.review`, app version `0.1.20`, and
-runtime `1.9.4`. Its task-mode preview was inspected and the bundle passed
-strict code-signature verification.
+Validation: all 10 Node runtime tests passed; the staged app reports version
+`0.1.20 (1020000)`, embeds runtime `1.9.5`, and passes strict code-signature
+verification. The exact staged bundle was installed at
+`/Applications/CodexStudio.app`; the prior app was preserved at
+`/tmp/codex-studio-pre-1.9.4.P7Snyk/CodexStudio.app`. Studio was reopened from
+the installed bundle. The live ChatGPT renderer was re-injected without
+restarting ChatGPT and reports runtime `1.9.5`, Golden Gate, and an active
+session. A temporary hidden Stop-control probe in that live renderer computed
+the host as `content-visibility: visible`, `contain: none`, and
+`contain-intrinsic-size: none`; a fresh real task transition still needs the
+user's visual confirmation.
 
-The active production ChatGPT/Codex session was not restarted or replaced. It
-still uses the previously installed runtime, so the source fix is not yet a
-live-production verification. Installing the runtime requires an explicit
-follow-up and a controlled restart of the active session.
 
 ## 2026-09-10 — Capability-aware 0.1.20 release preparation
 
