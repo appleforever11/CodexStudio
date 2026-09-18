@@ -1,5 +1,25 @@
 # Codex Studio handoff
 
+## 2026-09-17 — Codex Studio 0.1.21 published to Sparkle
+
+Published release commit `8dad996` / tag `v0.1.21`:
+https://github.com/appleforever11/CodexStudio/releases/tag/v0.1.21
+
+The public latest appcast serves 0.1.21 / 1021000. Its downloaded bytes match
+the generated feed, and GitHub reports all three uploaded assets with the
+same SHA-256 digests recorded below. Sparkle's `sign_update --verify` also
+accepted the ZIP enclosure signature. Both archives are notarized/stapled.
+
+The final candidate was launched and exercised at
+`/tmp/codexstudio-release-0.1.21/CodexStudio.app`; the installed application
+at `/Applications/CodexStudio.app` still reports 0.1.20. Computer Use reported
+that the Mac was locked before the installed updater download/relaunch test,
+so that test remains pending manual unlock. Do not describe the installed
+app itself as upgraded yet. The separately installed theme runtime and active
+Golden Gate session were upgraded and verified at 1.9.7 without restarting
+ChatGPT. Prior installed app and runtime are preserved under
+`/tmp/codexstudio-pre-0.1.21/`.
+
 ## 2026-09-17 — Codex Studio 0.1.21 release validation
 
 Final candidate: `/tmp/codexstudio-release-0.1.21/CodexStudio.app`, version
@@ -32,8 +52,7 @@ remains denied by Computer Use, so heading visual QA is the isolated fixture;
 Studio UI, deployed runtime identity, and real Apply verification are separate
 confirmed checks. ZIP and DMG notarization were accepted, both staples validated, and Gatekeeper
 accepted the app as Notarized Developer ID. The signed feed advertises 0.1.21 /
-1021000 and retains the existing update endpoint and public key. Publication
-is the next step. Final SHA-256 digests: ZIP
+1021000 and retains the existing update endpoint and public key. Publication is verified in the entry above. Final SHA-256 digests: ZIP
 `f263448840bbfa13bf023039a9e201162166ba7871fe8e8afa80a0f218b0591c`, DMG
 `2fe2cc5077bd7505d684a03e6ddd01be934e7dfc87f852e5e7406121080a5f16`, feed
 `f0994b59fb01996f5b68272de6a0411d8cbf981233bfe6175271b1b0bc113d53`.
