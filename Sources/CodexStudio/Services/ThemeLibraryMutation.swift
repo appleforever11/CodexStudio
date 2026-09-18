@@ -8,13 +8,12 @@ extension ThemeLibraryService {
     static func installBundledThemeIfNeeded(_ id: String) -> Bool {
         let fileManager = FileManager.default
         guard isSafeThemeID(id),
-              let bundledThemesDirectory
+              let source = availableThemePackDirectory(id)
         else {
             return false
         }
 
         let destination = managedThemesDirectory.appendingPathComponent(id, isDirectory: true)
-        let source = bundledThemesDirectory.appendingPathComponent(id, isDirectory: true)
         guard (try? source.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey]))
             .map({ $0.isDirectory == true && $0.isSymbolicLink != true }) == true,
               parseThemeDirectory(source, origin: .curated) != nil

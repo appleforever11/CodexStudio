@@ -36,7 +36,7 @@ struct ThemeLibraryService {
     static func loadSynchronously() -> ThemeLibraryResult {
         _ = installBundledRuntimeIfNeeded()
 
-        let bundledThemes = scanBundledThemes()
+        let bundledThemes = scanLocalThemePacks() + scanBundledThemes()
         let localThemes = scanManagedThemes()
         // Catalogs are user-editable inputs. A duplicate id should be
         // deterministic rather than crashing startup inside

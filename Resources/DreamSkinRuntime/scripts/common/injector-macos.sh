@@ -149,6 +149,7 @@ hot_reapply_theme() {
   local inj_pid=""
   local injector_protocol=""
   local injector_mode=""
+  local recorded_version=""
   local started_at=""
   local codex_pid=""
 
@@ -162,10 +163,18 @@ hot_reapply_theme() {
 
   injector_protocol="$(state_field injectorProtocol 2>/dev/null || true)"
   injector_mode="$(state_field injectorMode 2>/dev/null || true)"
-  if [ "$injector_protocol" = "2" ] || [ "$injector_protocol" = "3" ]; then
+  recorded_version="$(state_field skinVersion 2>/dev/null || true)"
+  if { [ "$injector_protocol" = "2" ] || [ "$injector_protocol" = "3" ]; } \
+    && [ "$recorded_version" = "$SKIN_VERSION" ]; then
     inj_pid="$(/bin/ps -axo pid=,command= | /usr/bin/awk -v inj="$INJECTOR" -v port="$port" '
       index($0, inj) && index($0, "--watch") && index($0, "--port " port " --theme-dir ") { print $1; exit }
     ')"
+  fi
+  # A watcher retains imported JavaScript and its runtime version in memory.
+  # Stop an older engine before injecting the new payload, otherwise it can
+  # immediately overwrite the upgrade when theme.json changes.
+  if [ -z "$inj_pid" ] || [ "$injector_mode" = "control" ]; then
+    stop_recorded_injector 2>/dev/null || return 1
   fi
   if ! "$NODE" "$INJECTOR" --once --port "$port" --theme-dir "$THEME_DIR" \
     --timeout-ms "$timeout_ms" "${operation_args[@]}" >/dev/null 2>&1; then
@@ -179,7 +188,6 @@ hot_reapply_theme() {
     write_operation_state success "$(dreamskin_text skin_applied)" "$operation_token" || return 1
     return 0
   fi
-  stop_recorded_injector 2>/dev/null || return 1
   inj_pid="$(launch_injector_daemon "$port")"
   /bin/kill -0 "$inj_pid" 2>/dev/null || return 1
   started_at="$(process_started_at "$inj_pid")"

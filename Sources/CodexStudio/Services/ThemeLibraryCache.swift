@@ -68,12 +68,11 @@ struct ThemeLibraryCache: Sendable {
 
     private static func rebased(_ theme: Theme) -> Theme {
         guard theme.origin == .curated,
-              let bundledThemesDirectory = ThemeLibraryService.bundledThemesDirectory
+              let directory = ThemeLibraryService.availableThemePackDirectory(theme.id)
         else {
             return theme
         }
 
-        let directory = bundledThemesDirectory.appendingPathComponent(theme.id, isDirectory: true)
         var current = theme
         if let imagePath = theme.imagePath {
             let cachedURL = URL(fileURLWithPath: imagePath)
