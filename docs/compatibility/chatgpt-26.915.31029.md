@@ -44,19 +44,25 @@ screenshot shows that extra "Choose project" prefix and left-aligned heading.
 This is direct evidence of a theme/native style conflict, but without the old
 bundle it does not establish which release first introduced the markup.
 
-Runtime 1.9.6 adds a rule scoped to this direct group/title shape: center the
+Runtime 1.9.7 includes a rule scoped to this direct group/title shape: center the
 heading, remove the generated button prefix, and constrain/wrap the inline
 button including long unbroken project names. Older heading shapes retain
 existing rules. No native application assets were edited.
 
 ## Validation and remaining work
 
-- All 10 Node runtime tests passed.
+- All 12 Node runtime tests passed; 40 Swift tests ran with two optional network checks skipped and no failures.
 - An [isolated browser fixture](home-heading-fixture.html) using the current heading shape passed at 1000px
   and 360px container widths, including a long unbroken project name.
   Computed text alignment was center, button ::before content was none,
   and heading scrollWidth equaled clientWidth in all three cases.
 - Computer Use explicitly denied access to `com.openai.codex`. No alternate
   access path was used to inspect or manipulate the denied live UI.
-- The source patch is not a claim of an installed or visually verified repair.
-  A live welcome-screen/project-picker check is still required.
+- The final Studio 0.1.21 candidate deployed runtime 1.9.7 through its normal
+  library load and Apply source theme controls. Runtime state and Connection
+  diagnostics agree on 1.9.7; Golden Gate is active and ChatGPT was not restarted.
+- Fixed older-watcher reuse during upgrades and retained local-only cached
+  wallpaper discovery. Staged Studio shows all 704 themes and four favorites.
+- A direct live welcome-screen/project-picker visual check remains unavailable
+  because Computer Use denies the host app; fixture evidence is not a screenshot
+  of the live ChatGPT page.

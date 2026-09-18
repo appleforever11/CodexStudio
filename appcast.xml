@@ -3,6 +3,31 @@
     <channel>
         <title>CodexStudio</title>
         <item>
+            <title>0.1.21</title>
+            <pubDate>Thu, 17 Sep 2026 22:00:56 -0400</pubDate>
+            <link>https://github.com/appleforever11/CodexStudio</link>
+            <sparkle:version>1021000</sparkle:version>
+            <sparkle:shortVersionString>0.1.21</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.21
+
+## ChatGPT 26.915 compatibility
+
+- Restores centered welcome text for the current ChatGPT home heading.
+- Removes the extra project-picker label from the welcome sentence and keeps long project names within the available width.
+- Includes DreamSkin runtime 1.9.7 and the task-rendering safeguards added after 0.1.20.
+- Refreshes an older background theme engine during apply so an app update cannot immediately revert to the previous runtime.
+
+## Local library continuity
+
+- Keeps locally cached Apple wallpaper packs visible and available after installing a release update. Their artwork stays on this Mac and is not redistributed in the update.
+
+Your imported themes, drafts, favorites, and local wallpaper library are preserved.
+]]></description>
+            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.21/CodexStudio-0.1.21-arm64.zip" length="11754756" type="application/octet-stream" sparkle:edSignature="hzGHFFX3bZD0NofFnvZKwIVQaeKlX+qfU/wmh5LubQqqjUE0L/tjOyntUoQLksnJ8N8djsRBMcdrq82qAhs0Ag=="/>
+        </item>
+        <item>
             <title>0.1.20</title>
             <pubDate>Thu, 10 Sep 2026 20:53:08 -0400</pubDate>
             <link>https://github.com/appleforever11/CodexStudio</link>
@@ -51,34 +76,6 @@
 - Verified the new Abstract controls, filtering counts, alphabetical ordering, and sort/filter persistence after relaunch.
 ]]></description>
             <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.19/CodexStudio-0.1.19-arm64.zip" length="11692766" type="application/octet-stream" sparkle:edSignature="hSA8Um3PAq1vbi2Eae3hrmPPDrjbGmtUn3a9jngiSelhzlG4VAkmbtb5CbWs+kDwBz6LQt9+wrdgh/SrENaHAA=="/>
-        </item>
-        <item>
-            <title>0.1.18</title>
-            <pubDate>Sat, 05 Sep 2026 22:59:41 -0400</pubDate>
-            <link>https://github.com/appleforever11/CodexStudio</link>
-            <sparkle:version>1018000</sparkle:version>
-            <sparkle:shortVersionString>0.1.18</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.18
-
-## A more immersive Studio
-
-- Larger Canvas artwork, wallpaper-derived ambient color, glass controls, and a selection inspector on wider windows.
-- Platform shortcuts in Explore, clearer navigation, and a larger bottom-anchored preview.
-- Settings organized into General, Connection, Library, and Recovery.
-- Tighter DockDoor artwork for a more consistent icon footprint.
-
-## Reliability and maintainability
-
-- Separate catalog, library, navigation, editor, and runtime responsibilities; smaller editor and Settings components.
-- Catalog refreshes preserve edits to the selected theme.
-- Bounded script timeouts and output collection prevent inherited pipes or ignored termination from holding an operation open indefinitely.
-- Runtime 1.9.2 reconciles completed operations after renderer setup and retries status delivery.
-- Runtime version changes refresh the build cache automatically.
-- Local Apple wallpaper packs remain available offline.
-]]></description>
-            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.18/CodexStudio-0.1.18-arm64.zip" length="391594125" type="application/octet-stream" sparkle:edSignature="XZbrHegcOa1tJyeslkPt0N+EPiZV0weqeZDYFFR6L58xwQguY8DAFpq5iXmXVSiwG2ZBvmSJlMNuur+WPD2OBg=="/>
         </item>
     </channel>
 </rss>

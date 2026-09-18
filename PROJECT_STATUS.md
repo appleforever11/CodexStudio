@@ -1,5 +1,43 @@
 # Codex Studio handoff
 
+## 2026-09-17 — Codex Studio 0.1.21 release validation
+
+Final candidate: `/tmp/codexstudio-release-0.1.21/CodexStudio.app`, version
+0.1.21 / 1021000, runtime 1.9.7. Built from an isolated committed-source
+snapshot because iCloud-backed working-tree reads stalled. Compiled Swift
+inputs and all 104 runtime files were checked against the release source.
+
+The current native heading shape is centered with safe project-name wrapping.
+A live Apply through Studio exposed a second upgrade defect: the old watcher
+was reused across engine versions. Hot apply now retires an older recorded
+watcher before injecting the new payload; process identity checks remain in
+place. Studio's Apply source theme succeeded, state records runtime 1.9.7,
+Golden Gate active, and ChatGPT 26.915.31029 / build 9771. Connection > Inspect
+again reports Ready. ChatGPT PID 65112 retained its 20:33:09 start time.
+
+Release-package QA also exposed missing local Apple shelves after the fresh
+catalog scan. Studio now discovers local-only packs already cached on this Mac
+and can install them into the managed library on demand. Source/license
+metadata and release packaging filters are preserved; Apple artwork is not
+included in the published artifacts. Final staged Canvas shows 704 themes,
+4 favorites, and 8 recent items, including 23 macOS, 278 iOS, and 268 iPadOS
+wallpapers. No draft or favorite edits were made.
+
+Validation: release build passed; Swift suite executed 40 tests with 2 optional
+network tests skipped and no failures; 12 Node tests passed, including older
+watcher retirement and refusal when retirement fails. The isolated heading
+fixture passed at 1000px and 360px with long project names. Strict nested
+signature validation passed. Direct ChatGPT screenshot/interaction inspection
+remains denied by Computer Use, so heading visual QA is the isolated fixture;
+Studio UI, deployed runtime identity, and real Apply verification are separate
+confirmed checks. ZIP and DMG notarization were accepted, both staples validated, and Gatekeeper
+accepted the app as Notarized Developer ID. The signed feed advertises 0.1.21 /
+1021000 and retains the existing update endpoint and public key. Publication
+is the next step. Final SHA-256 digests: ZIP
+`f263448840bbfa13bf023039a9e201162166ba7871fe8e8afa80a0f218b0591c`, DMG
+`2fe2cc5077bd7505d684a03e6ddd01be934e7dfc87f852e5e7406121080a5f16`, feed
+`f0994b59fb01996f5b68272de6a0411d8cbf981233bfe6175271b1b0bc113d53`.
+
 ## 2026-09-17 — ChatGPT 26.915 welcome-heading compatibility
 
 Installed ChatGPT is 26.915.31029 / build 9771. Runtime source 1.9.6 centers the
