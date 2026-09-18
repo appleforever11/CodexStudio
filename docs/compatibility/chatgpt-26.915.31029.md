@@ -49,7 +49,7 @@ heading, remove the generated button prefix, and constrain/wrap the inline
 button including long unbroken project names. Older heading shapes retain
 existing rules. No native application assets were edited.
 
-## Validation and remaining work
+## 0.1.21 validation (superseded for full-layout centering)
 
 - All 12 Node runtime tests passed; 40 Swift tests ran with two optional network checks skipped and no failures.
 - An [isolated browser fixture](home-heading-fixture.html) using the current heading shape passed at 1000px
@@ -66,3 +66,34 @@ existing rules. No native application assets were edited.
 - A direct live welcome-screen/project-picker visual check remains unavailable
   because Computer Use denies the host app; fixture evidence is not a screenshot
   of the live ChatGPT page.
+
+## September 18 correction: full welcome layout
+
+The follow-up screenshot disproved the 0.1.21 centering claim: text alignment
+was centered only inside a narrow left-positioned container. The earlier
+fixture omitted the ancestors that caused the defect.
+
+The installed ASAR's G9e component puts `.group/home-composer-layout` directly
+inside `[role="main"]`. Its hero child contains the `relative mx-auto` width
+wrapper (local variable V), then M9e's full-width flex wrapper and motion
+column. Legacy first-child selectors match those ancestors: the motion column
+gets `width: min(46%, 520px)` and its parent gets `justify-content: flex-start`.
+The narrow-screen rules in controls.css repeat the same mismatch.
+
+Runtime 1.9.8 excludes this modern direct-child layout from all legacy
+positional hero rules in home.css, controls.css and task.css. Native ancestor
+centering and sizing remain in control; the 1.9.7 typography and project-button
+wrapping remain. Older roots without this marker keep their legacy rules.
+
+The replacement [full layout fixture](home-heading-fixture.html) includes the
+native ancestor chain, sidebar and composer, and uses the shipped stylesheets.
+Before correction, its 1440px viewport had heading center x=533 and composer
+center x=830 (297px drift). After correction both centers are x=830.
+Checks at 1440, 1120, 900, 640 and 360px, all four art safe-area values, a long
+unbroken project name, no selected project, and a preceding banner produced
+zero center delta and zero horizontal/text overflow. Wide and narrow fixture
+screenshots were inspected. This is still representative browser evidence,
+not direct visual inspection of the protected ChatGPT UI.
+
+Release build and 40 Swift tests passed (2 optional network tests skipped);
+all 12 Node runtime tests passed. No native ChatGPT assets were modified.

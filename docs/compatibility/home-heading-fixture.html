@@ -1,3 +1,53 @@
-<!doctype html><html data-dream-skin="active"><meta charset="utf-8"><title>Welcome heading compatibility fixture</title><style>
-:root{--ds-accent:#e5ae52;--ds-accent-rgb:229 174 82;--ds-text:#fff8ee;--ds-text-rgb:255 248 238;--dream-skin-name:"Golden Gate";--dream-skin-tagline:"Make something wonderful."}body{background:#514436;color:#fff8ee;font:16px system-ui;margin:30px}main{display:grid;gap:36px}.fixture{border:1px solid #a2917a;padding:20px;box-sizing:border-box}.native{display:flex;max-width:100%;min-width:0;align-items:flex-end;justify-content:center;text-align:center;white-space:pre-wrap}.group\/title{display:inline-block;max-width:100%}button{font:inherit;display:inline-block;max-width:100%;vertical-align:baseline;overflow-wrap:break-word;white-space:normal} [data-testid="home-icon"]{display:none}
-</style><link rel="stylesheet" href="../../Resources/DreamSkinRuntime/assets/dream-skin/home.css"><h1>26.915 welcome heading — isolated fixture</h1><p>Representative native markup from the installed app. This is not live ChatGPT verification.</p><main role="main"><i data-testid="home-icon"></i><section class="fixture" style="width:1000px"><p>1000px container</p><div class="native" data-feature="game-source"><span class="group/title">What should we build in <button>Codex Tracker DDP Widget?</button></span></div></section><section class="fixture" style="width:360px"><p>360px container</p><div class="native" data-feature="game-source"><span class="group/title">What should we build in <button>Codex Tracker DDP Widget?</button></span></div></section><section class="fixture" style="width:360px"><p>360px container</p><div class="native" data-feature="game-source"><span class="group/title">What should we build in <button>AnExtremelyLongProjectNameWithoutAnySpacesThatMustWrapSafely?</button></span></div></section></main></html>
+<!doctype html>
+<html data-dream-skin="active" data-dream-art-wide="true" data-dream-art-safe="left">
+<meta charset="utf-8"><title>26.915 full welcome layout regression fixture</title>
+<style>
+/* Minimal native utility layout reconstructed from the installed 26.915.31029
+   G9e / M9e components, including the easily missed mx-auto wrapper (V).
+   Never add theme fixes here: they must come from the shipped stylesheets. */
+* { box-sizing: border-box; }
+:root { --ds-bg:#514436; --ds-bg-rgb:81 68 54; --ds-panel:#5b4638;
+ --ds-accent:#e5ae52; --ds-accent-rgb:229 174 82; --ds-text:#fff8ee;
+ --ds-text-rgb:255 248 238; --dream-skin-name:"Golden Gate";
+ --dream-skin-tagline:"Make something wonderful."; --ds-immersive-composer-solid:#594235; }
+body { margin:0; font:16px system-ui; background:var(--ds-bg); color:var(--ds-text); }
+.fixture-note { margin:12px; font:13px system-ui; }
+.shell { display:flex; height:700px; }
+aside { flex:0 0 220px; padding:24px; border-right:1px solid #a2917a; }
+main { flex:1; min-width:0; display:flex; }
+[role="main"] { container-type:size; position:relative; display:flex; min-height:0; width:100%; flex:1; flex-direction:column; }
+.group\/home-composer-layout { display:flex; min-height:0; width:100%; flex:1; flex-direction:column; padding-top:24px; }
+.native-hero { display:flex; align-items:flex-end; justify-content:center; min-height:fit-content; flex:1 1 0; padding-bottom:96px; }
+.native-width { position:relative; margin-inline:auto; display:flex; width:min(100%,var(--thread-content-max-width)); min-width:0; justify-content:center; padding-inline:16px; }
+.native-icon-heading { display:flex; min-height:112px; width:100%; align-items:flex-end; justify-content:center; }
+.native-motion { display:flex; width:100%; flex-direction:column; align-items:center; gap:24px; }
+[data-testid="home-icon"] { position:relative; width:56px; height:56px; }
+[data-feature="game-source"] { display:flex; max-width:100%; min-width:0; align-items:flex-end; justify-content:center; text-align:center; font-weight:400; white-space:pre-wrap; }
+.group\/title { display:inline-block; max-width:100%; }
+button { font:inherit; display:inline-block; max-width:100%; vertical-align:baseline; overflow-wrap:break-word; white-space:normal; }
+.native-suggestions { position:absolute; inset-inline:16px; top:100%; margin-top:32px; min-width:0; }
+.native-bottom { display:flex; min-width:0; flex-shrink:0; flex-direction:column; min-height:fit-content; flex:1 1 0; justify-content:flex-end; }
+.composer { width:min(var(--thread-content-max-width),100%); margin:0 auto 16px; min-height:120px; padding:18px; border:1px solid #a2917a; border-radius:20px; background:#594235; }
+@media(max-width:640px) { aside { display:none; } }
+</style>
+<link rel="stylesheet" href="../../Resources/DreamSkinRuntime/assets/dream-skin/home.css">
+<link rel="stylesheet" href="../../Resources/DreamSkinRuntime/assets/dream-skin/task.css">
+<link rel="stylesheet" href="../../Resources/DreamSkinRuntime/assets/dream-skin/controls.css">
+<p class="fixture-note">Full native ancestor fixture — representative markup, not a live ChatGPT screenshot.</p>
+<section class="shell"><aside>Codex<br><br>New chat<br><br>Projects</aside><main class="main-surface">
+<div role="main"><div class="group/home-composer-layout">
+<div class="native-hero"><div class="native-width">
+<div class="native-icon-heading"><div class="native-motion">
+<div data-testid="home-icon" aria-hidden="true"></div>
+<div data-feature="game-source"><span class="group/title">What should we build in <button>Codex Tracker DDP Widget?</button></span></div>
+</div></div><div class="native-suggestions"></div>
+</div></div><div class="native-bottom"><section class="composer">Codex Tracker DDP Widget · Local · main<br><br>Do anything</section></div>
+</div></div></main></section>
+<script>
+const params = new URLSearchParams(location.search);
+document.documentElement.dataset.dreamArtSafe = params.get('safe') || 'left';
+if(params.has('long')) document.querySelector('button').textContent = 'AnExtremelyLongProjectNameWithoutAnySpacesThatMustWrapSafely?';
+if(params.has('noProject')) document.querySelector('.group\\/title').textContent = 'What should we build?';
+if(params.has('banner')) document.querySelector('[role="main"]').insertAdjacentHTML('afterbegin', '<div class="banner">Native banner</div>');
+</script>
+</html>

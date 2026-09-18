@@ -3,12 +3,12 @@ html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) {
   overflow-x: hidden !important;
 }
 
-html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) > div:first-child {
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):not(:has(> .group\/home-composer-layout)) > div:first-child {
   min-height: 100% !important;
   padding-top: 15px !important;
 }
 
-html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child {
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):not(:has(> .group\/home-composer-layout)) > div:first-child > div:first-child {
   flex: 0 0 440px !important;
   min-height: 440px !important;
   align-items: flex-start !important;
@@ -23,19 +23,19 @@ html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) > di
    (see #244). Override with higher specificity only when that new slot is
    present, so pre-26.721 layouts are untouched. */
 html[data-dream-skin="active"]
-  [role="main"]:has([data-testid="home-icon"]) > div:first-child:has(> .home-banners) {
+  [role="main"]:has([data-testid="home-icon"]):not(:has(> .group\/home-composer-layout)) > div:first-child:has(> .home-banners) {
   min-height: 0 !important;
   padding-top: 0 !important;
 }
 
 html[data-dream-skin="active"]
-  [role="main"]:has([data-testid="home-icon"]) > div:first-child:has(> .home-banners) > .home-banners {
+  [role="main"]:has([data-testid="home-icon"]):not(:has(> .group\/home-composer-layout)) > div:first-child:has(> .home-banners) > .home-banners {
   flex: 0 1 auto !important;
   min-height: 0 !important;
 }
 
 html[data-dream-skin="active"]
-  [role="main"]:has([data-testid="home-icon"]) > div:first-child:has(> .home-banners) > .home-banners > div:first-child {
+  [role="main"]:has([data-testid="home-icon"]):not(:has(> .group\/home-composer-layout)) > div:first-child:has(> .home-banners) > .home-banners > div:first-child {
   height: auto !important;
   min-height: 0 !important;
   border: 0 !important;
@@ -45,18 +45,17 @@ html[data-dream-skin="active"]
 }
 
 html[data-dream-skin="active"]
-  [role="main"]:has([data-testid="home-icon"]) > div:first-child:has(> .home-banners) > .home-banners > div:first-child::before {
+  [role="main"]:has([data-testid="home-icon"]):not(:has(> .group\/home-composer-layout)) > div:first-child:has(> .home-banners) > .home-banners > div:first-child::before {
   content: none !important;
 }
 
-/* Codex 26.721+: this chain (3-6 first-child levels deep) targets the old
-   compact hero-art card that used to live inside div:first-child's second
-   level. That level is now the empty .home-banners slot (see #244), so on
-   the new DOM these rules currently match nothing and the compact hero card
-   is dormant rather than misrendered. Left as-is pending a real fixture of
-   the new nested shape; the critical content-invisible bug is the block
-   above this one. */
-html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child > div:first-child {
+/* Legacy hero-card geometry only. In 26.915 the direct home-composer-layout
+   column reuses this first-child chain for the native centered welcome hero.
+   Applying the old card rules narrows its motion container to 46% and pins it
+   left. Exclude the modern column in every positional rule (also controls.css
+   and task.css), leaving native spacing, centering and expanded-composer
+   behavior intact. Theme typography below remains shared across versions. */
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):not(:has(> .group\/home-composer-layout)) > div:first-child > div:first-child > div:first-child {
   position: relative !important;
   isolation: isolate;
   width: calc(100% - 44px) !important;
@@ -76,7 +75,7 @@ html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) > di
   box-shadow: 0 16px 38px rgb(var(--ds-bg-rgb) / .30) !important;
 }
 
-html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child > div:first-child::before {
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):not(:has(> .group\/home-composer-layout)) > div:first-child > div:first-child > div:first-child::before {
   content: "";
   position: absolute;
   inset: 0 auto 0 0;
@@ -88,25 +87,25 @@ html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) > di
 }
 
 html[data-dream-skin="active"]:is([data-dream-art-safe="right"], [data-dream-art-safe-area="right"])
-  [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child > div:first-child::before {
+  [role="main"]:has([data-testid="home-icon"]):not(:has(> .group\/home-composer-layout)) > div:first-child > div:first-child > div:first-child::before {
   inset: 0 0 0 auto;
 }
 
 html[data-dream-skin="active"]:is([data-dream-art-safe="center"], [data-dream-art-safe-area="center"])
-  [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child > div:first-child::before {
+  [role="main"]:has([data-testid="home-icon"]):not(:has(> .group\/home-composer-layout)) > div:first-child > div:first-child > div:first-child::before {
   inset: 0 14%;
   width: auto;
   border-radius: 0;
 }
 
 html[data-dream-skin="active"]:is([data-dream-art-safe="none"], [data-dream-art-safe-area="none"])
-  [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child > div:first-child::before {
+  [role="main"]:has([data-testid="home-icon"]):not(:has(> .group\/home-composer-layout)) > div:first-child > div:first-child > div:first-child::before {
   inset: 0;
   width: auto;
   border-radius: 21px;
 }
 
-html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child > div:first-child > div:first-child {
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):not(:has(> .group\/home-composer-layout)) > div:first-child > div:first-child > div:first-child > div:first-child {
   position: relative;
   z-index: 1;
   height: 100%;
@@ -116,29 +115,29 @@ html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) > di
 }
 
 html[data-dream-skin="active"]:is([data-dream-art-safe="right"], [data-dream-art-safe-area="right"])
-  [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child > div:first-child > div:first-child {
+  [role="main"]:has([data-testid="home-icon"]):not(:has(> .group\/home-composer-layout)) > div:first-child > div:first-child > div:first-child > div:first-child {
   justify-content: flex-end !important;
 }
 
 html[data-dream-skin="active"]:is([data-dream-art-safe="center"], [data-dream-art-safe-area="center"])
-  [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child > div:first-child > div:first-child {
+  [role="main"]:has([data-testid="home-icon"]):not(:has(> .group\/home-composer-layout)) > div:first-child > div:first-child > div:first-child > div:first-child {
   justify-content: center !important;
 }
 
-html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child > div:first-child > div:first-child > div:first-child {
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):not(:has(> .group\/home-composer-layout)) > div:first-child > div:first-child > div:first-child > div:first-child > div:first-child {
   width: min(46%, 520px) !important;
   align-items: flex-start !important;
   gap: 0 !important;
 }
 
 html[data-dream-skin="active"]:is([data-dream-art-safe="right"], [data-dream-art-safe-area="right"])
-  [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child > div:first-child > div:first-child > div:first-child {
+  [role="main"]:has([data-testid="home-icon"]):not(:has(> .group\/home-composer-layout)) > div:first-child > div:first-child > div:first-child > div:first-child > div:first-child {
   align-items: flex-end !important;
   text-align: right !important;
 }
 
 html[data-dream-skin="active"]:is([data-dream-art-safe="center"], [data-dream-art-safe-area="center"])
-  [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child > div:first-child > div:first-child > div:first-child {
+  [role="main"]:has([data-testid="home-icon"]):not(:has(> .group\/home-composer-layout)) > div:first-child > div:first-child > div:first-child > div:first-child > div:first-child {
   width: min(58%, 640px) !important;
   align-items: center !important;
   text-align: center !important;
@@ -230,7 +229,7 @@ html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"])
   content: none;
 }
 
-html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child > div:first-child > div:nth-child(2) {
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):not(:has(> .group\/home-composer-layout)) > div:first-child > div:first-child > div:first-child > div:nth-child(2) {
   left: 14px !important;
   right: 14px !important;
   top: 100% !important;

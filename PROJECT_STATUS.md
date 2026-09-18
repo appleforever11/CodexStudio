@@ -1,5 +1,30 @@
 # Codex Studio handoff
 
+## 2026-09-18 — 0.1.22 welcome-container correction validated locally
+
+The user's follow-up screenshot showed 0.1.21 did not fix outer centering.
+The previous heading-only fixture missed the full native ancestor chain.
+Runtime 1.9.8 excludes modern home-composer-layout roots from the obsolete
+first-child hero geometry in home.css, controls.css and task.css.
+
+Full-layout reproduction at 1440px measured 297px drift before the change,
+zero after it. Seven cases spanning 360–1440px, all art safe-area modes,
+long names, no selected project and a preceding banner had zero center delta
+and no horizontal overflow. Wide/narrow fixture screenshots were inspected.
+Direct ChatGPT UI access remains denied by Computer Use; this is not live
+visual confirmation of the user's welcome screen.
+
+Release candidate `/tmp/codexstudio-release-0.1.22/CodexStudio.app`,
+0.1.22 / 1022000, was built and launched. Live editor > Apply source theme
+completed with Golden Gate still active. Saved runtime state records 1.9.8,
+ChatGPT 26.915.31029, and unchanged ChatGPT PID 5526/start 09:53:59.
+Installed Studio remains 0.1.21 pending the release updater check.
+All 704 themes, 4 favorites and 8 recent entries remain present.
+Backup of prior runtime/state: `/tmp/codexstudio-pre-0122`.
+
+Release build passed; 40 Swift tests passed with 2 optional network skips;
+12 Node tests passed. Packaging/publication is the next step.
+
 ## 2026-09-17 — Codex Studio 0.1.21 published to Sparkle
 
 Published release commit `8dad996` / tag `v0.1.21`:

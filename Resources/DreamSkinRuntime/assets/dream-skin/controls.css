@@ -154,20 +154,20 @@ html[data-dream-skin="active"] [data-ds-part="message"] { border-radius: 16px; }
   html[data-dream-skin="active"]
     main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):has([role="main"])::after { content: none; }
   html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) { --thread-content-max-width: min(940px, calc(100cqw - 30px)) !important; }
-  html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child > div:first-child { width: calc(100% - 28px) !important; }
+  html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):not(:has(> .group\/home-composer-layout)) > div:first-child > div:first-child > div:first-child { width: calc(100% - 28px) !important; }
 }
 
 @media (max-width: 900px) {
-  html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child {
+  html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):not(:has(> .group\/home-composer-layout)) > div:first-child > div:first-child {
     flex-basis: 408px !important;
     min-height: 408px !important;
   }
-  html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child > div:first-child {
+  html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):not(:has(> .group\/home-composer-layout)) > div:first-child > div:first-child > div:first-child {
     height: 232px !important;
     min-height: 232px !important;
   }
-  html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child > div:first-child > div:first-child { padding: 0 26px; }
-  html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child > div:first-child > div:first-child > div:first-child {
+  html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):not(:has(> .group\/home-composer-layout)) > div:first-child > div:first-child > div:first-child > div:first-child { padding: 0 26px; }
+  html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):not(:has(> .group\/home-composer-layout)) > div:first-child > div:first-child > div:first-child > div:first-child > div:first-child {
     width: min(58%, 460px) !important;
   }
   html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) [data-feature="game-source"] { font-size: 18px !important; }
