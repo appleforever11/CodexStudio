@@ -199,6 +199,37 @@ html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) [dat
   opacity: .86;
 }
 
+/* 26.915.31029 keeps the invitation and inline project trigger in group/title.
+   Preserve that centered text flow instead of inheriting the legacy hero's
+   left alignment or inserting a second project label into the sentence. */
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"])
+  [data-feature="game-source"]:has(> .group\/title) {
+  width: 100%;
+  min-width: 0;
+  margin-inline: auto;
+  text-align: center !important;
+}
+
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"])
+  [data-feature="game-source"] > .group\/title {
+  display: inline-block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"])
+  [data-feature="game-source"] > .group\/title button {
+  box-sizing: border-box;
+  max-width: calc(100% - 10px);
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"])
+  [data-feature="game-source"] > .group\/title button::before {
+  content: none;
+}
+
 html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) > div:first-child > div:first-child > div:first-child > div:nth-child(2) {
   left: 14px !important;
   right: 14px !important;

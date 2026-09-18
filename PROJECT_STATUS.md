@@ -1,5 +1,21 @@
 # Codex Studio handoff
 
+## 2026-09-17 — ChatGPT 26.915 welcome-heading compatibility
+
+Installed ChatGPT is 26.915.31029 / build 9771. Runtime source 1.9.6 centers the
+current group/title welcome-heading shape, removes the injected project-picker
+prefix from its inline sentence, and bounds long-name wrapping. Ten runtime
+tests and an isolated browser fixture (1000px/360px, including an unbroken long
+name) passed. Live UI inspection was denied by Computer Use for com.openai.codex;
+production runtime/application deployment and live verification are outstanding.
+
+The September 13 deployment handoff records ChatGPT 26.908.40834 with runtime
+1.9.5; the earlier capability check recorded 26.903.71938 / 8576. No matching
+old app archive was located, so a full old/new asset diff is unavailable. Current
+packed-ASAR hashes and the precise findings/limits are in
+[the compatibility report](docs/compatibility/chatgpt-26.915.31029.md).
+
+
 ## 2026-09-13 — Keep active task surfaces paintable
 
 The supplied recording `/Users/kevinhowe/Desktop/Screen Recording 2026-09-13
