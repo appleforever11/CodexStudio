@@ -23,7 +23,17 @@ All 704 themes, 4 favorites and 8 recent entries remain present.
 Backup of prior runtime/state: `/tmp/codexstudio-pre-0122`.
 
 Release build passed; 40 Swift tests passed with 2 optional network skips;
-12 Node tests passed. Packaging/publication is the next step.
+12 Node tests passed. All 104 packaged and installed runtime files match the
+build snapshot. Connection > Inspect again reports Ready for runtime 1.9.8.
+ZIP and DMG notarization accepted; staples validated and Gatekeeper accepted
+the app as Notarized Developer ID. Sparkle signature verification passed;
+feed version/build are 0.1.22 / 1022000. Publication is next.
+
+Artifact SHA-256:
+- `CodexStudio-0.1.22-arm64.dmg`: `07a46d3e3ac88991cdd140389423c7dc0596f585a2ae01cf54368f885c44e254`
+- `CodexStudio-0.1.22-arm64.zip`: `3085259f1c230941203b49862efdd168f9291fd99c665c2e55bd6938faf22c84`
+- `appcast.xml`: `1336c42f9c24fa0a9010358d98f08c91a49db3be1ff00bda4cda9808fb712ee8`
+
 
 ## 2026-09-17 — Codex Studio 0.1.21 published to Sparkle
 

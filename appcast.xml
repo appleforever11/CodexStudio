@@ -3,6 +3,25 @@
     <channel>
         <title>CodexStudio</title>
         <item>
+            <title>0.1.22</title>
+            <pubDate>Fri, 18 Sep 2026 10:25:21 -0400</pubDate>
+            <link>https://github.com/appleforever11/CodexStudio</link>
+            <sparkle:version>1022000</sparkle:version>
+            <sparkle:shortVersionString>0.1.22</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
+            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.22
+
+Fixes welcome text that remained shifted left after the ChatGPT 26.915.31029
+update. The theme now preserves the new welcome container's native width and
+centering, aligning the heading with the main workspace and composer.
+
+Also preserves project-name wrapping in narrow windows. Includes DreamSkin
+runtime 1.9.8; existing local wallpaper libraries and favorites are retained.
+]]></description>
+            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.22/CodexStudio-0.1.22-arm64.zip" length="11754849" type="application/octet-stream" sparkle:edSignature="97miGOvsJ2Mk0pNTXhWkyGbO+eOkNKk84KKXlzah/gy3HRMZ+KQ1AlqwwCcbw2AL0STZzhTvO5KWtWVTFPF5Cw=="/>
+        </item>
+        <item>
             <title>0.1.21</title>
             <pubDate>Thu, 17 Sep 2026 22:00:56 -0400</pubDate>
             <link>https://github.com/appleforever11/CodexStudio</link>
@@ -51,31 +70,6 @@ Your imported themes, drafts, favorites, and local wallpaper library are preserv
 - Extends safe diagnostics with compatibility and renderer-target context without including prompts, artwork bytes, or credentials.
 ]]></description>
             <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.20/CodexStudio-0.1.20-arm64.zip" length="11765517" type="application/octet-stream" sparkle:edSignature="ItzR+EBptDFGTbIRkoF8hic6RT7BMZA2qm0WFnvAeS+QtMI2V888kZRD1AOX0i0w/rCLfCwh+TukEPa0EteNAw=="/>
-        </item>
-        <item>
-            <title>0.1.19</title>
-            <pubDate>Mon, 07 Sep 2026 12:01:28 -0400</pubDate>
-            <link>https://github.com/appleforever11/CodexStudio</link>
-            <sparkle:version>1019000</sparkle:version>
-            <sparkle:shortVersionString>0.1.19</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.19
-
-## Abstract wallpaper library
-
-- Added on-demand MoeWalls Abstract browsing with larger artwork cards, source-aware quality choices, and a crash-safe WebKit animation preview.
-- Added sorting by Recommended, Newest, Name, Largest preview, and Recently viewed.
-- Added filters for All wallpapers, Imported, Favorites, and Large previews, with persistent selections and local status badges.
-- Added a bounded recently-viewed list and cached local-library status checks so the gallery stays responsive as the catalog grows.
-- Kept the catalog source-only: wallpapers remain downloaded only when the user imports one, avoiding release-bundle bloat.
-
-## Reliability
-
-- Improved unavailable-source errors so failed downloads return to the quality sheet with actionable guidance and preserve the attempted choice.
-- Verified the new Abstract controls, filtering counts, alphabetical ordering, and sort/filter persistence after relaunch.
-]]></description>
-            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.19/CodexStudio-0.1.19-arm64.zip" length="11692766" type="application/octet-stream" sparkle:edSignature="hSA8Um3PAq1vbi2Eae3hrmPPDrjbGmtUn3a9jngiSelhzlG4VAkmbtb5CbWs+kDwBz6LQt9+wrdgh/SrENaHAA=="/>
         </item>
     </channel>
 </rss>
