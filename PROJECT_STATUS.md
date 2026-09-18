@@ -1,5 +1,22 @@
 # Codex Studio handoff
 
+## 2026-09-18 — 0.1.22 published and installed through Sparkle
+
+Published tag `v0.1.22` / release commit `23abb9e`:
+https://github.com/appleforever11/CodexStudio/releases/tag/v0.1.22
+
+GitHub reports the release as public and all three asset digests match the
+local signed artifacts below. The public latest appcast matches byte-for-byte.
+Installed Studio 0.1.21 found 0.1.22 through Check for Updates, downloaded it,
+and completed Install and Relaunch. `/Applications/CodexStudio.app` now reports
+0.1.22 / 1022000; all 104 runtime files match the verified release candidate.
+Canvas shows Golden Gate applied, Connected to ChatGPT 26.915.31029,
+704 themes, 4 favorites and 8 recent items. The active runtime remains 1.9.8.
+ChatGPT PID 5526/start 09:53:59 stayed unchanged throughout the update.
+The remaining limitation is direct visual inspection of ChatGPT's welcome
+screen, which Computer Use denies; full-layout fixture evidence is detailed
+below and in the compatibility report.
+
 ## 2026-09-18 — 0.1.22 welcome-container correction validated locally
 
 The user's follow-up screenshot showed 0.1.21 did not fix outer centering.
