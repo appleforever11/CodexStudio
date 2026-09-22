@@ -5,7 +5,10 @@ struct AppearanceSettingsCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
             SettingsCardHeading("Studio behavior", symbol: "wand.and.stars", tint: StudioColor.cyan)
-            Toggle(isOn: Binding(get: { store.motionEnabled }, set: store.setMotionEnabled)) {
+            Toggle(isOn: Binding(
+                get: { store.motionEnabled },
+                set: { enabled in store.setMotionEnabled(enabled) }
+            )) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Atmospheric motion")
                         .font(.system(size: 12, weight: .semibold))
