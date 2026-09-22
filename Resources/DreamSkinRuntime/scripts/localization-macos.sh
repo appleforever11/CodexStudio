@@ -29,6 +29,8 @@ dreamskin_text() {
     en:theme_switch_unconfirmed) /usr/bin/printf '%s' 'Theme switch did not finish; the result is unconfirmed' ;;
     en:switching_theme) /usr/bin/printf '%s' 'Switching theme' ;;
     en:apply_unconfirmed) /usr/bin/printf '%s' 'Apply failed; the result is unconfirmed' ;;
+    en:apply_failed_recovered) /usr/bin/printf '%s' 'Theme apply failed, but ChatGPT was reopened normally without the theme.' ;;
+    en:apply_failed_recovery_failed) /usr/bin/printf '%s' 'Theme apply failed and ChatGPT could not be recovered automatically. Open ChatGPT manually, then try again.' ;;
     en:applying_skin) /usr/bin/printf '%s' 'Applying skin' ;;
     en:cancelled_unchanged) /usr/bin/printf '%s' 'Operation cancelled; the previous skin is unchanged' ;;
     en:pause_failed) /usr/bin/printf '%s' 'Pause failed; the previous state may be unchanged' ;;

@@ -26,7 +26,8 @@ else
 fi
 SIGNING_IDENTITY="${CODEX_STUDIO_SIGNING_IDENTITY:-}"
 SPARKLE_FEED_URL="${CODEX_STUDIO_SPARKLE_FEED_URL:-https://github.com/appleforever11/CodexStudio/releases/latest/download/appcast.xml}"
-SPARKLE_PUBLIC_ED_KEY="${CODEX_STUDIO_SPARKLE_PUBLIC_ED_KEY:-1QwxGTbkRZRB2hZJ8wTAJwytcGxG1v5i9/l/oEVuPzg=}"
+# Keep Codex Studio's Sparkle key separate from keys used by other apps.
+SPARKLE_PUBLIC_ED_KEY="${CODEX_STUDIO_SPARKLE_PUBLIC_ED_KEY:-y9XhgPqXn7/ClkCIBXESvwehGa/gYw2RVg5H5l/nKdw=}"
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 USER_HOME="${HOME:-}"

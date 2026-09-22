@@ -36,6 +36,32 @@ APPLIED_THEME_ID=""
 CODEX_RUNNING="false"
 OPERATION_STATUS=""
 OPERATION_MESSAGE=""
+CODEX_EXE=""
+
+for bundle in \
+  "/Applications/ChatGPT.app" "$HOME/Applications/ChatGPT.app" \
+  "/Applications/Codex.app" "$HOME/Applications/Codex.app"; do
+  [ -f "$bundle/Contents/Info.plist" ] || continue
+  identifier="$(/usr/bin/plutil -extract CFBundleIdentifier raw -o - "$bundle/Contents/Info.plist" 2>/dev/null || true)"
+  [ "$identifier" = "com.openai.codex" ] || continue
+  executable_name="$(/usr/bin/plutil -extract CFBundleExecutable raw -o - "$bundle/Contents/Info.plist" 2>/dev/null || true)"
+  [ -n "$executable_name" ] || continue
+  CODEX_EXE="$bundle/Contents/MacOS/$executable_name"
+  break
+done
+
+codex_main_process_present() {
+  [ -n "$CODEX_EXE" ] || return 1
+  local pid
+  local command_line
+  while read -r pid command_line; do
+    [ -n "$pid" ] || continue
+    case "$command_line" in
+      "$CODEX_EXE"*) return 0 ;;
+    esac
+  done < <(/bin/ps -axo pid=,command=)
+  return 1
+}
 
 read_json_text_field() {
   # Parse machine-written JSON (one key per line) without python3, which macOS
@@ -90,9 +116,10 @@ injector_identity_matches() {
   [ -n "$actual_start" ] && [ "$actual_start" = "$expected_start" ]
 }
 
-# Codex process: cheap name match only.  26.707 renamed Codex.app to
-# ChatGPT.app, while older installs still expose the former process name.
-if /usr/bin/pgrep -x ChatGPT >/dev/null 2>&1 || /usr/bin/pgrep -x Codex >/dev/null 2>&1; then
+# Codex process: use the official main executable path.  Helper processes such
+# as crashpad and browser modifiers can survive the main window and must not
+# make status claim that ChatGPT is running.
+if codex_main_process_present; then
   CODEX_RUNNING="true"
 fi
 

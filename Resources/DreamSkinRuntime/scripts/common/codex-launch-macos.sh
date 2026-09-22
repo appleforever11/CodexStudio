@@ -10,6 +10,7 @@ release_codex_launchd_job() {
 
 launch_codex_with_cdp() {
   local port="$1"
+  local deadline
   : > "$APP_LOG"
   : > "$APP_ERROR_LOG"
   release_codex_launchd_job
@@ -19,7 +20,17 @@ launch_codex_with_cdp() {
     --remote-debugging-address=127.0.0.1 \
     --remote-debugging-port="$port" \
     >>"$APP_LOG" 2>>"$APP_ERROR_LOG" || true
-  # Fallback if open failed to pass args on some builds
+  # Give LaunchServices a short opportunity to create the official main
+  # process before falling back. A direct executable launch while an existing
+  # LaunchServices session is still being reused does not reliably create a
+  # fresh CDP-enabled session.
+  deadline=$((SECONDS + 8))
+  while ! codex_is_running && [ "$SECONDS" -lt "$deadline" ]; do
+    /bin/sleep 0.2
+  done
+  # Fallback only after the existing main session has had time to exit or the
+  # open request failed to create one. The caller still owns the verified CDP
+  # wait and must not start the injector before that check succeeds.
   if ! codex_is_running; then
     /usr/bin/nohup "$CODEX_EXE" \
       --remote-debugging-address=127.0.0.1 \
@@ -30,5 +41,5 @@ launch_codex_with_cdp() {
 
 launch_codex_normally() {
   release_codex_launchd_job
-  /usr/bin/open -na "$CODEX_BUNDLE"
+  /usr/bin/open -a "$CODEX_BUNDLE"
 }
