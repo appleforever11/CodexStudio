@@ -25,9 +25,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          # Swift 6.3.3 in Xcode 26.6 crashes while compiling this app's debug build.
+          # Swift 6.3.x in Xcode 26.5 and 26.6 crashes while compiling this app's debug build.
           for candidate in \
-            /Applications/Xcode_26.5.app \
             /Applications/Xcode_26.4.1.app \
             /Applications/Xcode_26.4.app \
             /Applications/Xcode_26.3.app \
