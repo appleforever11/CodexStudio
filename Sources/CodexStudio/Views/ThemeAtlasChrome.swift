@@ -22,7 +22,10 @@ struct CatalogToolbar: View {
                 .overlay(RoundedRectangle(cornerRadius: 11).strokeBorder(StudioColor.line, lineWidth: 1))
 
                 Menu {
-                    Picker("Sort themes", selection: Binding(get: { store.themeSortOrder }, set: store.setThemeSortOrder)) {
+                    Picker("Sort themes", selection: Binding(
+                        get: { store.themeSortOrder },
+                        set: { order in store.setThemeSortOrder(order) }
+                    )) {
                         ForEach(ThemeSortOrder.allCases) { order in Text(order.label).tag(order) }
                     }
                 } label: {
