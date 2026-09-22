@@ -87,6 +87,9 @@ mark_state_stale() {
     const file = process.argv[1];
     const state = JSON.parse(fs.readFileSync(file, "utf8"));
     state.session = "stale";
+    delete state.appliedThemeId;
+    delete state.appliedThemeName;
+    delete state.verifiedAt;
     state.updatedAt = new Date().toISOString();
     const temporary = `${file}.${process.pid}.tmp`;
     fs.writeFileSync(temporary, `${JSON.stringify(state, null, 2)}\n`, { mode: 0o600 });

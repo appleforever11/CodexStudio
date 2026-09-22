@@ -15,6 +15,16 @@ codex_is_running() {
   [ -n "$(codex_main_pids)" ]
 }
 
+wait_for_codex_running() {
+  local timeout_seconds="${1:-20}"
+  local deadline=$((SECONDS + timeout_seconds))
+  while [ "$SECONDS" -lt "$deadline" ]; do
+    codex_is_running && return 0
+    /bin/sleep 0.25
+  done
+  codex_is_running
+}
+
 active_theme_appearance() {
   "$NODE" -e '
 const fs = require("node:fs");

@@ -87,6 +87,60 @@ stop_recorded_injector() {
   return 0
 }
 
+stop_owned_injector() {
+  local pid="$1"
+  local started_at="$2"
+  local port="$3"
+  local deadline
+
+  # A failed operation may have a live child without a committed state file.
+  # Only signal it when the complete identity belongs to this operation.
+  recorded_injector_process_matches "$pid" "$started_at" "$NODE" "$INJECTOR" "$port" \
+    || return 0
+  /bin/launchctl remove "$INJECTOR_JOB_LABEL" >/dev/null 2>&1 || true
+  /bin/kill -TERM "$pid" 2>/dev/null || true
+  deadline=$((SECONDS + 6))
+  while recorded_injector_process_matches "$pid" "$started_at" "$NODE" "$INJECTOR" "$port" \
+    && [ "$SECONDS" -lt "$deadline" ]; do
+    /bin/sleep 0.2
+  done
+  if recorded_injector_process_matches "$pid" "$started_at" "$NODE" "$INJECTOR" "$port"; then
+    /bin/kill -KILL "$pid" 2>/dev/null || true
+  fi
+  deadline=$((SECONDS + 2))
+  while recorded_injector_process_matches "$pid" "$started_at" "$NODE" "$INJECTOR" "$port" \
+    && [ "$SECONDS" -lt "$deadline" ]; do
+    /bin/sleep 0.1
+  done
+  if recorded_injector_process_matches "$pid" "$started_at" "$NODE" "$INJECTOR" "$port"; then
+    printf 'Could not stop the injector owned by this apply operation (PID %s).\n' "$pid" >&2
+    return 1
+  fi
+  return 0
+}
+
+stop_recorded_injector_if_owned() {
+  [ -f "$STATE_PATH" ] || return 0
+  local pid
+  local started_at
+  local node_path
+  local injector_path
+  local port
+  pid="$(state_field injectorPid 2>/dev/null || true)"
+  started_at="$(state_field injectorStartedAt 2>/dev/null || true)"
+  node_path="$(state_field nodePath 2>/dev/null || true)"
+  injector_path="$(state_field injectorPath 2>/dev/null || true)"
+  port="$(state_field port 2>/dev/null || true)"
+  if recorded_injector_process_matches "$pid" "$started_at" "$node_path" "$injector_path" "$port"; then
+    stop_recorded_injector
+  else
+    # Preserve stale PID/path evidence, but never allow it to block a new
+    # operation or authorize a signal to a reused unrelated PID.
+    printf 'Recorded injector identity did not match a live Dream Skin process; preserving stale state.\n' >&2
+    return 0
+  fi
+}
+
 launch_injector_daemon() {
   local port="$1"
   local pid=""

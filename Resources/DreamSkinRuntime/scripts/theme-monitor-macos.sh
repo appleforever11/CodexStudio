@@ -61,7 +61,7 @@ while :; do
   [ -n "$CODEX_PID" ] || { /bin/sleep 2; continue; }
 
   OPERATION="$(/usr/bin/plutil -extract status raw -o - "$OPERATION_STATE_PATH" 2>/dev/null || true)"
-  case "$OPERATION" in applying|pausing) /bin/sleep 2; continue ;; esac
+  case "$OPERATION" in applying|pausing|failed) /bin/sleep 2; continue ;; esac
   [ -f "$THEME_DIR/theme.json" ] || { log_monitor "No staged theme exists; leaving Codex unchanged."; /bin/sleep 5; continue; }
 
   /bin/sleep 3

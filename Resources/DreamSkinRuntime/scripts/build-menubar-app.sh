@@ -114,6 +114,7 @@ RUNTIME_SCRIPTS=(
   theme-config.mjs
   validate-safe-css-file.mjs
   verify-dream-skin-macos.sh
+  verify-relaunch-macos.sh
   write-theme.mjs
 )
 /bin/mkdir -p "$ENGINE/scripts"
