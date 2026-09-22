@@ -25,14 +25,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Swift 6.3.3 in Xcode 26.6 crashes while compiling this app's debug build.
           for candidate in \
-            /Applications/Xcode_26.6.app \
             /Applications/Xcode_26.5.app \
             /Applications/Xcode_26.4.1.app \
             /Applications/Xcode_26.4.app \
             /Applications/Xcode_26.3.app \
-            /Applications/Xcode_26.2.app \
-            /Applications/Xcode.app; do
+            /Applications/Xcode_26.2.app; do
             if [[ -d "$candidate/Contents/Developer" ]]; then
               sudo xcode-select --switch "$candidate/Contents/Developer"
               echo "DEVELOPER_DIR=$candidate/Contents/Developer" >> "$GITHUB_ENV"
