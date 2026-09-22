@@ -247,18 +247,22 @@ if [[ "${#THEME_SYNC_SOURCES[@]}" -gt 0 ]]; then
 fi
 
 VERIFIED_THEME_SOURCES=()
-for theme_name in "${CANDIDATE_THEME_NAMES[@]}"; do
-  cached_theme="$THEME_CACHE_DIR/$theme_name"
-  [[ -d "$cached_theme" ]] || continue
-  VERIFIED_THEME_SOURCES+=("$cached_theme")
-done
+if [[ "${#CANDIDATE_THEME_NAMES[@]}" -gt 0 ]]; then
+  for theme_name in "${CANDIDATE_THEME_NAMES[@]}"; do
+    cached_theme="$THEME_CACHE_DIR/$theme_name"
+    [[ -d "$cached_theme" ]] || continue
+    VERIFIED_THEME_SOURCES+=("$cached_theme")
+  done
+fi
 if [[ "${#VERIFIED_THEME_SOURCES[@]}" -eq 0 ]]; then
   echo "No cached theme packs were available; the app will use its managed local library." >&2
 fi
 
-if ! copy_theme_sources "$APP_RESOURCES/ThemePacks" "${VERIFIED_THEME_SOURCES[@]}"; then
-  echo "Theme pack staging failed while copying the local assets." >&2
-  exit 1
+if [[ "${#VERIFIED_THEME_SOURCES[@]}" -gt 0 ]]; then
+  if ! copy_theme_sources "$APP_RESOURCES/ThemePacks" "${VERIFIED_THEME_SOURCES[@]}"; then
+    echo "Theme pack staging failed while copying the local assets." >&2
+    exit 1
+  fi
 fi
 VERIFIED_THEME_PACK_COUNT=0
 for bundled_theme in "$APP_RESOURCES/ThemePacks"/*; do
