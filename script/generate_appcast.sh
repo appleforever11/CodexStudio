@@ -6,7 +6,7 @@ VERSION="${1:-${CODEX_STUDIO_VERSION:-0.1.0}}"
 ARCHIVE_PATH="${2:-$ROOT_DIR/dist/CodexStudio-${VERSION}-arm64.zip}"
 OUTPUT_PATH="${3:-$ROOT_DIR/appcast.xml}"
 REPOSITORY="${CODEX_STUDIO_REPOSITORY:-appleforever11/CodexStudio}"
-SPARKLE_ACCOUNT="${CODEX_STUDIO_SPARKLE_ACCOUNT:-ed25519}"
+SPARKLE_ACCOUNT="${CODEX_STUDIO_SPARKLE_ACCOUNT:-codex-studio-rotation-2026}"
 SPARKLE_BIN="${SPARKLE_BIN_PATH:-$ROOT_DIR/.build/artifacts/sparkle/Sparkle/bin}"
 INPUT_DIR="$(mktemp -d /tmp/codexstudio-appcast.XXXXXX)"
 
