@@ -1,5 +1,31 @@
 # Codex Studio handoff
 
+## 2026-09-25 — Codex Studio 0.1.24 published
+
+Published release commit `35436fa` as tag `v0.1.24`:
+https://github.com/appleforever11/CodexStudio/releases/tag/v0.1.24
+
+The release bundles DreamSkin runtime 1.9.10 with the ChatGPT/Codex 26.924.20706
+conversation, composer, scrolling, switcher, sidebar, and titlebar fixes. The
+downloaded release ZIP contains app version 0.1.24 / build 1024000 and runtime
+1.9.10; its bundled `task.css` matches the published source. The ZIP SHA-256 is
+`45f924ac847eff98ea80e73579a127a84bf66dfb1025605467611366d6c26157`.
+
+GitHub Actions run 36208420348 completed every release step successfully:
+release builds, Developer ID signing, Apple notarization and stapling, signed
+Sparkle appcast generation, and GitHub asset publication. The downloaded app
+passes strict `codesign` verification and Gatekeeper reports `Notarized
+Developer ID`. The hosted “latest” appcast is valid XML, advertises 0.1.24 /
+1024000, and points at the v0.1.24 ZIP with a Sparkle EdDSA enclosure
+signature. The hosted DMG SHA-256 is
+`fa08b92ddffc0d0da8a1f5f4a126ff41d835e6288870f63dd184d4d8924cadc6`; the
+hosted appcast SHA-256 is
+`b0d9a8ed7b84d3b4f79be81b79221b417e0ec52b0001fc9c0c29481a34f07c7e`.
+
+The existing public Sparkle URL remains unchanged. The release is available
+through **Check for Updates**; automatic installation remains disabled. No
+other Mac was updated as part of this publication.
+
 ## 2026-09-18 — 0.1.22 published and installed through Sparkle
 
 Published tag `v0.1.22` / release commit `23abb9e`:
