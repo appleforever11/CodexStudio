@@ -1,5 +1,32 @@
 # Codex Studio handoff
 
+## 2026-09-25 — Codex Studio 0.1.25 published and installed
+
+Published release commit `de0f93b` as tag `v0.1.25`:
+https://github.com/appleforever11/CodexStudio/releases/tag/v0.1.25
+
+GitHub Actions run 36214555402 completed the debug/release builds, Developer
+ID signing, Apple notarization and stapling, signed Sparkle appcast generation,
+and asset publication. The appcast served at the existing “latest” feed URL
+matches the release asset byte-for-byte and advertises 0.1.25 / 1025000 with a
+Sparkle EdDSA signature. ZIP SHA-256:
+`b5fa25a921a4d5e15f3917eb82148d657b80f3975c89dcf46d7bea1b6b387f2f`; DMG:
+`d38552b58deb29225f5166c373f0028da8a15fb930332d19506460661882736c`;
+appcast: `1346900f5933eea43135edcdee4153e0ed6e0e5c45dd2ed1abc9f12109449452`.
+The downloaded app passes strict `codesign` verification and Gatekeeper
+reports `Notarized Developer ID`.
+
+The release includes the finalized rounded liquid-glass sidebar CSS and
+DreamSkin runtime 1.9.11, which allows existing 1.9.10 installs to receive the
+stylesheet. The current Mac updated through Sparkle from Codex Studio 0.1.24 to
+0.1.25 / 1025000; its installed runtime is 1.9.11. Golden Gate remains
+selected/applied, with 704 themes, 4 favorites, and 8 recent items. Installed
+CSS hashes match the release source. A one-shot live injection reports runtime
+1.9.11, the expected payload revision, and visible sidebar/composer geometry.
+The final verifier's overall pass remains unavailable while the ChatGPT window
+is backgrounded; Computer Use denied direct access to that app for a visible
+screenshot.
+
 ## 2026-09-25 — Codex Studio 0.1.24 published
 
 Published release commit `35436fa` as tag `v0.1.24`:
