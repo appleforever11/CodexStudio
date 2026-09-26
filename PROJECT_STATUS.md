@@ -1,25 +1,32 @@
 # Codex Studio handoff
 
-## 2026-09-26 — search/chat visual fixes hot-applied
+## 2026-09-26 — Codex Studio 0.1.26 published
 
-DreamSkin runtime source is now 1.9.12. `task.css` removes the redesigned
+Published release commit `1c08179` as tag `v0.1.26`:
+https://github.com/appleforever11/CodexStudio/releases/tag/v0.1.26
+
+GitHub Actions run 36252236649 completed debug/release builds, Developer ID
+signing, Apple notarization and stapling, signed Sparkle appcast generation,
+and release asset publication. The public `latest` Sparkle feed is valid XML,
+matches the release appcast byte-for-byte, and advertises 0.1.26 / 1026000 with
+a Sparkle EdDSA signature. ZIP SHA-256:
+`a5cc89cc1e97b5d4c79a749964e2cbb6c1da8ccfcdd97ecbd23c173c095cd11c`; DMG:
+`a44feae60c7c7bfc26a4e4e8ad2ccf64fe8b7d868c91b5f2ca9db8e60f9245bc`;
+appcast: `28236127fbf336dcfdd1aa8e1dd1cc83bb7025503d906f2b5f2b84ae33195221`.
+
+The downloaded ZIP contains app version 0.1.26 and DreamSkin runtime 1.9.12;
+its `task.css` matches source. Strict `codesign` verification passes and
+Gatekeeper reports `Notarized Developer ID`. The fixes remove the redesigned
 thread's lower fade overlays without changing scroll/composer geometry,
-restores the active ChatGPT/Codex switcher label, and adds restrained glass
-backing to assistant turns for readability over wallpaper. The matching
-stylesheet was atomically copied into the running local runtime; ChatGPT
-26.924.20706 (PID 4987) and its watcher (PID 5102) stayed running. Golden Gate
-payload integrity and live renderer verification pass; the themed style is
-present and the sidebar and composer are visible.
+restore the active ChatGPT/Codex switcher label, and add restrained glass
+backing to assistant turns. The user confirmed the hot-applied appearance in
+the themed ChatGPT 26.924.20706 session. That session (PID 4987) and its watcher
+(PID 5102) remained running; use **Check for Updates** to install 0.1.26.
 
-A fresh Codex Studio 0.1.25 debug bundle is staged at
-`$TMPDIR/codex-studio-local-build/CodexStudio.app`; its runtime reports 1.9.12,
-its `task.css` matches source, and strict code-signature verification passes.
 The normal workspace SwiftPM cache had an invalid Sparkle checkout and an
 incomplete framework artifact; both were preserved under
-`.build/cache-quarantine/sparkle-20260926`, and the build completed from a clean
-temporary scratch directory. Computer Use still denies direct visual access to
-the ChatGPT window, so the final appearance on the selected search result
-needs confirmation in the visible app.
+`.build/cache-quarantine/sparkle-20260926`. A clean temporary scratch build
+succeeded and the local debug bundle was staged before release.
 
 ## 2026-09-25 — Codex Studio 0.1.25 published and installed
 
