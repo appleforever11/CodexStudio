@@ -275,17 +275,105 @@ html[data-dream-skin="active"] .thread-scroll-container
   opacity: 1 !important;
 }
 
-/* Codex wraps the active conversation in a native content-visibility:auto
-   host. Chromium can skip painting that host for one compositor frame while
-   streaming updates replace its children, exposing the artwork underneath.
-   Keep the host paintable only while a turn is active. This preserves the
-   normal themed artwork/gradient instead of covering it with a solid veil. */
+/* Codex wraps conversations in a native content-visibility:auto host.
+   The redesigned shell can leave that host unpainted after a turn finishes,
+   making the wallpaper show through where the conversation should be. Keep
+   the thread subtree paintable while idle as well as while streaming. */
 html[data-dream-skin="active"]
-  main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):not(:has([role="main"])):has(button[aria-label="Stop"])
-  [class*="content-visibility:auto"] {
+  main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):not(:has([role="main"]))
+  :is([class*="content-visibility"], [style*="content-visibility"]) {
   content-visibility: visible !important;
   contain: none !important;
   contain-intrinsic-size: none !important;
+}
+
+html[data-dream-skin="active"][data-dream-art-wide="true"]
+  main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):not(:has([role="main"]))
+  :is(.thread-scroll-container, [data-ds-part="thread"], [data-ds-part="message"], [data-ds-part="composer"], [data-message-author-role], [data-local-conversation-user-anchor], [data-local-conversation-final-assistant]) {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* The 26.924 conversation surface can hide a route by applying opacity or
+   content-visibility to an intermediate wrapper, rather than to the message
+   nodes themselves. Restore paint and visibility on the complete ancestor
+   chain for real conversation and composer content. */
+html[data-dream-skin="active"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):has(:is(
+  .thread-scroll-container,
+  [data-ds-part="thread"],
+  [data-ds-part="message"],
+  [data-message-author-role],
+  [data-local-conversation-user-anchor],
+  [data-local-conversation-final-assistant],
+  [data-codex-composer-root],
+  [data-composer-placement],
+  textarea,
+  [contenteditable="true"],
+  [role="textbox"]
+)),
+html[data-dream-skin="active"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):has(:is(
+  .thread-scroll-container,
+  [data-ds-part="thread"],
+  [data-ds-part="message"],
+  [data-message-author-role],
+  [data-local-conversation-user-anchor],
+  [data-local-conversation-final-assistant],
+  [data-codex-composer-root],
+  [data-composer-placement],
+  textarea,
+  [contenteditable="true"],
+  [role="textbox"]
+)) :has(:is(
+  .thread-scroll-container,
+  [data-ds-part="thread"],
+  [data-ds-part="message"],
+  [data-message-author-role],
+  [data-local-conversation-user-anchor],
+  [data-local-conversation-final-assistant],
+  [data-codex-composer-root],
+  [data-composer-placement],
+  textarea,
+  [contenteditable="true"],
+  [role="textbox"]
+)) {
+  content-visibility: visible !important;
+  contain: none !important;
+  contain-intrinsic-size: none !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Let the current conversation shell own its scroll and sticky composer
+   geometry. The previous shell contract clipped these redesigned children
+   at the main surface edge and painted a dark veil over the artwork. */
+html[data-dream-skin="active"][data-dream-art-wide="true"]
+  main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):has(:is(
+    .thread-scroll-container,
+    [data-ds-part="thread"],
+    [data-ds-part="message"],
+    [data-message-author-role],
+    [data-local-conversation-user-anchor],
+    [data-local-conversation-final-assistant],
+    [data-codex-composer-root],
+    [data-composer-placement],
+    textarea,
+    [contenteditable="true"],
+    [role="textbox"]
+  )) {
+  background: transparent !important;
+  overflow: visible !important;
+}
+
+/* Keep this rule on explicit composer roots. A fuzzy class-name substring can
+   match the conversation scroller's group-has-data-expanded-composer utility
+   class and change its overflow, disabling trackpad scrolling. */
+html[data-dream-skin="active"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]):has(:is(textarea, [contenteditable="true"], [role="textbox"]))
+  :is([class*="ComposerLayoutRoot_"], [data-composer-placement], [data-codex-composer-root], [data-testid*="composer" i], [data-testid*="prompt" i]) {
+  position: relative !important;
+  z-index: 3 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  overflow: visible !important;
 }
 
 /* Search routes ship an opaque sticky band and input surface. Keep the
@@ -323,16 +411,228 @@ html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface
   border-top: 0 !important;
 }
 
+/* The data-app-shell-main-content-top-fade attribute is fade STATE on the
+   content wrapper in 26.924, which also owns the conversation and composer.
+   Hide only the decorative fade element; hiding the state owner blanks every
+   chat route, including New chat. */
 html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"])
-  :is(.app-shell-main-content-top-fade, [data-app-shell-main-content-top-fade], [class*="_MainContentTopFade_"]) {
+  :is(.app-shell-main-content-top-fade, [class*="_MainContentTopFade_"]) {
   display: none !important;
   background: transparent !important;
 }
 
-/* Codex paints a second opaque fade behind the sticky composer. The composer
-   already owns its readable surface, so retaining this layer creates a false
-   bottom panel and makes the control look duplicated. */
+/* Codex 26.924 changed the sticky composer backdrop to a new surface gradient.
+   Remove only that decorative layer; the composer keeps its own surface. */
 html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"])
-  .thread-scroll-container .bg-gradient-to-t.from-token-main-surface-primary {
+  .thread-scroll-container [aria-hidden="true"][class~="absolute"][class~="-top-8"][class~="bottom-0"][class~="z-0"][class~="bg-gradient-to-t"][class~="from-surface"][class~="via-surface"] {
   background: transparent !important;
+  background-image: none !important;
+}
+
+/* The 26.924 shell keeps the wallpaper behind the complete home and task
+   surfaces. Earlier immersive values were tuned for a darker theme and
+   obscure bright artwork, so keep only a light readability wash. */
+html[data-dream-skin="active"][data-dream-art-wide="true"] {
+  --ds-immersive-edge: rgb(var(--ds-bg-rgb) / .08) !important;
+  --ds-immersive-mid: rgb(var(--ds-bg-rgb) / .035) !important;
+  --ds-immersive-far: rgb(var(--ds-bg-rgb) / 0) !important;
+  --ds-task-immersive-edge: rgb(var(--ds-bg-rgb) / .38) !important;
+  --ds-task-immersive-mid: rgb(var(--ds-bg-rgb) / .23) !important;
+  --ds-task-immersive-far: rgb(var(--ds-bg-rgb) / .11) !important;
+  --ds-task-full-veil: linear-gradient(
+    rgb(var(--ds-bg-rgb) / .035),
+    rgb(var(--ds-bg-rgb) / .035)
+  ) !important;
+}
+
+/* 26.924 separates the chat list from the icon rail inside the same aside.
+   Paint glass on that list alone. An inset edge avoids changing the native
+   width, while a small outer gap keeps all four corners clear of the titlebar,
+   resize rail, and bottom window edge. Its existing inner scroller stays live. */
+html[data-dream-skin="active"][data-dream-art-wide="true"]
+  aside.app-shell-left-panel .sidebar-navigation[class*="_ConversationSidebar_"] {
+  margin-block: 4px 6px !important;
+  margin-inline-end: 6px !important;
+  background:
+    linear-gradient(155deg,
+      rgb(var(--ds-text-rgb) / .16),
+      rgb(var(--ds-text-rgb) / .045) 42%,
+      rgb(var(--ds-accent-rgb) / .07)),
+    rgb(var(--ds-panel-rgb) / .20) !important;
+  border: 0 !important;
+  border-radius: 20px !important;
+  background-clip: padding-box !important;
+  box-shadow:
+    0 3px 12px rgb(var(--ds-bg-rgb) / .10),
+    inset 0 0 0 1px rgb(var(--ds-text-rgb) / .14),
+    inset 0 1px rgb(var(--ds-text-rgb) / .26),
+    inset 0 -1px rgb(var(--ds-bg-rgb) / .12) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(145%) brightness(1.12) !important;
+  backdrop-filter: blur(24px) saturate(145%) brightness(1.12) !important;
+}
+
+/* In the older home DOM, the welcome card and its prompt shared the same
+   positional wrappers. Once the prompt is present, release those wrappers
+   from the legacy 440px hero sizing so the composer stays in the viewport. */
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):has([data-ds-part="composer"]):not(:has(> .group\/home-composer-layout))
+  > div:first-child > div:first-child {
+  flex: 1 1 auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  align-items: stretch !important;
+  justify-content: center !important;
+  overflow: visible !important;
+}
+
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):has([data-ds-part="composer"]):not(:has(> .group\/home-composer-layout))
+  > div:first-child > div:first-child > div:first-child:has([data-ds-part="composer"]) {
+  position: relative !important;
+  align-self: center !important;
+  flex: 1 1 auto !important;
+  width: min(calc(100% - 48px), 880px) !important;
+  max-width: 880px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):has([data-ds-part="composer"]):not(:has(> .group\/home-composer-layout))
+  > div:first-child > div:first-child > div:first-child:has([data-ds-part="composer"])::before {
+  content: none !important;
+}
+
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):has([data-ds-part="composer"]):not(:has(> .group\/home-composer-layout))
+  > div:first-child > div:first-child > div:first-child > div:first-child:has([data-ds-part="composer"]) {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  padding: 0 24px !important;
+}
+
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):has([data-ds-part="composer"]):not(:has(> .group\/home-composer-layout))
+  > div:first-child > div:first-child > div:first-child > div:first-child > div:first-child:has([data-ds-part="composer"]) {
+  width: min(100%, 840px) !important;
+  max-width: 840px !important;
+  min-height: 0 !important;
+  align-items: stretch !important;
+}
+
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):has([data-ds-part="composer"]):not(:has(> .group\/home-composer-layout))
+  > div:first-child > div:first-child > div:first-child > div:nth-child(2):has([data-ds-part="composer"]) {
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
+  margin: 18px 0 0 !important;
+}
+
+/* In the redesigned Home shell the prompt can be present without the old
+   Studio part marker. Release the legacy welcome-card dimensions when that
+   native editable is mounted, then keep the prompt root in the foreground. */
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):has(:is(textarea, [contenteditable="true"], [role="textbox"])):not(:has(> .group\/home-composer-layout))
+  > div:first-child {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  padding-top: 0 !important;
+}
+
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):has(:is(textarea, [contenteditable="true"], [role="textbox"])):not(:has(> .group\/home-composer-layout))
+  > div:first-child > div:first-child {
+  flex: 1 1 auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  align-items: stretch !important;
+  justify-content: center !important;
+  overflow: visible !important;
+}
+
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):has(:is(textarea, [contenteditable="true"], [role="textbox"])):not(:has(> .group\/home-composer-layout))
+  > div:first-child > div:first-child > div:first-child:has(:is(textarea, [contenteditable="true"], [role="textbox"])) {
+  position: relative !important;
+  align-self: center !important;
+  flex: 1 1 auto !important;
+  width: min(calc(100% - 48px), 880px) !important;
+  max-width: 880px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):has(:is(textarea, [contenteditable="true"], [role="textbox"])):not(:has(> .group\/home-composer-layout))
+  > div:first-child > div:first-child > div:first-child:has(:is(textarea, [contenteditable="true"], [role="textbox"]))::before {
+  content: none !important;
+}
+
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]):has(:is(textarea, [contenteditable="true"], [role="textbox"])):not(:has(> .group\/home-composer-layout))
+  :is([class*="ComposerLayoutRoot_"], [data-composer-placement], [data-codex-composer-root], [data-testid*="composer" i], [data-testid*="prompt" i]):has(:is(textarea, [contenteditable="true"], [role="textbox"])) {
+  position: relative !important;
+  z-index: 2 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  overflow: visible !important;
+}
+
+/* Keep new-chat input surfaces and editable text reachable after the app
+   changes its composer wrapper classes. */
+html[data-dream-skin="active"] [role="main"]:has([data-ds-part="composer"]) [data-ds-part="composer"],
+html[data-dream-skin="active"] [role="main"]:has([data-ds-part="composer"]) [data-ds-part="composer"] :is(.ProseMirror, [contenteditable="true"], [role="textbox"], textarea),
+html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) :is(.ProseMirror, [contenteditable="true"], [role="textbox"], textarea) {
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* The redesigned switcher has a native SVG wordmark. Keep it visible and
+   suppress the old accessible-label pseudo-copy that was drawn over it. */
+html[data-dream-skin="active"][data-dream-art-wide="true"] aside.app-shell-left-panel
+  button[aria-label^="Switch mode" i]::before {
+  content: "" !important;
+}
+
+html[data-dream-skin="active"][data-dream-art-wide="true"] aside.app-shell-left-panel
+  button[aria-label^="Switch mode" i]::after {
+  content: none !important;
+}
+
+/* Keep the app-shell titlebar in the same glass language as the sidebar.
+   The second toolbar underneath previously left a hard amber seam at its
+   bottom edge, so make that backing row clear while preserving its drag area. */
+html[data-dream-skin="active"][data-dream-art-wide="true"]
+  [data-app-shell-titlebar="true"][data-ds-part="header"] {
+  background:
+    linear-gradient(180deg,
+      rgb(var(--ds-text-rgb) / .12),
+      rgb(var(--ds-panel-rgb) / .38)) !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: blur(22px) saturate(135%) brightness(1.06) !important;
+  backdrop-filter: blur(22px) saturate(135%) brightness(1.06) !important;
+}
+
+html[data-dream-skin="active"][data-dream-art-wide="true"]
+  header[class~="h-toolbar"][class~="border-b"][class~="draggable"]:not([data-app-shell-titlebar]) {
+  background: transparent !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}
+
+html[data-dream-skin="active"][data-dream-art-wide="true"]
+  [data-app-shell-main-titlebar="true"] [class~="bg-border"] {
+  background: rgb(var(--ds-text-rgb) / .16) !important;
 }
