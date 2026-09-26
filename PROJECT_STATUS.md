@@ -1,5 +1,26 @@
 # Codex Studio handoff
 
+## 2026-09-26 — search/chat visual fixes hot-applied
+
+DreamSkin runtime source is now 1.9.12. `task.css` removes the redesigned
+thread's lower fade overlays without changing scroll/composer geometry,
+restores the active ChatGPT/Codex switcher label, and adds restrained glass
+backing to assistant turns for readability over wallpaper. The matching
+stylesheet was atomically copied into the running local runtime; ChatGPT
+26.924.20706 (PID 4987) and its watcher (PID 5102) stayed running. Golden Gate
+payload integrity and live renderer verification pass; the themed style is
+present and the sidebar and composer are visible.
+
+A fresh Codex Studio 0.1.25 debug bundle is staged at
+`$TMPDIR/codex-studio-local-build/CodexStudio.app`; its runtime reports 1.9.12,
+its `task.css` matches source, and strict code-signature verification passes.
+The normal workspace SwiftPM cache had an invalid Sparkle checkout and an
+incomplete framework artifact; both were preserved under
+`.build/cache-quarantine/sparkle-20260926`, and the build completed from a clean
+temporary scratch directory. Computer Use still denies direct visual access to
+the ChatGPT window, so the final appearance on the selected search result
+needs confirmation in the visible app.
+
 ## 2026-09-25 — Codex Studio 0.1.25 published and installed
 
 Published release commit `de0f93b` as tag `v0.1.25`:

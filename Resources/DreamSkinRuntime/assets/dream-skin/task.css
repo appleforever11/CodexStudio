@@ -460,6 +460,27 @@ html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface
   background-image: none !important;
 }
 
+/* The redesigned thread can add a separate bottom fade after a search result
+   opens. Remove only the decorative fade itself; keep the scroll container,
+   sticky composer, and their geometry intact. */
+html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"])
+  :is(.app-shell-main-content-bottom-fade, [class*="_MainContentBottomFade_"], [class*="_ConversationBottomFade_"]) {
+  display: none !important;
+  background: transparent !important;
+  background-image: none !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+}
+
+html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"])
+  :is(.thread-scroll-container, [data-ds-part="thread"])
+  [aria-hidden="true"][class~="pointer-events-none"][class~="absolute"][class~="bottom-0"]:is([class*="bg-gradient"], [style*="linear-gradient"], [style*="mask-image"]) {
+  background: transparent !important;
+  background-image: none !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+}
+
 /* The 26.924 shell keeps the wallpaper behind the complete home and task
    surfaces. Earlier immersive values were tuned for a darker theme and
    obscure bright artwork, so keep only a light readability wash. */
@@ -652,16 +673,38 @@ html[data-dream-skin="active"] [role="main"]:has([data-testid="home-icon"]) :is(
   pointer-events: auto !important;
 }
 
-/* The redesigned switcher has a native SVG wordmark. Keep it visible and
-   suppress the old accessible-label pseudo-copy that was drawn over it. */
+/* The redesign uses a native wordmark when the accessible label has no active
+   mode. Keep that old pseudo-copy suppressed, but let accessibility.css render
+   the active ChatGPT/Codex label when the app exposes the current mode. */
 html[data-dream-skin="active"][data-dream-art-wide="true"] aside.app-shell-left-panel
-  button[aria-label^="Switch mode" i]::before {
+  button[aria-label^="Switch mode" i]:not([aria-label*="current mode" i])::before {
   content: "" !important;
 }
 
 html[data-dream-skin="active"][data-dream-art-wide="true"] aside.app-shell-left-panel
   button[aria-label^="Switch mode" i]::after {
   content: none !important;
+}
+
+/* Keep assistant turns legible over detailed wallpapers with a restrained
+   glass backing. User messages retain their stronger native bubble contrast. */
+html[data-dream-skin="active"][data-dream-art-wide="true"]
+  .thread-scroll-container :is(
+    [data-message-author-role="assistant"],
+    [data-local-conversation-final-assistant]:not(:has([data-message-author-role="assistant"]))
+  ) {
+  box-sizing: border-box !important;
+  padding: 8px 12px !important;
+  border: 1px solid rgb(var(--ds-text-rgb) / .08) !important;
+  border-radius: 16px !important;
+  background:
+    linear-gradient(135deg, rgb(var(--ds-text-rgb) / .035), transparent 48%),
+    rgb(var(--ds-panel-rgb) / .22) !important;
+  box-shadow:
+    0 5px 18px rgb(var(--ds-bg-rgb) / .08),
+    inset 0 1px rgb(var(--ds-text-rgb) / .045) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(104%) !important;
+  backdrop-filter: blur(10px) saturate(104%) !important;
 }
 
 /* Keep the app-shell titlebar in the same glass language as the sidebar.
