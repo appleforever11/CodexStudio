@@ -1,5 +1,16 @@
 # Codex Studio handoff
 
+## 2026-09-26 — Bounded floating summary correction, runtime 1.9.17
+
+User clarified the highlighted target: a wider card near the upper right,
+not a full-height sidebar. Removed the vertical stretch; wrapper width targets
+410px and the card height is bounded at 420px, shrinking to available space on
+short windows. Native edge insets, internal scrolling, glass and collapse remain.
+Live measured card: x1189/y50, 404x420 (native wrapper padding accounts for 6px),
+bottom470 in the 796px-high viewport. Screenshot inspected and body offset zero.
+Chromium direct-UI regression passed, including 410x420 fixture sizing and
+shrinking to a 350px available height. Applied locally; pinned restore unchanged.
+
 ## 2026-09-26 — Right panel fills its native column, runtime 1.9.16
 
 Removed the artificial 260px width. The glass summary now fills the native

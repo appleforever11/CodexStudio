@@ -11,8 +11,8 @@
     };
     const panelState = () => {
       const panel=document.querySelector('[data-summary-panel-variant="summary"]');
-      // Stretch only the native floating-summary wrapper chain, never the
-      // conversation or another sidebar. Keep the native viewport insets.
+      // Size only the native floating-summary wrapper chain. Keep a bounded
+      // floating card and preserve the native viewport insets.
       if(panel){
         const chain=[];let node=panel.parentElement;
         while(node && chain.length<5 && !node.style.getPropertyValue('--thread-floating-panel-full-width-progress')){
