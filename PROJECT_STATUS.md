@@ -1,5 +1,21 @@
 # Codex Studio handoff
 
+## 2026-09-26 — Right panel fills its native column, runtime 1.9.16
+
+Removed the artificial 260px width. The glass summary now fills the native
+300px floating column and its available height, preserving the app's insets.
+Only the verified summary wrapper chain is stretched; the chat's geometry and
+scroll containers remain unchanged. Collapsing hides the stretched wrappers
+as well so they cannot intercept input over the conversation.
+
+Live inspection: panel x1293/y50, 300x736 inside a 1603x796 viewport, leaving
+10px at the right and bottom. Model selector remains visible and body offset
+is zero. The existing Chromium direct-UI check passes with assertions for
+full-width/full-height sizing, resizing, and hide/reopen. Preserved runtime
+1.9.15 at `runtime-backups/before-panel-fill-20260926-214642` beneath the
+CodexDreamSkinStudio application-support folder. Pinned 1.9.13 is untouched.
+Applied locally without restarting ChatGPT; no native app replacement or push.
+
 ## 2026-09-26 — Direct ChatGPT ergonomics, runtime 1.9.15
 
 Implemented in the running ChatGPT renderer, with no new Studio UI changes:

@@ -10,6 +10,18 @@
       b.addEventListener('click', action); return b;
     };
     const panelState = () => {
+      const panel=document.querySelector('[data-summary-panel-variant="summary"]');
+      // Stretch only the native floating-summary wrapper chain, never the
+      // conversation or another sidebar. Keep the native viewport insets.
+      if(panel){
+        const chain=[];let node=panel.parentElement;
+        while(node && chain.length<5 && !node.style.getPropertyValue('--thread-floating-panel-full-width-progress')){
+          chain.push(node);node=node.parentElement;
+        }
+        if(node?.style.getPropertyValue('--thread-floating-panel-full-width-progress')){
+          for(const wrapper of chain)if(getComputedStyle(wrapper).display!=='contents')mark(wrapper,'data-dream-summary-fill');
+        }
+      }
       setAttribute(document.documentElement, 'data-dream-summary-collapsed', String(collapsed));
       if (panelButton) {
         panelButton.textContent = collapsed ? 'Outputs & sources' : 'Hide panel';
@@ -138,7 +150,7 @@
         document.removeEventListener('input',input);host?.remove();
         for(const b of outputActions.values())b.remove();outputActions.clear();
         for(const entry of details.values())entry.button.remove();
-        for(const node of attrs)for(const attr of [...node.attributes])if(/^data-dream-(compact|options|secondary-control|detail-hidden|native-work-details|final-backing|output-)/.test(attr.name))node.removeAttribute(attr.name);
+        for(const node of attrs)for(const attr of [...node.attributes])if(/^data-dream-(summary-fill|compact|options|secondary-control|detail-hidden|native-work-details|final-backing|output-)/.test(attr.name))node.removeAttribute(attr.name);
         details.clear();attrs.clear();
         document.documentElement.removeAttribute('data-dream-summary-collapsed');
       }
