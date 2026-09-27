@@ -16,18 +16,11 @@
     const groupResponses = () => {
       const desired = new Set();
       if (workspaceSettings.groupResponses) {
-        const responseSelector = '[data-local-conversation-item-target-ids], [data-local-conversation-final-assistant], [data-message-author-role="assistant"]';
-        // Current local turns have a user branch followed by a response branch.
-        // Tag the existing response ancestor without reparenting React nodes.
-        for (const user of document.querySelectorAll('.thread-scroll-container [data-local-conversation-user-anchor]')) {
-          const turn = user.parentElement?.parentElement;
-          if (!turn || turn.querySelectorAll('[data-local-conversation-user-anchor]').length !== 1) continue;
-          for (const child of turn.children) {
-            if (!child.contains(user) && child.querySelector(responseSelector)) desired.add(child);
-          }
-        }
-        for (const assistant of document.querySelectorAll('.thread-scroll-container [data-message-author-role="assistant"]')) {
-          if (![...desired].some(e => e.contains(assistant))) desired.add(assistant);
+        // Decorate each message, never the turn containing tools or user replies.
+        for (const message of document.querySelectorAll('.thread-scroll-container [data-markdown-text-style="assistant-message"], .thread-scroll-container [data-message-author-role="assistant"]')) {
+          const bubble = message.closest('[data-local-conversation-final-assistant]')
+            || message.closest('[data-response-annotation-target]') || message;
+          if (!bubble.querySelector('[data-local-conversation-user-anchor], [data-message-author-role="user"]')) desired.add(bubble);
         }
       }
       for (const node of responseNodes) if (!desired.has(node)) node.removeAttribute('data-dream-response');

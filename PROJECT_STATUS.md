@@ -1,5 +1,18 @@
 # Codex Studio handoff
 
+## 2026-09-27 — Separate update bubbles, runtime 1.9.20
+
+Response decoration now targets individual assistant messages instead of the
+whole turn branch. Progress updates and final answers have independent glass
+bubbles; tool rows and user replies no longer share their outer backing.
+No native nodes are moved. Three targeted browser/preferences tests passed,
+including multiple sibling updates and cleanup. Hot-applied to the installed
+managed runtime and inspected in /Applications/ChatGPT.app: six decorated
+messages, zero bubbles containing multiple assistant messages. Screenshot:
+/tmp/separate-updates.png. Composer and sidebar dimensions remain unchanged;
+pinned restore point preserved. No app restart or native bundle replacement.
+
+
 ## 2026-09-26 — Restore native composer spacing, runtime 1.9.19
 
 Removed all three empty-composer geometry overrides introduced in 1.9.15:
