@@ -1,5 +1,56 @@
 # Codex Studio handoff
 
+## 2026-09-26 — Bottom strip reproduced and corrected locally
+
+Starting from clean `7d1f693`, reproduced the user's full-width bottom strip
+in the running ChatGPT 26.924.20706 renderer. The sidebar's decorative
+`::before` extends 72px below its host, producing a body scrollHeight of 864px
+inside a 796px viewport. Native `overflow:hidden` permits focus/programmatic
+scrolling: setting body.scrollTop to 60 moved the shell up 60px, hid the mode
+switcher, and exposed the same wallpaper strip shown in the user screenshot.
+The prior fade-only fixes did not address that outer document offset.
+
+DreamSkin 1.9.13 uses `overflow:clip` on the themed html/body only. Applying it
+resets an existing body offset and prevents subsequent outer scrolling, while
+the native sidebar and conversation remain independent scroll containers.
+No changes to native thread scrolling, composer geometry, or event handlers.
+
+Verification:
+- All 14 Node runtime tests passed, including real Chromium layout checks at
+  1440x900 and 800x600. The fixture reproduces the old 60px displacement,
+  verifies recovery and prevention, focuses/scrolls the composer and sidebar,
+  and checks both directions in the nested scroll panes. Set
+  `DREAM_SKIN_TEST_CHROMIUM` on hosts without Chrome at the default macOS path;
+  the two browser checks explicitly skip when no browser is available.
+- Updated the stale flash-guard assertion to reflect the already-shipped
+  idle-and-streaming paint rule; it previously required the removed Stop-only
+  selector. No paint-rule implementation changed in this milestone.
+- `swift build --product CodexStudio --scratch-path /tmp/codexstudio-scroll-build`
+  passed. The normal workspace build still fails on its missing Sparkle
+  framework Info.plist, as in the prior handoff; its cache was preserved.
+- Staged `/tmp/codexstudio-scroll-review/CodexStudio.app`, version 0.1.26 /
+  1026000, review bundle ID, runtime 1.9.13. Strict deep signature verification
+  passed. This review app was built, not launched or installed over Studio.
+- Source, staged runtime, and installed shell.css SHA-256 all match:
+  `595791a4cecb119d24445998e28e8481d7eae558aa10b7ae320b30e604e8655d`.
+- Installed VERSION and shell.css with a backup at
+  `~/Library/Application Support/CodexDreamSkinStudio/runtime-backups/viewport-scroll-20260926-203512`.
+  The existing hot-reapply operation retired the older watcher and started
+  watcher PID 22546; ChatGPT PID 3152/start 20:25:29 stayed unchanged.
+  Live verification passed with Golden Gate, version 1.9.13, payload revision
+  `b12581d2587176b11b57`, and visible sidebar/composer.
+- Exercised Search > Swiftcord > Swiftcord Support Contact, wheel-scrolled
+  the 5212px conversation up and down (-400 to -150), wheel-scrolled the
+  sidebar both ways, focused the composer, and opened New chat. Body offset
+  remained zero; the main pane ended at 792px in a 796px viewport (native 4px
+  inset). Inspected captured renderer images for the conversation and home;
+  the strip was absent and mode label visible. Restored this chat afterward.
+  These checks passed; they do not exhaust every intermittent scrolling case.
+
+Changes are local only; no Git push, Sparkle publication, or installed Studio
+app replacement was performed. The running theme and future local builds
+contain the fix. Existing themes, favorites, drafts, and artwork were preserved.
+
 ## 2026-09-26 — Codex Studio 0.1.26 published
 
 Published release commit `1c08179` as tag `v0.1.26`:

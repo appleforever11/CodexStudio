@@ -1,3 +1,13 @@
+/* The artwork and sidebar glass can paint beyond the viewport. Native
+   overflow:hidden still lets focus/scrollIntoView scroll the body, lifting
+   the whole shell and exposing a strip of wallpaper beneath it. Clip the
+   outer document without creating a scroll container; the native sidebar,
+   conversation, and composer keep their own scrolling behavior. */
+html[data-dream-skin="active"],
+html[data-dream-skin="active"] body {
+  overflow: clip !important;
+}
+
 html[data-dream-skin="active"] body {
   background: var(--ds-bg) !important;
   color: var(--ds-text) !important;

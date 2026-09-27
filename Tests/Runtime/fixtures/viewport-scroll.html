@@ -1,0 +1,65 @@
+<!doctype html>
+<html data-dream-skin="active" data-dream-art-wide="true">
+<head><meta charset="utf-8"><title>DreamSkin viewport scrolling regression</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body, #root { height: 100%; margin: 0; }
+  html, body { overflow: hidden; }
+  #shell { display: flex; height: calc(100% - 4px); }
+  aside.app-shell-left-panel { position: relative; width: 260px; flex-shrink: 0; }
+  #sidebar-scroll { height: 100%; overflow: auto; }
+  main.main-surface { flex: 1; min-width: 0; height: 100%; }
+  .thread-scroll-container { height: 100%; overflow-x: hidden; overflow-y: auto; }
+  .long-content { height: 2000px; display: flex; flex-direction: column; justify-content: space-between; }
+  #report { display: none; }
+</style>
+<!-- RUNTIME_CSS -->
+</head>
+<body><div id="root"><div id="shell">
+  <aside class="app-shell-left-panel"><div id="sidebar-scroll"><div class="long-content">
+    <button>First chat</button><button id="last-chat">Last chat</button>
+  </div></div></aside>
+  <main class="main-surface"><div class="thread-scroll-container"><div class="long-content">
+    <p>Conversation start</p><textarea id="composer" aria-label="Prompt"></textarea>
+  </div></div></main>
+</div></div><pre id="report"></pre>
+<script>
+  const body = document.body;
+  const shell = document.getElementById('shell');
+  const thread = document.querySelector('.thread-scroll-container');
+  const sidebar = document.getElementById('sidebar-scroll');
+  const geometry = () => ({
+    bodyTop: body.scrollTop,
+    documentTop: document.documentElement.scrollTop,
+    shellTop: shell.getBoundingClientRect().top,
+    shellBottom: shell.getBoundingClientRect().bottom,
+    height: innerHeight,
+  });
+  // Prove the decorative overflow can reproduce the old full-window shift.
+  body.style.setProperty('overflow', 'hidden', 'important');
+  body.scrollTop = 60;
+  const control = geometry();
+  body.style.removeProperty('overflow');
+  const recovered = geometry();
+  body.scrollTop = 60;
+  document.documentElement.scrollTop = 60;
+  const directScroll = geometry();
+  document.getElementById('composer').focus();
+  document.getElementById('composer').scrollIntoView({ block: 'end' });
+  const composerFocus = { ...geometry(), threadTop: thread.scrollTop };
+  thread.scrollTop = 300;
+  const threadDown = thread.scrollTop;
+  thread.scrollTop = 100;
+  const threadUp = thread.scrollTop;
+  document.getElementById('last-chat').focus();
+  document.getElementById('last-chat').scrollIntoView({ block: 'end' });
+  const sidebarFocus = { ...geometry(), sidebarTop: sidebar.scrollTop };
+  sidebar.scrollTop = 200;
+  const sidebarDown = sidebar.scrollTop;
+  sidebar.scrollTop = 50;
+  const sidebarUp = sidebar.scrollTop;
+  document.getElementById('report').textContent = JSON.stringify({
+    control, recovered, directScroll, composerFocus, sidebarFocus,
+    threadDown, threadUp, sidebarDown, sidebarUp,
+  });
+</script></body></html>

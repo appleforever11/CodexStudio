@@ -11,9 +11,9 @@ const lifecycle = await fs.readFile(
   "utf8",
 );
 
-test("active task hosts remain paintable without replacing the themed backdrop", () => {
-  assert.match(taskCss, /:has\(button\[aria-label="Stop"\]\)/);
-  assert.match(taskCss, /\[class\*="content-visibility:auto"\]/);
+test("idle and active task hosts remain paintable without replacing the themed backdrop", () => {
+  assert.doesNotMatch(taskCss, /:has\(button\[aria-label="Stop"\]\)/);
+  assert.match(taskCss, /\[class\*="content-visibility"\]/);
   assert.match(taskCss, /content-visibility: visible !important;/);
   assert.match(taskCss, /contain: none !important;/);
   assert.match(taskCss, /contain-intrinsic-size: none !important;/);
