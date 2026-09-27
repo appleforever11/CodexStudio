@@ -1,5 +1,17 @@
 # Codex Studio handoff
 
+## 2026-09-26 — Restore native composer spacing, runtime 1.9.19
+
+Removed all three empty-composer geometry overrides introduced in 1.9.15:
+body vertical padding, input-layout padding/minimum height, and editor sizing
+variables. Native composer spacing now applies again. Hot-applied and visually
+inspected in /Applications/ChatGPT.app; body padding is back to 0px and the
+model remains visible. Native empty composer measures 98px high (the previous
+custom compact sizing was 94px); this is a restoration, not a new height rule.
+Right-card spacing and pinned restore point preserved. Direct-workspace browser
+regression passed. No native bundle replacement or restart.
+
+
 ## 2026-09-26 — More space beside the floating card, runtime 1.9.18
 
 Reduced the summary wrapper width from 410px to 378px, preserving its 420px
