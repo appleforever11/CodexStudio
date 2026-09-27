@@ -1,5 +1,42 @@
 # Codex Studio handoff
 
+## 2026-09-26 — Direct ChatGPT ergonomics, runtime 1.9.15
+
+Implemented in the running ChatGPT renderer, with no new Studio UI changes:
+- Narrower 260px glass summary with Hide panel / Outputs & sources toggle.
+- A keyboard-accessible Outline popover that jumps to loaded user requests.
+  Uses the browser top layer to escape titlebar clipping; opening it does not
+  scroll the document or move the toolbar.
+- Single-line sidebar excerpts and secondary row actions on hover/focus;
+  native unread and working indicators remain intact.
+- Compact empty composer that expands for content. **The user rejected the
+  experimental Options disclosure: removed it and keep the native model and
+  effort selector visible at all times. Do not hide it in a future redesign.**
+- Stronger final-answer surfaces, native completed-work disclosure labeled
+  Work details, and a reversible fallback disclosure for loaded tool content.
+  Active work/approval controls are not automatically collapsed.
+- Consistent glass for native menus/search and softer wallpaper behind text.
+- Output cards with wrapping filenames, enlarged native thumbnails/file icons,
+  native Open actions and Reveal in Finder for listed local files. This does
+  not generate new PDF or website thumbnails when the app supplies only icons.
+  The Finder bridge accepts only existing files listed in the native Outputs
+  section of the active app renderer; it uses bounded argument-based execution.
+
+Validation: 18 runtime tests passed, with subsequent targeted direct-UI checks
+passing after the model-visibility correction. Browser tests cover popover
+clipping, request navigation, panel toggles, compact/typing composer states,
+model visibility, details, preserved file actions and cleanup. Live screenshot
+inspection confirmed the model label, output card and reveal control, narrower
+panel and unclipped outline. Exercised panel hide/reopen and outline open/close;
+body scroll offset remained zero. No chat messages were sent.
+
+Installed runtime is 1.9.15. Preserved an additional exact pre-change runtime at
+`~/Library/Application Support/CodexDreamSkinStudio/runtime-backups/before-direct-ui-20260926-213739`.
+The pinned stable 1.9.13 restore point still verifies. Runtime source and installed
+assets are checked independently; no installed ChatGPT/Studio app bundle was
+replaced and no release or push was performed. Prior native Studio visual
+verification remains outside this direct-app change.
+
 ## 2026-09-26 — Workspace glass and reading improvements, local runtime 1.9.14
 
 On `codex/workspace-ui-improvements`, based on `7254146`. Preserved the

@@ -1,3 +1,4 @@
+import { installOutputActions } from "./output-actions.mjs";
 import { connectTarget, listVerifiedTargets, waitForCodexProbe } from "./cdp-session.mjs";
 import {
   earlyPayloadFor,
@@ -335,6 +336,7 @@ export async function runWatch(options) {
             continue;
           }
           rejected.delete(target.id);
+          await installOutputActions(session).catch(() => {});
           if (controlOnly || pausing || mutationEpoch !== connectionEpoch) {
             await early.invalidateEarly(record);
           }

@@ -2,6 +2,7 @@
     const state = window[STATE_KEY];
     if (state?.installToken !== installToken) return false;
     window[DISABLED_KEY] = true;
+    directWorkspace.dispose();
     workspaceUI.dispose();
     disposeArtworkAnimation();
     const root = document.documentElement;

@@ -30,6 +30,7 @@ const STATIC_CSS_FILES = [
   "dream-skin/controls.css",
   "dream-skin/accessibility.css",
   "dream-skin/workspace.css",
+  "dream-skin/direct-workspace.css",
 ];
 const STATIC_RENDERER_FILES = [
   "renderer/bootstrap.js",
@@ -42,6 +43,7 @@ const STATIC_RENDERER_FILES = [
   "renderer/workspace-reading.js",
   "renderer/workspace-navigation.js",
   "renderer/workspace.js",
+  "renderer/direct-workspace.js",
   "renderer/scope.js",
   "renderer/cleanup.js",
   "renderer/lifecycle.js",
