@@ -22,6 +22,7 @@ struct LiveEditorPage: View {
                         previewColumn
                         EditorInspector().frame(height: 560)
                     }
+                    WorkspaceAppearanceCard().frame(maxWidth: 760)
                 }.padding(28)
             }.scrollIndicators(.hidden)
         }

@@ -22,7 +22,9 @@ struct PreferencesPage: View {
                 }.pickerStyle(.segmented).frame(maxWidth: 500)
                 VStack(alignment: .leading, spacing: 18) {
                     switch selection {
-                    case .general: AppearanceSettingsCard()
+                    case .general:
+                        AppearanceSettingsCard()
+                        WorkspaceAppearanceCard()
                     case .connection:
                         RuntimeSettingsCard()
                         CodexCapabilitiesSettingsCard()

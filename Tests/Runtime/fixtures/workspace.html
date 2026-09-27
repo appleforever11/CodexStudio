@@ -1,0 +1,68 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;height:100%;--ds-bg-rgb:30 20 10;--ds-panel-rgb:55 45 35;--ds-text-rgb:240 230 220}
+.thread-scroll-container{position:absolute;left:320px;top:70px;width:600px;height:500px;display:flex;flex-direction:column-reverse;overflow:auto;overflow-anchor:none}
+.transcript{flex-shrink:0}.message{height:180px}.sidebar-navigation{position:relative;width:250px;height:200px}.sidebar-navigation::before{content:"";position:absolute;inset:0}
+[data-summary-panel-variant]{position:absolute;left:950px;top:100px;width:220px;background:rgb(70,49,39)}
+[data-summary-panel-variant] header,[data-summary-panel-variant] header::before{background:rgb(70,49,39);content:""}
+</style><!-- CSS --></head><body>
+<aside class="app-shell-left-panel"><button aria-label="Search">Search</button><div class="sidebar-navigation _ConversationSidebar_test"></div><div data-app-action-sidebar-thread-row data-app-action-sidebar-thread-id="first" data-app-action-sidebar-thread-selected="true" data-app-action-sidebar-thread-active="false"><div data-thread-title-trigger>First</div></div></aside>
+<div data-app-shell-header-toolbar><div></div><div></div></div>
+<div data-summary-panel-variant="summary"><header>Outputs</header><section>Sources</section></div>
+<div class="thread-scroll-container"><div class="transcript"></div></div>
+<pre id="report">pending</pre>
+<script>
+const THEME={workspaceUI: /* SETTINGS */}; const previous=null;
+const setAttribute=(node,k,v)=>{if(node.getAttribute(k)!==v)node.setAttribute(k,v)};
+const setStyleProperty=(node,k,v)=>node.style.setProperty(k,v);
+/* MODULES */
+(async()=>{
+const check=(condition,label)=>{if(!condition)throw Error(label)};
+const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+const thread=document.querySelector('.thread-scroll-container'), transcript=thread.firstElementChild;
+for(let i=0;i<12;i++)transcript.insertAdjacentHTML('beforeend',`<div><div><div data-local-conversation-user-anchor>User ${i}</div></div><div><div class="message" data-local-conversation-item-target-ids="${i}">searchable response ${i}</div></div></div>`);
+document.documentElement.setAttribute('data-dream-skin','active');
+document.documentElement.setAttribute('data-dream-art-wide','true');
+workspaceUI.refresh();
+await wait(100);
+const right=document.querySelector('[data-summary-panel-variant]');
+const left=document.querySelector('.sidebar-navigation');
+check(getComputedStyle(right).backgroundImage===getComputedStyle(left,'::before').backgroundImage,'matched glass gradients');
+check(getComputedStyle(right).backdropFilter===getComputedStyle(left,'::before').backdropFilter,'matched glass blur');
+check(getComputedStyle(right.querySelector('header')).backgroundColor==='rgba(0, 0, 0, 0)','header: '+getComputedStyle(right.querySelector('header')).backgroundColor+' rules '+document.styleSheets.length+' '+[...document.styleSheets].map(s=>s.cssRules.length));
+check(document.querySelectorAll('[data-dream-response]').length===12,'group responses without moving users');
+check(!document.querySelector('[data-dream-response] [data-local-conversation-user-anchor]'),'users outside response backing');
+const controls=document.querySelector('[data-dream-workspace-controls]').shadowRoot;
+controls.querySelector('[aria-label="Toggle focused reading view"]').click();
+check(getComputedStyle(right).display==='none','focus hides summary');
+controls.querySelector('[aria-label="Toggle focused reading view"]').click();
+check(getComputedStyle(right).display!=='none','focus restores summary');
+thread.dispatchEvent(new WheelEvent('wheel',{deltaY:-500}));thread.scrollTop=-500;thread.dispatchEvent(new Event('scroll'));
+await wait(400);
+check(!document.querySelector('[data-dream-latest-control]').hidden,'latest shown away from bottom');
+const anchor=[...thread.querySelectorAll('.message')].find(e=>e.getBoundingClientRect().top>=70);
+const before=anchor.getBoundingClientRect().top;
+transcript.lastElementChild.insertAdjacentHTML('beforeend','<div style="height:180px">Incoming content</div>');
+// Native anchoring may reset to latest when streaming updates arrive.
+await wait(150);
+check(Math.abs(anchor.getBoundingClientRect().top-before)<2,'stream growth preserves visible reading position');
+const latest=document.querySelector('[data-dream-latest-control]').shadowRoot.querySelector('button');
+check(latest.textContent.includes('New activity'),'activity indicator');latest.click();
+check(thread.scrollTop===0,'jump to latest');
+const row=document.querySelector('[data-app-action-sidebar-thread-row]');
+check(!row.querySelector('[data-dream-thread-status]'),'unknown idle is not fabricated done');
+row.setAttribute('data-app-action-sidebar-thread-active','true');workspaceUI.refresh();
+check(row.querySelector('[data-dream-thread-status]').textContent==='Working','native working state');
+row.setAttribute('data-app-action-sidebar-thread-active','false');workspaceUI.refresh();
+check(!row.querySelector('[data-dream-thread-status]'),'stopped does not imply successful completion');
+const input=document.createElement('input');input.placeholder='Search chats';input.value='searchable';document.body.append(input);
+const result=document.createElement('div');result.setAttribute('cmdk-item','');document.body.append(result);result.click();input.remove();result.remove();workspaceUI.refresh();
+check(CSS.highlights.get('dream-skin-search').size>0,'native search highlights');
+check(!controls.querySelector('button').hidden,'return to results offered');
+document.querySelector('aside button').onclick=()=>document.body.append(input);
+controls.querySelector('button').click();check(input.value==='searchable','query restored');input.remove();
+workspaceUI.dispose();
+check(!document.querySelector('[data-dream-workspace-controls],[data-dream-latest-control],[data-dream-response]'),'cleanup removes owned UI');
+check(!CSS.highlights.has('dream-skin-search'),'cleanup clears highlights');
+document.querySelector('#report').textContent=JSON.stringify({pass:true});
+})().catch(error=>document.querySelector('#report').textContent=JSON.stringify({pass:false,error:error.message}));
+</script></body></html>

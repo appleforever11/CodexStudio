@@ -1,5 +1,66 @@
 # Codex Studio handoff
 
+## 2026-09-26 — Workspace glass and reading improvements, local runtime 1.9.14
+
+On `codex/workspace-ui-improvements`, based on `7254146`. Preserved the
+pre-change runtime, Golden Gate theme, preference evidence, and checksummed
+manifest at:
+`~/Library/Application Support/CodexStudio/RestorePoints/stable-1.9.13-20260926-204245`.
+The safety branch `codex/safety-runtime-1.9.13-20260926` preserves the source base.
+`Restore stable appearance.command` verifies the backup, retires only the
+identity-checked injector, restores runtime/theme files, and verifies a hot
+reapply. It preserves replaced files and does not replay historical PIDs or
+account settings. Tested a real 1.9.14 -> 1.9.13 -> 1.9.14 round trip; ChatGPT
+PID 3152/start 20:25:29 stayed unchanged. The pinned backup still verifies.
+
+Implemented and live-applied:
+- Shared glass for the left conversation sidebar and right summary bubble,
+  including clear sticky headers. Actual renderer computed background, blur,
+  and shadow match exactly; inspected the live screenshot. Root/body offsets
+  remain zero, retaining the prior bottom-strip fix.
+- Independent sidebar/chat appearance preferences in `workspace-ui.json`,
+  strictly validated before injection and watched across atomic replacements.
+- Response-branch backing without reparenting native nodes; title wrapping and
+  adjustable row spacing. Status badges use native working/attention/completed
+  evidence; idle is never guessed to mean successful completion.
+- Return to latest with new-activity indication; visible-anchor protection
+  after deliberate scrolling. Native overflow and document geometry remain intact.
+- Expanded native search excerpts, loaded-text highlights, and return to the
+  saved search query. Dates are added only when native datetime metadata exists;
+  the runtime does not invent missing metadata or fetch conversation history.
+- A Reading view button reduces wallpaper detail, narrows the transcript, and
+  hides the summary card without changing the persisted native panel state.
+
+Studio source includes a Workspace appearance card in Settings > General and
+Live editor, explicit Apply, one-level Undo, rollback on failed verification,
+and a link to the pinned restore point. The longer conversation preview adds
+paragraphs, lists, code, and comparisons. Its appearance is an approximation,
+not a pixel-identical embedded ChatGPT renderer.
+
+Validation and remaining boundary:
+- 16 Node tests passed, including real Chromium shared-glass cascade, sticky
+  headers, reading anchors during growth, latest/activity, focus toggles,
+  search return/highlights, native status handling, and cleanup. Existing
+  viewport/scroll checks at two sizes remain green.
+- Swift build passed using `/tmp/codexstudio-scroll-build`; Swift tests passed
+  41 cases with 2 existing fixture-dependent skips, including apply/undo and
+  failure rollback. The ordinary workspace Sparkle cache was not repaired.
+- Latest staged review: `/tmp/codexstudio-workspace-final/CodexStudio.app`,
+  version 0.1.26 / runtime 1.9.14. Refresh the local build asset mirror when
+  staging same-version runtime source edits.
+- Opened the earlier `/tmp/codexstudio-workspace-review/CodexStudio.app` and
+  observed Canvas. Native computer-use then failed repeatedly with “Sky
+  Computer Use native pipe closed before response,” including after reset.
+  **New native Settings/Live editor screens still need visual inspection.**
+  Do not claim full native UI smoke coverage or replace the installed Studio
+  app on the basis of build/test success alone.
+- Live renderer screenshot/measurements use the app's existing verified local
+  debug endpoint. No chat messages were sent. The native ChatGPT installation,
+  theme library, favorites, drafts, and installed Studio app remain intact.
+
+Changes are local; no push or release. The runtime enhancements are active;
+native controls are in the staged review build, not `/Applications/CodexStudio.app`.
+
 ## 2026-09-26 — Bottom strip reproduced and corrected locally
 
 Starting from clean `7d1f693`, reproduced the user's full-width bottom strip

@@ -102,6 +102,22 @@ struct PreviewTaskContent: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(values.background.opacity(0.82), in: RoundedRectangle(cornerRadius: store.draftRadius * 0.52, style: .continuous))
                     }
+                    ForEach(0..<3) { index in
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text(["Layout and hierarchy", "Verification", "Next steps"][index])
+                                .font(.system(size: 12, weight: .bold))
+                            Text("Long conversations should remain easy to read as new activity arrives. This sample includes paragraphs, a checklist, and a compact comparison so you can judge spacing against the wallpaper.")
+                                .fixedSize(horizontal: false, vertical: true)
+                            Text("• Keep related content together\n• Leave enough room around code\n• Preserve the reader’s place")
+                            Divider()
+                            HStack { Text("Sidebar"); Spacer(); Text("Shared glass") }
+                            HStack { Text("Conversation"); Spacer(); Text("Independent contrast") }
+                        }
+                        .font(.system(size: 10)).lineSpacing(3).foregroundStyle(values.text)
+                        .padding(14).frame(maxWidth: .infinity, alignment: .leading)
+                        .background(values.panel.opacity(store.workspaceAppearance.chatOpacity),
+                            in: RoundedRectangle(cornerRadius: 18))
+                    }
                     Spacer(minLength: 52)
                 }
                 .padding(22)

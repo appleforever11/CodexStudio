@@ -42,6 +42,9 @@ final class StudioStore: ObservableObject {
         message: "Preparing the studio…"
     )
 
+    @Published var workspaceAppearance = (try? WorkspaceAppearanceService().read()) ?? WorkspaceAppearance()
+    @Published var workspaceAppearanceMessage = ""
+
     @Published var draftAccent: Color = StudioColor.cyan
     @Published var draftOpacity: Double = 0.82
     @Published var draftBlur: Double = 18

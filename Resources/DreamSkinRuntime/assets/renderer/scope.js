@@ -45,5 +45,6 @@
     metrics.ensureCalls += 1;
     if (rootPass) applyRootState(root);
     if (partPass) refreshParts();
+    if (partPass || rootPass) workspaceUI.refresh();
     if (scopePass) refreshScope();
   };

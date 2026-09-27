@@ -91,6 +91,7 @@
     metrics,
     version: VERSION,
     themeId: THEME.id || "custom",
+    workspaceSession,
     revision: PAYLOAD_REVISION,
     detectShellAppearance,
   };

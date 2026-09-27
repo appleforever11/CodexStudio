@@ -18,6 +18,7 @@ export function watchPayloadSources(themeDir, onDirty) {
     try {
       watcher = watchFs(directory, { persistent: false }, (_event, filename) => {
         const name = filename ? String(filename) : "";
+        if (kind === "workspace" && name && name !== "workspace-ui.json") return;
         const staticChanged = directory === assetsRoot
           ? (!name || name === "dream-skin.css" || name === "renderer-inject.js"
             || name === "dream-skin" || name === "renderer")
@@ -34,6 +35,7 @@ export function watchPayloadSources(themeDir, onDirty) {
     }
   };
   add(themeRoot, "theme");
+  if (themeDir) add(path.dirname(themeDir), "workspace");
   add(assetsRoot, "static");
   add(path.join(assetsRoot, "dream-skin"), "static");
   add(path.join(assetsRoot, "renderer"), "static");

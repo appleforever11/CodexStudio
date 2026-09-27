@@ -2,6 +2,7 @@
     const state = window[STATE_KEY];
     if (state?.installToken !== installToken) return false;
     window[DISABLED_KEY] = true;
+    workspaceUI.dispose();
     disposeArtworkAnimation();
     const root = document.documentElement;
     for (const name of ROOT_ATTRS) root?.removeAttribute(name);

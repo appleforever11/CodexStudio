@@ -17,6 +17,7 @@ import {
   normalizeThemeText,
 } from "../../assets/theme-package-validator.mjs";
 import { decodeAndValidateSafeCss } from "../../assets/safe-css-validator.mjs";
+import { loadWorkspacePreferences } from "./workspace-preferences.mjs";
 
 let staticPayloadAssets = null;
 const STATIC_CSS_FILES = [
@@ -28,6 +29,7 @@ const STATIC_CSS_FILES = [
   "dream-skin/task.css",
   "dream-skin/controls.css",
   "dream-skin/accessibility.css",
+  "dream-skin/workspace.css",
 ];
 const STATIC_RENDERER_FILES = [
   "renderer/bootstrap.js",
@@ -36,6 +38,10 @@ const STATIC_RENDERER_FILES = [
   "renderer/animation.js",
   "renderer/style.js",
   "renderer/parts.js",
+  "renderer/workspace-controls.js",
+  "renderer/workspace-reading.js",
+  "renderer/workspace-navigation.js",
+  "renderer/workspace.js",
   "renderer/scope.js",
   "renderer/cleanup.js",
   "renderer/lifecycle.js",
@@ -337,6 +343,7 @@ export async function loadPayload(themeDir) {
   ]);
   const { css, template } = staticAssets;
   const { art, extension, safeCssRuntime, safeCssStatus, theme } = loaded;
+  theme.workspaceUI = await loadWorkspacePreferences(themeDir);
   const combinedCss = safeCssRuntime ? `${css}\n${safeCssRuntime}\n` : css;
   const styleRevision = createHash("sha256").update(combinedCss).digest("hex").slice(0, 20);
   const artMetadata = readImageMetadata(art, extension);

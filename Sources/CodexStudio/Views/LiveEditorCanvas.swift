@@ -18,9 +18,9 @@ struct CodexLivePreview: View {
                 ThemeArtworkView(theme: theme, animated: store.motionEnabled, showOverlay: false)
                     .frame(width: viewport.size.width, height: viewport.size.height)
                     .clipped()
-                    .opacity(theme.imagePath != nil ? 0.24 : 0.38)
+                    .opacity(theme.imagePath != nil ? 0.72 : 0.38)
                 }
-            LinearGradient(colors: [values.background.opacity(0.48), values.background.opacity(0.80)], startPoint: .top, endPoint: .bottom)
+            values.background.opacity(store.workspaceAppearance.chatDim)
 
             VStack(spacing: 0) {
                 previewTitleBar
@@ -127,7 +127,8 @@ struct CodexLivePreview: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 13)
-        .background(values.panel.opacity(0.62))
+        .background(values.panel.opacity(store.workspaceAppearance.sidebarOpacity))
+        .background(values.background.opacity(store.workspaceAppearance.sidebarDim))
     }
 
     @ViewBuilder
