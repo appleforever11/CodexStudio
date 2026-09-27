@@ -30,6 +30,18 @@
       }
       const state = window[STATE_KEY]; if (state) state.directSession = { collapsed };
     };
+    const sidebarScrollTimers = new Map();
+    const sidebarScrolled = event => {
+      const node = event.target;
+      if (!node?.matches?.('[data-app-action-sidebar-scroll]')) return;
+      node.setAttribute('data-dream-sidebar-scrolling', '');
+      clearTimeout(sidebarScrollTimers.get(node));
+      sidebarScrollTimers.set(node, setTimeout(() => {
+        node.removeAttribute('data-dream-sidebar-scrolling');
+        sidebarScrollTimers.delete(node);
+      }, 800));
+    };
+    document.addEventListener('scroll', sidebarScrolled, true);
     const timestampTitles = new Map();
     const refreshTimestamps = () => {
       for (const [node, entry] of timestampTitles) if (!node.isConnected) timestampTitles.delete(node);
@@ -174,6 +186,9 @@
     return {
       refresh(){if(!workspaceSettings.enabled)return;mount();refreshOutline();refreshComposer();refreshDetails();refreshOutputs();refreshTimestamps();},
       dispose(){
+        document.removeEventListener('scroll', sidebarScrolled, true);
+        for(const [node,timer] of sidebarScrollTimers){clearTimeout(timer);node.removeAttribute('data-dream-sidebar-scrolling');}
+        sidebarScrollTimers.clear();
         for(const [node,entry] of timestampTitles)if(node.getAttribute('title')===entry.label){if(entry.original===null)node.removeAttribute('title');else node.setAttribute('title',entry.original);}
         timestampTitles.clear();
         document.removeEventListener('dream-skin-reveal-result',revealResult);

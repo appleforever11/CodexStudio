@@ -25,3 +25,7 @@ html[data-dream-workspace-ui="true"] [data-dream-output-reveal]{font:11px system
 
 html[data-dream-workspace-ui="true"] [data-dream-native-work-details]::before{content:'Work details · ';font-size:12px;color:var(--ds-muted)}
 html[data-dream-workspace-ui="true"] .thread-scroll-container [data-dream-final-backing]{padding:18px!important;border-radius:18px;border:1px solid rgb(var(--ds-text-rgb)/.1)!important;background:rgb(var(--ds-panel-rgb)/calc(var(--ds-ui-chat-opacity) + .12))!important;backdrop-filter:blur(var(--ds-ui-chat-blur))!important}
+
+/* Keep the native draggable scrollbar, but hide its paint while idle. */
+html[data-dream-workspace-ui="true"] [data-app-action-sidebar-scroll]{scrollbar-color:transparent transparent!important}
+html[data-dream-workspace-ui="true"] [data-app-action-sidebar-scroll][data-dream-sidebar-scrolling]{scrollbar-color:rgb(var(--ds-accent-rgb)/.38) transparent!important}

@@ -1,5 +1,17 @@
 # Codex Studio handoff
 
+## 2026-09-27 — Sidebar scrollbar idle dismissal, runtime 1.9.22
+
+Sidebar scrollbar paint is transparent while idle and accent-colored during
+native scrolling, returning to transparent 800ms after the last scroll event.
+Native overflow and scrollbar geometry stay intact. Capture listener and timers
+are cleaned up on disposal. Direct-workspace browser regression passed.
+Hot-applied to /Applications/ChatGPT.app through the managed runtime; live
+sidebar scroll verified accent color during movement and transparent after 1s.
+Restored original scroll position and inspected /tmp/sidebar-scroll-idle.png.
+Pinned restore point retained; no native bundle replacement or app restart.
+
+
 ## 2026-09-27 — Recorded hover timestamps, runtime 1.9.21
 
 Native title tooltips on assistant bubbles and original user prompts now show
