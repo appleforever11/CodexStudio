@@ -72,7 +72,7 @@ const panelWrap=document.createElement('div');panelWrap.style.cssText='display:f
 right.before(panelFrame);panelFrame.append(panelWrap);panelWrap.append(right);right.style.cssText='position:relative;left:0;top:0';
 directWorkspace.refresh();
 const direct=document.querySelector('[data-dream-direct-controls]').shadowRoot;
-check(right.getBoundingClientRect().width===410 && right.getBoundingClientRect().height===420,'panel is a wider bounded floating card');
+check(right.getBoundingClientRect().width===378 && right.getBoundingClientRect().height===420,'panel is a wider bounded floating card');
 panelFrame.style.height='350px';check(right.getBoundingClientRect().height===350,'panel follows available height');
 direct.querySelectorAll('button')[1].click();check(getComputedStyle(right).display==='none','collapse panel');
 direct.querySelectorAll('button')[1].click();check(getComputedStyle(right).display!=='none','reopen panel');

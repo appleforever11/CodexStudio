@@ -1,5 +1,16 @@
 # Codex Studio handoff
 
+## 2026-09-26 — More space beside the floating card, runtime 1.9.18
+
+Reduced the summary wrapper width from 410px to 378px, preserving its 420px
+bounded height and right inset. Live ChatGPT at 1603x796 now has a 36.5px gap
+between the chat/composer edge and summary (previously 4.5px); actual card
+372x420 after native wrapper padding. Screenshot inspected after hot apply to
+/Applications/ChatGPT.app; model selector remains visible. No app restart or
+native bundle replacement. Direct-workspace Chromium regression passed.
+Installed runtime VERSION and CSS updated; pinned safety restore remains intact.
+
+
 ## 2026-09-26 — Bounded floating summary correction, runtime 1.9.17
 
 User clarified the highlighted target: a wider card near the upper right,

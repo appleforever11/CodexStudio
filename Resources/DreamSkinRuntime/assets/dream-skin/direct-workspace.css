@@ -1,6 +1,6 @@
 /* Direct app ergonomics; all rules disappear with the managed layer. */
 html[data-dream-workspace-ui="true"] [data-summary-panel-variant="summary"]{width:100%!important;height:min(420px,calc(100dvh - 70px))!important;max-height:100%!important;min-height:0!important;align-self:stretch}
-html[data-dream-workspace-ui="true"] [data-dream-summary-fill]{width:min(410px,calc(100vw - 32px))!important;height:auto!important;max-height:100%!important;min-height:0!important}
+html[data-dream-workspace-ui="true"] [data-dream-summary-fill]{width:min(378px,calc(100vw - 32px))!important;height:auto!important;max-height:100%!important;min-height:0!important}
 html[data-dream-summary-collapsed="true"] :is([data-summary-panel-variant="summary"],[data-dream-summary-fill]){display:none!important}
 html[data-dream-workspace-ui="true"] [data-thread-secondary-title]{display:-webkit-box!important;-webkit-line-clamp:1!important;-webkit-box-orient:vertical;overflow:hidden!important;opacity:.72}
 html[data-dream-workspace-ui="true"] [data-app-action-sidebar-thread-row] button[aria-haspopup="menu"]{opacity:0}
