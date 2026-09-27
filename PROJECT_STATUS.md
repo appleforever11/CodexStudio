@@ -1,5 +1,19 @@
 # Codex Studio handoff
 
+## 2026-09-27 — Recorded hover timestamps, runtime 1.9.21
+
+Native title tooltips on assistant bubbles and original user prompts now show
+localized date/time from existing native turn metadata. Bounded read-only React
+ancestor lookup uses recorded assistant ID timestamps, final-start time, and
+original turn-start time. Missing times stay unlabeled; no inferred ID dates or
+render-time substitutes. Original titles restore on disposal. This depends on
+private native metadata and safely skips labels if that shape changes.
+Direct-workspace browser test passed with recorded/missing timestamp cases.
+Hot-applied to managed runtime; live ChatGPT title attributes verified for
+assistant messages and original user prompt. No layout changes or restart.
+Pinned restore point retained.
+
+
 ## 2026-09-27 — Separate update bubbles, runtime 1.9.20
 
 Response decoration now targets individual assistant messages instead of the

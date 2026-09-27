@@ -71,6 +71,11 @@ const panelFrame=document.createElement('div');panelFrame.style.cssText='positio
 const panelWrap=document.createElement('div');panelWrap.style.cssText='display:flex;flex-direction:column;width:300px;max-height:100%';
 right.before(panelFrame);panelFrame.append(panelWrap);panelWrap.append(right);right.style.cssText='position:relative;left:0;top:0';
 directWorkspace.refresh();
+const timestampNode=document.querySelector('[data-dream-response]');
+timestampNode.__reactFiberTest={memoizedProps:{mcpTurn:{turnStartedAtMs:1700000000000,aeonAssistantMessageStartedAtMsById:{'0':1700000060000}}}};
+directWorkspace.refresh();
+check(timestampNode.title===new Date(1700000060000).toLocaleString(undefined,{dateStyle:'medium',timeStyle:'short'}),'recorded message timestamp');
+check(!document.querySelectorAll('[data-dream-response]')[1].title,'missing time stays unlabeled');
 const direct=document.querySelector('[data-dream-direct-controls]').shadowRoot;
 check(right.getBoundingClientRect().width===378 && right.getBoundingClientRect().height===420,'panel is a wider bounded floating card');
 panelFrame.style.height='350px';check(right.getBoundingClientRect().height===350,'panel follows available height');

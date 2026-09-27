@@ -30,6 +30,36 @@
       }
       const state = window[STATE_KEY]; if (state) state.directSession = { collapsed };
     };
+    const timestampTitles = new Map();
+    const refreshTimestamps = () => {
+      for (const [node, entry] of timestampTitles) if (!node.isConnected) timestampTitles.delete(node);
+      for (const node of document.querySelectorAll('.thread-scroll-container [data-dream-response], .thread-scroll-container [data-user-message-bubble]')) {
+        // Read only the nearest native turn metadata. Never infer dates from IDs
+        // or use render time as message time. Missing metadata stays unlabeled.
+        let fiber = node[Object.keys(node).find(key => key.startsWith('__reactFiber'))];
+        let turn;
+        for (let depth = 0; fiber && depth < 24; depth++, fiber = fiber.return) {
+          const props = fiber.memoizedProps;
+          const candidate = props?.mcpTurn || props?.turn;
+          if (candidate && Number.isFinite(candidate.turnStartedAtMs)) { turn = candidate; break; }
+        }
+        if (!turn) continue;
+        const annotation = node.matches('[data-response-annotation-target]') ? node : node.querySelector('[data-response-annotation-target]');
+        const id = annotation?.getAttribute('data-response-annotation-target');
+        let time = turn.aeonAssistantMessageStartedAtMsById?.[id];
+        if (node.matches('[data-local-conversation-final-assistant]')) time ??= turn.finalAssistantStartedAtMs;
+        if (node.matches('[data-user-message-bubble]')) {
+          const anchor = node.closest('[data-local-conversation-user-anchor]');
+          const container = node.closest('[data-content-search-turn-key]');
+          if (anchor && container?.querySelector('[data-local-conversation-user-anchor]') === anchor) time = turn.turnStartedAtMs;
+        }
+        if (!Number.isFinite(time) || time <= 0) continue;
+        const label = new Date(time).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+        if (!timestampTitles.has(node)) timestampTitles.set(node, { original: node.getAttribute('title'), label });
+        timestampTitles.get(node).label = label;
+        setAttribute(node, 'title', label);
+      }
+    };
     const closeOutline=()=>{list?.hidePopover();if(list)list.hidden=true;outlineButton?.setAttribute('aria-expanded','false');};
     const mount = () => {
       if (!host) {
@@ -142,8 +172,10 @@
     document.addEventListener('pointerdown',outside);
     document.addEventListener('input',input);
     return {
-      refresh(){if(!workspaceSettings.enabled)return;mount();refreshOutline();refreshComposer();refreshDetails();refreshOutputs();},
+      refresh(){if(!workspaceSettings.enabled)return;mount();refreshOutline();refreshComposer();refreshDetails();refreshOutputs();refreshTimestamps();},
       dispose(){
+        for(const [node,entry] of timestampTitles)if(node.getAttribute('title')===entry.label){if(entry.original===null)node.removeAttribute('title');else node.setAttribute('title',entry.original);}
+        timestampTitles.clear();
         document.removeEventListener('dream-skin-reveal-result',revealResult);
         document.removeEventListener('dream-skin-output-ready',ready);
         document.removeEventListener('pointerdown',outside);
