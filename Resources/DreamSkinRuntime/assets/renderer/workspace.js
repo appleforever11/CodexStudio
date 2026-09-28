@@ -5,6 +5,7 @@
       sidebarOpacity: '--ds-ui-sidebar-opacity', sidebarDim: '--ds-ui-sidebar-dim', sidebarBlur: '--ds-ui-sidebar-blur',
       chatOpacity: '--ds-ui-chat-opacity', chatDim: '--ds-ui-chat-dim', chatBlur: '--ds-ui-chat-blur',
       rowSpacing: '--ds-ui-row-spacing', readingWidth: '--ds-ui-reading-width',
+      summaryWidth: '--ds-ui-summary-width',
     };
     const focus = () => {
       const active = workspaceSession.focus ?? workspaceSettings.focusByDefault;
@@ -37,6 +38,7 @@
         setAttribute(root, 'data-dream-workspace-ui', 'true');
         setAttribute(root, 'data-dream-wrap-titles', String(workspaceSettings.wrapTitles));
         setAttribute(root, 'data-dream-search-context', String(workspaceSettings.searchContext));
+        setAttribute(root, 'data-dream-auto-hide-sidebar-scrollbar', String(workspaceSettings.autoHideSidebarScrollbar));
         for (const [name, variable] of Object.entries(variables)) {
           const unit = /Blur$|Spacing$|Width$/.test(name) ? 'px' : '';
           setStyleProperty(root, variable, `${workspaceSettings[name]}${unit}`);

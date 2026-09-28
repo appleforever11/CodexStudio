@@ -15,6 +15,7 @@ struct WorkspaceAppearanceCard: View {
                     slider("Wallpaper dimming", value: $store.workspaceAppearance.sidebarDim, range: 0...0.8)
                     slider("Blur", value: $store.workspaceAppearance.sidebarBlur, range: 0...48, unit: "px")
                     slider("Row spacing", value: $store.workspaceAppearance.rowSpacing, range: 2...12, unit: "px")
+                    slider("Right panel width", value: $store.workspaceAppearance.summaryWidth, range: 300...480, unit: "px")
                     Toggle("Wrap chat titles", isOn: $store.workspaceAppearance.wrapTitles)
                 }.padding(8)
             }
@@ -23,7 +24,9 @@ struct WorkspaceAppearanceCard: View {
                     slider("Opacity", value: $store.workspaceAppearance.chatOpacity, range: 0...1)
                     slider("Wallpaper dimming", value: $store.workspaceAppearance.chatDim, range: 0...0.8)
                     slider("Blur", value: $store.workspaceAppearance.chatBlur, range: 0...32, unit: "px")
-                    Toggle("One surface per response", isOn: $store.workspaceAppearance.groupResponses)
+                    Toggle("Separate assistant updates into bubbles", isOn: $store.workspaceAppearance.groupResponses)
+                    Toggle("Show message date and time on hover", isOn: $store.workspaceAppearance.showTimestamps)
+                    Toggle("Hide sidebar scrollbar when idle", isOn: $store.workspaceAppearance.autoHideSidebarScrollbar)
                     Toggle("Keep my place while new content arrives", isOn: $store.workspaceAppearance.preserveReading)
                     Toggle("Show Return to latest", isOn: $store.workspaceAppearance.showLatest)
                     Toggle("Expand search context and highlight matches", isOn: $store.workspaceAppearance.searchContext)

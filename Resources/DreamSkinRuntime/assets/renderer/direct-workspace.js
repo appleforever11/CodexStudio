@@ -33,7 +33,7 @@
     const sidebarScrollTimers = new Map();
     const sidebarScrolled = event => {
       const node = event.target;
-      if (!node?.matches?.('[data-app-action-sidebar-scroll]')) return;
+      if (!workspaceSettings.autoHideSidebarScrollbar || !node?.matches?.('[data-app-action-sidebar-scroll]')) return;
       node.setAttribute('data-dream-sidebar-scrolling', '');
       clearTimeout(sidebarScrollTimers.get(node));
       sidebarScrollTimers.set(node, setTimeout(() => {
@@ -45,6 +45,7 @@
     const timestampTitles = new Map();
     const refreshTimestamps = () => {
       for (const [node, entry] of timestampTitles) if (!node.isConnected) timestampTitles.delete(node);
+      if (!workspaceSettings.showTimestamps) return;
       for (const node of document.querySelectorAll('.thread-scroll-container [data-dream-response], .thread-scroll-container [data-user-message-bubble]')) {
         // Read only the nearest native turn metadata. Never infer dates from IDs
         // or use render time as message time. Missing metadata stays unlabeled.

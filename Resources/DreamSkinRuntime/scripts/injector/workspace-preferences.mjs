@@ -7,12 +7,13 @@ export const workspaceDefaults = Object.freeze({
   chatOpacity: 0.14, chatDim: 0.08, chatBlur: 10,
   rowSpacing: 6, wrapTitles: true, groupResponses: true,
   preserveReading: true, showLatest: true, searchContext: true,
-  readingWidth: 820, focusByDefault: false,
+  readingWidth: 820, focusByDefault: false, summaryWidth: 378,
+  showTimestamps: true, autoHideSidebarScrollbar: true,
 });
 const ranges = {
   sidebarOpacity: [0, 1], sidebarDim: [0, 0.8], sidebarBlur: [0, 48],
   chatOpacity: [0, 1], chatDim: [0, 0.8], chatBlur: [0, 32],
-  rowSpacing: [2, 12], readingWidth: [560, 1120],
+  rowSpacing: [2, 12], readingWidth: [560, 1120], summaryWidth: [300, 480],
 };
 export function normalizeWorkspacePreferences(value = {}) {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('Invalid workspace appearance');

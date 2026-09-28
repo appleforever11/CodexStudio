@@ -1,5 +1,28 @@
 # Codex Studio handoff
 
+## 2026-09-28 — Studio 0.1.27 release preparation
+
+Studio now carries the workspace runtime advances made after 0.1.26 (DreamSkin
+1.9.12): shared left/right liquid glass; bounded 378px floating Outputs/Sources
+panel; individual assistant update bubbles; hover timestamps; idle scrollbar
+hiding; original native composer/model controls; outline and panel controls;
+outputs and reveal actions; and reading/return-to-latest improvements. The
+Workspace appearance page now exposes the right panel width, separate assistant
+bubbles, hover timestamps, and idle scrollbar as reversible settings. Legacy
+workspace preference JSON receives defaults for newly added fields. Runtime
+bumped to 1.9.23; release notes created for 0.1.27 / build 1027000.
+
+`swift build --product CodexStudio --scratch-path /tmp/codexstudio-0.1.27-build
+--configuration debug` passed. An isolated review app at
+`/tmp/codexstudio-0.1.27-review.FlNpd5/CodexStudio.app` contains app 0.1.27,
+build 1027000, runtime 1.9.23; code signature verification passed. The review
+app opened on Canvas; the native UI inspector repeatedly closed its pipe while
+opening Settings, so the updated preference screen lacks visual inspection.
+The installed production Studio app was left untouched. Source and package
+syntax/whitespace checks passed. No automated tests were run in this turn.
+Sparkle publication and hosted artifact verification are pending.
+
+
 ## 2026-09-27 — Sidebar scrollbar idle dismissal, runtime 1.9.22
 
 Sidebar scrollbar paint is transparent while idle and accent-colored during
