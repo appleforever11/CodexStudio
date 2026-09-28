@@ -1,26 +1,31 @@
 # Codex Studio handoff
 
-## 2026-09-28 — Studio 0.1.27 release preparation
+## 2026-09-28 — Codex Studio 0.1.27 published through Sparkle
 
-Studio now carries the workspace runtime advances made after 0.1.26 (DreamSkin
-1.9.12): shared left/right liquid glass; bounded 378px floating Outputs/Sources
-panel; individual assistant update bubbles; hover timestamps; idle scrollbar
-hiding; original native composer/model controls; outline and panel controls;
-outputs and reveal actions; and reading/return-to-latest improvements. The
-Workspace appearance page now exposes the right panel width, separate assistant
-bubbles, hover timestamps, and idle scrollbar as reversible settings. Legacy
-workspace preference JSON receives defaults for newly added fields. Runtime
-bumped to 1.9.23; release notes created for 0.1.27 / build 1027000.
+Published commit `1acccb8` as tag `v0.1.27`:
+https://github.com/appleforever11/CodexStudio/releases/tag/v0.1.27
+GitHub Actions run `36428155861` completed the Xcode build, Developer ID
+signing, app/DMG notarization and stapling, Sparkle appcast generation, and
+release publication. The downloaded ZIP contains app 0.1.27 / build 1027000
+and DreamSkin runtime 1.9.23. Its direct-workspace, workspace, preferences,
+payload, and VERSION hashes match this source revision.
 
-`swift build --product CodexStudio --scratch-path /tmp/codexstudio-0.1.27-build
---configuration debug` passed. An isolated review app at
-`/tmp/codexstudio-0.1.27-review.FlNpd5/CodexStudio.app` contains app 0.1.27,
-build 1027000, runtime 1.9.23; code signature verification passed. The review
-app opened on Canvas; the native UI inspector repeatedly closed its pipe while
-opening Settings, so the updated preference screen lacks visual inspection.
-The installed production Studio app was left untouched. Source and package
-syntax/whitespace checks passed. No automated tests were run in this turn.
-Sparkle publication and hosted artifact verification are pending.
+Hosted ZIP, DMG, and appcast SHA-256:
+`b698193c5e751a084c081c73dc2c273cf324e1a632cef9f1e032beedb140dd0e`,
+`eceba7bd25f8b3e7662a86c70b3d74a0d3a920392cf309033b11c4a1b4b950f3`,
+`23ea4ad48ff2eb8015a5654b8d15392c840c4be6e59a63ae1d66c91d763b763a`.
+The `latest` feed matches the release appcast byte-for-byte and advertises
+0.1.27 / 1027000 with the v0.1.27 ZIP enclosure. Its Ed25519 enclosure signature
+verifies against the public key embedded in the app. Strict `codesign`,
+Gatekeeper (`Notarized Developer ID`), app stapling, and DMG verification all
+passed on downloaded release assets.
+
+The installed production Studio bundle was left in place; existing users can
+install this release through **Check for Updates**. The isolated 0.1.27 review
+bundle opened on Canvas and has correct version/runtime metadata, but the native
+UI inspector pipe failed during Settings navigation, so those controls still
+lack visual inspection. Local Swift build and source syntax/whitespace checks
+passed. No automated tests were run in this turn.
 
 
 ## 2026-09-27 — Sidebar scrollbar idle dismissal, runtime 1.9.22
