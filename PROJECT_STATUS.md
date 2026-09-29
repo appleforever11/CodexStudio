@@ -1,5 +1,16 @@
 # Codex Studio handoff
 
+## 2026-09-29 — Prepare Codex Studio 0.1.28
+
+Bundles all ChatGPT 26.928 compatibility and glass/chrome fixes from this chat
+as runtime 1.9.24. Release notes are RELEASE_NOTES/0.1.28.md. All 20 runtime
+tests passed; Swift tests passed 41 cases with 2 existing skips. Isolated
+Swift build passed using /tmp/codexstudio-scroll-build. Prior live renderer
+verification covers the affected Home/chat/sidebar surfaces; native traffic-light
+compositing remains unverified due to computer-use app access restrictions.
+The tag workflow will sign, notarize, staple and publish the final ZIP/DMG/feed.
+
+
 ## 2026-09-29 — Clear chat accent frame and feather titlebar seam
 
 Made the main conversation border transparent and removed its edge shadow,
