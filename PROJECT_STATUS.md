@@ -1,5 +1,19 @@
 # Codex Studio handoff
 
+## 2026-09-29 — Clear chat accent frame and feather titlebar seam
+
+Made the main conversation border transparent and removed its edge shadow,
+retaining native border dimensions and radius. Added a 28px upper fade to the
+sidebar backing mask: its previous abrupt start at y30 extended into the 44px
+titlebar beside the native traffic lights. Hot-applied task.css with a backup
+at runtime-backups/before-chat-frame-20260929.css. Renderer screenshot confirms
+the amber outline is absent and the backing's upper transition is feathered.
+Native ChatGPT inspection was rejected by the computer-use app access policy,
+so the actual traffic-light compositing remains unverified. Live renderer
+verification and three workspace/viewport browser checks passed; editor stays
+visible and body offset remains zero. Local only; no app restart or publication.
+
+
 ## 2026-09-29 — Restore sidebar glass through new native wrapper
 
 ChatGPT 26.928 adds [data-slate-sidebar-content] around the existing rounded

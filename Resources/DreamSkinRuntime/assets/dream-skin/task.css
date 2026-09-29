@@ -762,3 +762,19 @@ html[data-dream-skin="active"][data-dream-art-wide="true"]
   [data-app-shell-main-titlebar="true"] [class~="bg-border"] {
   background: rgb(var(--ds-text-rgb) / .16) !important;
 }
+
+/* Keep the conversation surface seamless against the wallpaper. Retain its
+   border geometry so removing the accent paint does not shift the transcript. */
+html[data-dream-skin="active"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"]) {
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* The sidebar backing extends into the titlebar. Feather its upper edge too;
+   otherwise that blur starts abruptly beside the native traffic lights. */
+html[data-dream-skin="active"][data-dream-art-wide="true"] aside.app-shell-left-panel::before {
+  -webkit-mask-image: linear-gradient(180deg,
+    transparent 0, #000 28px, #000 calc(100% - 160px), transparent 100%) !important;
+  mask-image: linear-gradient(180deg,
+    transparent 0, #000 28px, #000 calc(100% - 160px), transparent 100%) !important;
+}
