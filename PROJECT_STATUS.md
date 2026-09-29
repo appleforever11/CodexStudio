@@ -1,5 +1,30 @@
 # Codex Studio handoff
 
+## 2026-09-29 — ChatGPT 26.928.20755 theme compatibility, local
+
+Corrected the Home composer body paint after native motion wrappers were added,
+and removed the solid sticky-footer backdrop plus its separate upper gradient.
+The composer keeps its own themed surface and native dimensions/controls.
+Verification now selects visible shell/composer/home nodes because 26.928 keeps
+inactive home and thread pages mounted before the active page in the DOM.
+
+Validated in /Applications/ChatGPT.app, version 26.928.20755, Golden Gate,
+managed runtime 1.9.23 with this local patch. Home and current chat pass renderer
+verification; Home composer 640x98, thread composer 736x98, editor 44px high,
+body offset zero. Visually inspected both routes and returned to the current
+chat. No test messages were sent. Full runtime suite passed 19 tests, then both
+compatibility tests passed after adding the cached-page verification regression
+(20 tests total). No Swift source changed or native Studio rebuild performed.
+
+Installed composer.css, task.css, and renderer-verification.mjs match source.
+Restarted only the recorded owned injector through stop_recorded_injector and
+hot_reapply_theme to load the verification module; ChatGPT PID 99145 and start
+time stayed unchanged. New watcher PID 11468. Backup retained beneath
+CodexDreamSkinStudio/runtime-backups/before-chatgpt-26928-20260929-180401.
+Runtime version remains 1.9.23 pending a separately requested release. Existing
+Studio/ChatGPT app bundles and pinned restore point were preserved. Local only.
+
+
 ## 2026-09-28 — Codex Studio 0.1.27 published through Sparkle
 
 Published commit `1acccb8` as tag `v0.1.27`:

@@ -194,11 +194,15 @@ export async function verifySession(session, expectedThemeId = null, expectedRev
         visible: Boolean(node.isConnected !== false && cssVisible && intersectsViewport),
       };
     };
-    const homeIndicator = document.querySelector(${selectorLiteral("home-icon")});
-    const homeSignal = homeIndicator ?? document.querySelector(${selectorLiteral("game-source")}) ??
-      document.querySelector(${selectorLiteral("home-suggestions")});
-    const homeRoute = homeSignal?.closest('[role="main"]') ?? null;
-    const home = document.querySelector(${selectorLiteral("home-route")}) ?? homeRoute;
+    // 26.928 retains inactive pages in the DOM. Verify the displayed surface,
+    // rather than the first (potentially hidden) cached home/thread page.
+    const visibleNode = (selector) => [...document.querySelectorAll(selector)]
+      .find((node) => box(node)?.visible) ?? null;
+    const homeRoute = visibleNode(${selectorLiteral("home-route")});
+    const home = homeRoute ?? [...document.querySelectorAll('[role="main"]')]
+      .find((node) => box(node)?.visible && node.querySelector(
+        ${selectorLiteral("game-source")} + ',' + ${selectorLiteral("home-suggestions")}
+      )) ?? null;
     const suggestions = home?.querySelector(${selectorLiteral("home-suggestions")}) ?? null;
     const cardButtons = suggestions ? [...suggestions.querySelectorAll('button')] : [];
     const cardBoxes = cardButtons.map(box);
@@ -228,11 +232,11 @@ export async function verifySession(session, expectedThemeId = null, expectedRev
       ?? siblingCandidates.find((item) => item?.visible)
       ?? box(boxableChain[boxableChain.length - 1]);
     const projectButton = box(home?.querySelector(${selectorLiteral("project-selector")} + " > button"));
-    const shell = box(document.querySelector(${selectorLiteral("shell-main")}));
-    const composer = box(document.querySelector(${selectorLiteral("composer-chrome")}));
-    const sidebar = box(document.querySelector(${selectorLiteral("left-panel")}));
-    const genericMain = box(document.querySelector('[data-ds-part="main"], [data-ds-part="home"]'));
-    const genericInput = box(document.querySelector('[data-ds-part="composer"]'));
+    const shell = box(visibleNode(${selectorLiteral("shell-main")}));
+    const composer = box(visibleNode(${selectorLiteral("composer-chrome")}));
+    const sidebar = box(visibleNode(${selectorLiteral("left-panel")}));
+    const genericMain = box(visibleNode('[data-ds-part="main"], [data-ds-part="home"]'));
+    const genericInput = box(visibleNode('[data-ds-part="composer"]'));
     const settingsBoxes = [
       box(document.querySelector(${selectorLiteral("settings-panel")})),
       box(document.querySelector(${selectorLiteral("appearance-radio")})),

@@ -460,6 +460,17 @@ html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface
   background-image: none !important;
 }
 
+/* 26.928 uses a solid decorative backdrop instead of the older gradient.
+   Target only the inert direct child of the sticky footer; leave the footer's
+   controls, layout, and the composer's own surface intact. */
+html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"])
+  [data-thread-scroll-footer] > [class~="pointer-events-none"][class~="absolute"][class~="z-0"][class~="bg-surface"],
+html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"])
+  .thread-scroll-container [class~="pointer-events-none"][class~="sticky"][class~="bottom-0"] > [class~="pointer-events-none"][class~="absolute"][class~="z-0"][class~="bg-gradient-to-t"][class~="from-surface"] {
+  background: transparent !important;
+  background-image: none !important;
+}
+
 /* The redesigned thread can add a separate bottom fade after a search result
    opens. Remove only the decorative fade itself; keep the scroll container,
    sticky composer, and their geometry intact. */
