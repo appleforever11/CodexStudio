@@ -1,5 +1,19 @@
 # Codex Studio handoff
 
+## 2026-09-29 — Restore sidebar glass through new native wrapper
+
+ChatGPT 26.928 adds [data-slate-sidebar-content] around the existing rounded
+ConversationSidebar. Its 65% opaque native fill darkened the glass and left a
+square backing visible around its inset corners. Cleared only this wrapper's
+background in wide-art mode. Existing 20px rounded glass, 36px blur and independent
+scroll container remain unchanged. Hot-applied matching task.css to the managed
+runtime, preserving the prior file at runtime-backups/before-sidebar-glass-20260929.css.
+Visually inspected live /Applications/ChatGPT.app 26.928.20755: clear wrapper,
+rounded glass and no dark square corners. Sidebar scroll moved and restored,
+body offset zero. Workspace Chromium regression and live renderer verification
+passed. No app restart, native bundle replacement or publication.
+
+
 ## 2026-09-29 — ChatGPT 26.928.20755 theme compatibility, local
 
 Corrected the Home composer body paint after native motion wrappers were added,

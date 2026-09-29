@@ -510,6 +510,14 @@ html[data-dream-skin="active"][data-dream-art-wide="true"] {
 
 /* 26.924 separates the chat list from the icon rail inside the same aside.
    Give the list its own near-clear glass pane and keep its inset scroller live. */
+/* 26.928 adds a square painted container around that rounded pane. Clear
+   only its backing so it cannot darken the glass or fill the inset corners. */
+html[data-dream-skin="active"][data-dream-art-wide="true"]
+  aside.app-shell-left-panel [data-slate-sidebar-content] {
+  background: transparent !important;
+  background-image: none !important;
+}
+
 html[data-dream-skin="active"][data-dream-art-wide="true"]
   aside.app-shell-left-panel .sidebar-navigation[class*="_ConversationSidebar_"] {
   margin-block: 4px 6px !important;
