@@ -3,73 +3,25 @@
     <channel>
         <title>CodexStudio</title>
         <item>
-            <title>0.1.22</title>
-            <pubDate>Fri, 18 Sep 2026 10:25:21 -0400</pubDate>
+            <title>0.1.28</title>
+            <pubDate>Tue, 29 Sep 2026 23:28:22 +0000</pubDate>
             <link>https://github.com/appleforever11/CodexStudio</link>
-            <sparkle:version>1022000</sparkle:version>
-            <sparkle:shortVersionString>0.1.22</sparkle:shortVersionString>
+            <sparkle:version>1028000</sparkle:version>
+            <sparkle:shortVersionString>0.1.28</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
             <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.22
+            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.28
 
-Fixes welcome text that remained shifted left after the ChatGPT 26.915.31029
-update. The theme now preserves the new welcome container's native width and
-centering, aligning the heading with the main workspace and composer.
+Restores custom themes after the ChatGPT 26.928 update:
 
-Also preserves project-name wrapping in narrow windows. Includes DreamSkin
-runtime 1.9.8; existing local wallpaper libraries and favorites are retained.
+- Restores the themed Home composer and removes the dark backdrop behind the chat composer.
+- Restores the sidebar's translucent glass and rounded corners.
+- Removes the amber frame around the conversation and softens the glass transition beside the titlebar.
+- Verifies the visible page correctly when ChatGPT keeps inactive pages mounted.
+
+Includes DreamSkin runtime 1.9.24. Existing themes and workspace preferences are preserved.
 ]]></description>
-            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.22/CodexStudio-0.1.22-arm64.zip" length="11754849" type="application/octet-stream" sparkle:edSignature="97miGOvsJ2Mk0pNTXhWkyGbO+eOkNKk84KKXlzah/gy3HRMZ+KQ1AlqwwCcbw2AL0STZzhTvO5KWtWVTFPF5Cw=="/>
-        </item>
-        <item>
-            <title>0.1.21</title>
-            <pubDate>Thu, 17 Sep 2026 22:00:56 -0400</pubDate>
-            <link>https://github.com/appleforever11/CodexStudio</link>
-            <sparkle:version>1021000</sparkle:version>
-            <sparkle:shortVersionString>0.1.21</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.21
-
-## ChatGPT 26.915 compatibility
-
-- Restores centered welcome text for the current ChatGPT home heading.
-- Removes the extra project-picker label from the welcome sentence and keeps long project names within the available width.
-- Includes DreamSkin runtime 1.9.7 and the task-rendering safeguards added after 0.1.20.
-- Refreshes an older background theme engine during apply so an app update cannot immediately revert to the previous runtime.
-
-## Local library continuity
-
-- Keeps locally cached Apple wallpaper packs visible and available after installing a release update. Their artwork stays on this Mac and is not redistributed in the update.
-
-Your imported themes, drafts, favorites, and local wallpaper library are preserved.
-]]></description>
-            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.21/CodexStudio-0.1.21-arm64.zip" length="11754756" type="application/octet-stream" sparkle:edSignature="hzGHFFX3bZD0NofFnvZKwIVQaeKlX+qfU/wmh5LubQqqjUE0L/tjOyntUoQLksnJ8N8djsRBMcdrq82qAhs0Ag=="/>
-        </item>
-        <item>
-            <title>0.1.20</title>
-            <pubDate>Thu, 10 Sep 2026 20:53:08 -0400</pubDate>
-            <link>https://github.com/appleforever11/CodexStudio</link>
-            <sparkle:version>1020000</sparkle:version>
-            <sparkle:shortVersionString>0.1.20</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.20
-
-## Capability-aware runtime
-
-- Aligns the injector's reported version with the bundled `DreamSkinRuntime/VERSION` file so shell, payload, and renderer diagnostics share one source of truth.
-- Adds explicit DevTools target classification so the main Codex page, avatar composition surface, external pages, and embedded webviews stay separate.
-- Adds a read-only Codex capability check for the installed app version/build, loopback renderer, bundled Node and CLI versions, app-server support, and declared feature flags.
-- Keeps runtime inspection bounded and local-only; it never attaches to a renderer, starts app-server, or reads account content.
-
-## Studio polish
-
-- Adds a Connection settings capability panel with clearer health, renderer, package, and feature status.
-- Makes the navigation rail opaque so the Codex window behind Studio cannot bleed through its labels and selection states.
-- Extends safe diagnostics with compatibility and renderer-target context without including prompts, artwork bytes, or credentials.
-]]></description>
-            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.20/CodexStudio-0.1.20-arm64.zip" length="11765517" type="application/octet-stream" sparkle:edSignature="ItzR+EBptDFGTbIRkoF8hic6RT7BMZA2qm0WFnvAeS+QtMI2V888kZRD1AOX0i0w/rCLfCwh+TukEPa0EteNAw=="/>
+            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.28/CodexStudio-0.1.28-arm64.zip" length="11863412" type="application/octet-stream" sparkle:edSignature="BtRP/VHcg8k51QnZVB70eFLMmo8uFCzr8TGNJwYWL7b8gZuSSm2PjKPZMpdY8UDfolXINxO27SESeeYF8E19Cg=="/>
         </item>
     </channel>
 </rss>

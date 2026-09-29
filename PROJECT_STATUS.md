@@ -1,5 +1,28 @@
 # Codex Studio handoff
 
+## 2026-09-29 — Codex Studio 0.1.28 published and verified
+
+Published release commit 7ab913f as v0.1.28; Actions run 36645029766 succeeded.
+Release: https://github.com/appleforever11/CodexStudio/releases/tag/v0.1.28
+Hosted bundle is 0.1.28 / build 1028000 with runtime 1.9.24. Composer, task,
+verification module and VERSION match source byte-for-byte. Latest Sparkle feed
+matches release appcast and its Ed25519 signature verifies using the embedded
+public key; enclosure length matches the final ZIP. Download hashes match
+GitHub's asset digests:
+ZIP f3203dc169e2d39df149efcee6ecacbd6dacfe02a6dace3139539442998d9495
+DMG a135532e0cc9772e446226988a45cf6a44d06c0bf0a2f44f361d1005a498052b
+Feed dd20f301d4acbab5017e510629f617a7273db7ebbcc9441c85bc17729063eb63
+
+Gatekeeper accepted the downloaded app as Notarized Developer ID; app and DMG
+stapling validated and DMG checksum passed. Strict deep codesign passed after
+removing FinderInfo/ResourceFork metadata from the disposable extracted copy
+(the extraction initially carried Finder metadata). Local staged review bundle
+/tmp/codexstudio-0128-review/CodexStudio.app has correct app/runtime metadata,
+strict signature and matching runtime files. Native Studio was not replaced.
+All 20 runtime tests passed; Swift suite passed 41 cases with 2 existing skips.
+The previously noted native traffic-light visual verification limitation remains.
+
+
 ## 2026-09-29 — Prepare Codex Studio 0.1.28
 
 Bundles all ChatGPT 26.928 compatibility and glass/chrome fixes from this chat
