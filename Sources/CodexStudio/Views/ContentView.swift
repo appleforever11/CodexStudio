@@ -106,6 +106,8 @@ struct ContentView: View {
             AbstractWallpapersPage()
         case .canvas:
             CanvasPage()
+        case .dot:
+            DotAppearancePage()
         case .editor:
             LiveEditorPage()
         case .themes:

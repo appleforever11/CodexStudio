@@ -25,3 +25,11 @@ Workspace appearance checks (1.9.14+):
 - Before a major regression recovery, verify the pinned restore manifest.
   Record both the restored runtime and the subsequent active version; never
   replay the backup's old process IDs.
+
+Dot appearance checks:
+- Open Your dot; verify blue left bubbles, grey right replies and readable text.
+- Change colors, spacing and corners; inspect preview at a narrow window width.
+- Apply, reopen Studio and verify persistence; Undo restores the prior appearance.
+- On the actual Dot page check separate text bubbles, replies, reactions, writing
+  blocks and Page previews; ordinary task chats must retain their own styling.
+- Disable Dot styling and verify native messaging layout returns.

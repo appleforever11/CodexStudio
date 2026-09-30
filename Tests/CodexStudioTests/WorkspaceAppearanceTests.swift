@@ -2,6 +2,17 @@ import XCTest
 @testable import CodexStudio
 
 final class WorkspaceAppearanceTests: XCTestCase {
+    func testOlderAppearanceGetsDotDefaults() throws {
+        let old = try JSONDecoder().decode(WorkspaceAppearance.self, from: Data("{\"chatBlur\":12}".utf8))
+        XCTAssertEqual(old.dotBubbleColor, "#2563EB")
+        XCTAssertEqual(old.dotUserBubbleColor, "#4B5563")
+        var custom = old
+        custom.dotSpacing = 24
+        custom.dotBubbleColor = "#334455"
+        let saved = try JSONEncoder().encode(custom)
+        XCTAssertEqual(try JSONDecoder().decode(WorkspaceAppearance.self, from: saved), custom)
+    }
+
     func testApplyUndoAndVerificationRollback() throws {
         let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         defer { try? FileManager.default.removeItem(at: root) }

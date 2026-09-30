@@ -3,6 +3,7 @@ import Foundation
 enum StudioSection: String, CaseIterable, Identifiable, Sendable {
     case abstract
     case canvas
+    case dot
     case editor
     case themes
     case library
@@ -14,6 +15,7 @@ enum StudioSection: String, CaseIterable, Identifiable, Sendable {
         switch self {
         case .abstract: "Abstract"
         case .canvas: "Canvas"
+        case .dot: "Your dot"
         case .editor: "Live editor"
         case .themes: "Themes"
         case .library: "Library"
@@ -25,6 +27,7 @@ enum StudioSection: String, CaseIterable, Identifiable, Sendable {
         switch self {
         case .abstract: "MoeWalls live wallpapers"
         case .canvas: "Live workspace"
+        case .dot: "Conversation appearance"
         case .editor: "Edit in context"
         case .themes: "Explore directions"
         case .library: "Your collection"
@@ -36,6 +39,7 @@ enum StudioSection: String, CaseIterable, Identifiable, Sendable {
         switch self {
         case .abstract: "play.rectangle"
         case .canvas: "rectangle.3.group.bubble.left"
+        case .dot: "circle.circle"
         case .editor: "slider.horizontal.3"
         case .themes: "sparkles"
         case .library: "square.stack.3d.up"

@@ -21,9 +21,16 @@ struct WorkspaceAppearance: Codable, Equatable, Sendable {
     var showTimestamps = true
     var autoHideSidebarScrollbar = true
 
+    var dotEnabled = true
+    var dotBubbleColor = "#2563EB"
+    var dotUserBubbleColor = "#4B5563"
+    var dotSpacing = 14.0
+    var dotRadius = 18.0
+
     init() {}
 
     private enum CodingKeys: String, CodingKey {
+        case dotEnabled, dotBubbleColor, dotUserBubbleColor, dotSpacing, dotRadius
         case schemaVersion, enabled, sidebarOpacity, sidebarDim, sidebarBlur
         case chatOpacity, chatDim, chatBlur, rowSpacing, wrapTitles, groupResponses
         case preserveReading, showLatest, searchContext, readingWidth, focusByDefault
@@ -32,6 +39,11 @@ struct WorkspaceAppearance: Codable, Equatable, Sendable {
 
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
+        dotEnabled = try values.decodeIfPresent(Bool.self, forKey: .dotEnabled) ?? true
+        dotBubbleColor = try values.decodeIfPresent(String.self, forKey: .dotBubbleColor) ?? "#2563EB"
+        dotUserBubbleColor = try values.decodeIfPresent(String.self, forKey: .dotUserBubbleColor) ?? "#4B5563"
+        dotSpacing = try values.decodeIfPresent(Double.self, forKey: .dotSpacing) ?? 14
+        dotRadius = try values.decodeIfPresent(Double.self, forKey: .dotRadius) ?? 18
         schemaVersion = try values.decodeIfPresent(Int.self, forKey: .schemaVersion) ?? 1
         enabled = try values.decodeIfPresent(Bool.self, forKey: .enabled) ?? true
         sidebarOpacity = try values.decodeIfPresent(Double.self, forKey: .sidebarOpacity) ?? 0.06

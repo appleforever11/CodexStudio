@@ -21,3 +21,13 @@ test('workspace preferences reject invalid values and preserve independent surfa
     await assert.rejects(loadWorkspacePreferences(path.join(root, 'theme')));
   } finally { await fs.rm(root, {recursive:true,force:true}); }
 });
+
+test('Dot preferences migrate older settings and validate colors and geometry', () => {
+  const older = normalizeWorkspacePreferences({chatBlur: 12});
+  assert.equal(older.dotBubbleColor, '#2563EB');
+  assert.equal(older.dotUserBubbleColor, '#4B5563');
+  assert.equal(normalizeWorkspacePreferences({dotSpacing: 24, dotEnabled: false}).dotSpacing, 24);
+  for (const value of [{dotBubbleColor: 'red'}, {dotUserBubbleColor: '#fff;display:none'}, {dotSpacing: 99}, {dotRadius: -1}]) {
+    assert.throws(() => normalizeWorkspacePreferences(value));
+  }
+});

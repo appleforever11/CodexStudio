@@ -1,5 +1,44 @@
 # Codex Studio handoff
 
+## 2026-09-30 — Your dot appearance section, local
+
+Added a dedicated Your dot sidebar destination with blue Dot / grey self
+bubble defaults, color pickers, spacing/corner controls, sample conversation,
+and shared appearance Apply/Undo. Preferences migrate older schema-1 files.
+Native 26.928.20755 source confirms messaging-root, message-row assistant/self,
+message-surface, message-bubble and orbit text-part selectors. CSS clears
+full-width row/surface backing, bounds assistant bubbles and keeps writing
+blocks/page previews separate. No messages or native nodes are moved.
+
+Fixed refresh-workspace-ui-macos.sh to discover the signed app before checking
+its CDP listener; the prior entrypoint failed without initialized app paths.
+Hot-applied the four changed runtime files with an exact backup at
+~/Library/Application Support/CodexDreamSkinStudio/runtime-backups/before-dot-20260930-100853.
+The owned watcher restarted as PID 31043; ChatGPT PID 6029 and its original
+09:56:20 start time stayed unchanged. Runtime remains 1.9.23 with this local
+patch; no release/version bump, production Studio replacement or publication.
+Refresh entrypoint and one-shot renderer verification pass; source, installed
+and packaged copies of all four changed files match byte-for-byte.
+
+Review bundle: /tmp/codexstudio-dot-review/CodexStudio.app, debug 0.1.0 / 1000000,
+review bundle ID, refreshed runtime cache; strict ad-hoc signature passes.
+Visually inspected Your dot page in the staged native Studio: both bubble
+colors/alignment, controls and sidebar/footer fit. Exercised spacing increment
+and decrement, restoring 14px. Native Apply clicks did not produce an observed
+state change; the UI inspection connection later failed / reported the app
+changed. Apply/Undo button interactions remain unverified. The refresh script
+itself succeeds, and Swift tests cover settings write, undo and rollback.
+Direct ChatGPT app inspection is denied by computer-use policy, so actual Dot
+page visual appearance remains unverified; Chromium fixture verifies role
+colors, narrow assistant wrapping, spacing, clear wrappers, rich text parts,
+ordinary-chat isolation and disabling. No test messages were sent.
+
+Validation: swift build passed; 22 runtime tests passed; isolated Swift suite
+passed 42 cases with 2 existing skips. Initial in-workspace Swift test signing
+failed due to File Provider/Finder metadata; rerun with scratch path
+/tmp/codexstudio-dot-swift-build passed. Shell syntax and whitespace checks pass.
+New Swift view is 85 lines. Local milestone only.
+
 ## 2026-09-29 — Codex Studio 0.1.28 published and verified
 
 Published release commit 7ab913f as v0.1.28; Actions run 36645029766 succeeded.

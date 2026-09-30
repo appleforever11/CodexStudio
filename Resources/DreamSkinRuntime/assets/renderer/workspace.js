@@ -6,6 +6,8 @@
       chatOpacity: '--ds-ui-chat-opacity', chatDim: '--ds-ui-chat-dim', chatBlur: '--ds-ui-chat-blur',
       rowSpacing: '--ds-ui-row-spacing', readingWidth: '--ds-ui-reading-width',
       summaryWidth: '--ds-ui-summary-width',
+      dotBubbleColor: '--ds-dot-color', dotUserBubbleColor: '--ds-dot-user-color',
+      dotSpacing: '--ds-dot-spacing', dotRadius: '--ds-dot-radius',
     };
     const focus = () => {
       const active = workspaceSession.focus ?? workspaceSettings.focusByDefault;
@@ -36,12 +38,18 @@
         if (!workspaceSettings.enabled) return;
         const root = document.documentElement;
         setAttribute(root, 'data-dream-workspace-ui', 'true');
+        setAttribute(root, 'data-dream-dot-ui', String(workspaceSettings.dotEnabled));
         setAttribute(root, 'data-dream-wrap-titles', String(workspaceSettings.wrapTitles));
         setAttribute(root, 'data-dream-search-context', String(workspaceSettings.searchContext));
         setAttribute(root, 'data-dream-auto-hide-sidebar-scrollbar', String(workspaceSettings.autoHideSidebarScrollbar));
         for (const [name, variable] of Object.entries(variables)) {
-          const unit = /Blur$|Spacing$|Width$/.test(name) ? 'px' : '';
+          const unit = /Blur$|Spacing$|Width$|Radius$/.test(name) ? 'px' : '';
           setStyleProperty(root, variable, `${workspaceSettings[name]}${unit}`);
+        }
+        for (const [key, variable] of [['dotBubbleColor', '--ds-dot-text'], ['dotUserBubbleColor', '--ds-dot-user-text']]) {
+          const value = parseInt(workspaceSettings[key].slice(1), 16);
+          const luminance = ((value >> 16) & 255) * .299 + ((value >> 8) & 255) * .587 + (value & 255) * .114;
+          setStyleProperty(root, variable, luminance > 155 ? '#111827' : '#FFFFFF');
         }
         if (!controls) {
           controls = createWorkspaceControls();

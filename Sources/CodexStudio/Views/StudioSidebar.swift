@@ -21,6 +21,7 @@ struct StudioSidebar: View {
                     VStack(spacing: 4) {
                         navigation("Canvas", symbol: "rectangle.inset.filled", selected: store.section == .canvas) { store.selectSection(.canvas) }
                         navigation("Explore", symbol: "square.grid.2x2", selected: store.section == .themes && store.themeFilter == .all && store.selectedThemeCategory == "All") { store.selectThemes() }
+                        navigation("Your dot", symbol: "circle.circle", selected: store.section == .dot) { store.selectSection(.dot) }
                         navigation("Live editor", symbol: "slider.horizontal.3", selected: store.section == .editor) { store.selectSection(.editor) }
                     }
                     VStack(alignment: .leading, spacing: 4) {
