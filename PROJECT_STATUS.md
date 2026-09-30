@@ -9,7 +9,10 @@ Focus indication lives on the outer capsule. Scoped main sticky-footer backing
 and pseudo layers clear only when the main contains native messaging-root.
 No text, controls, sizing or conversation colors changed. Exact installed CSS
 backup uses before-dot-single-composer timestamp under runtime-backups.
-Hot-applied locally without restarting ChatGPT. Updated browser fixture checks
+One-shot injection confirms payload, structure and viewport checks pass without
+restarting ChatGPT; overall verification remains incomplete because its document
+is hidden and native-window validation is unsupported. Restored the watcher
+(PID 51543) after the refresh helper stopped before restarting it. Updated browser fixture checks
 outer glass, transparent native inner root and zero textarea border; passes.
 Actual visual result still requires user confirmation because direct app
 inspection is blocked. The screenshot describes the pre-correction state.
