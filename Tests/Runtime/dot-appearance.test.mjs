@@ -39,6 +39,17 @@ test('Dot bubbles separate roles, clear wrappers, retain rich content and disabl
         check(wrap.getBoundingClientRect().width<=770);
         check(wrap.getBoundingClientRect().width<footer.getBoundingClientRect().width-30);
         check(getComputedStyle(wrap).borderBottomWidth==='1px');
+        // A native backing layer missed by the transparency rules must still
+        // be clipped at all four rounded corners, without hiding the input.
+        const backing=document.createElement('div');
+        backing.style.cssText='position:absolute;inset:0;background:black;pointer-events:auto';
+        wrap.style.position='relative';wrap.append(backing);
+        const rect=wrap.getBoundingClientRect();
+        for(const [x,y] of [[rect.left+1,rect.top+1],[rect.right-1,rect.top+1],[rect.left+1,rect.bottom-1],[rect.right-1,rect.bottom-1]]) {
+          check(!wrap.contains(document.elementFromPoint(x,y)));
+        }
+        check(wrap.contains(document.elementFromPoint(rect.left+rect.width/2,rect.top+rect.height/2)));
+        backing.remove();
         check(getComputedStyle(footer).backgroundColor==='rgba(0, 0, 0, 0)');check(getComputedStyle(document.querySelector('[data-role="composer"]')).backgroundColor==='rgba(0, 0, 0, 0)');
         check(getComputedStyle(document.querySelector('textarea')).borderTopWidth==='0px');
         check(getComputedStyle(document.querySelector('._ComposerLayoutRoot_fixture')).backgroundColor==='rgba(0, 0, 0, 0)');

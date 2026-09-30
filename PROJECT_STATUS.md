@@ -1,5 +1,18 @@
 # Codex Studio handoff
 
+## 2026-09-30 — Clip Dot input backing to rounded corners
+
+User screenshot still showed a square dark backing beyond the rounded composer
+border. Added overflow clipping and an explicit 28px rounded clip path to the
+bounded composer-wrap, isolating its paint stack. Browser regression adds an
+opaque native child and verifies all four corner hit regions exclude the
+backing while the center remains reachable. Targeted Dot runtime test passed.
+Installed CSS matches source, prior CSS saved in runtime-backups with a
+before-dot-corner-clip timestamp. One-shot apply succeeded with payload,
+structure and viewport checks, revision d1819313df154ffb7a91. These checks
+confirm deployment and fixture geometry; actual Dot visual verification remains
+unavailable under the app inspection restriction. No native app replacement.
+
 ## 2026-09-30 — Bound Dot composer to chat column
 
 Latest user screenshot exposed that composer-wrap is a viewport-wide native

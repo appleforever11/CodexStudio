@@ -124,6 +124,9 @@ html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root .compos
   border: 1px solid rgb(211 222 239 / .20) !important;
   background: linear-gradient(135deg, rgb(255 255 255 / .07), rgb(255 255 255 / .02)), rgb(38 44 55 / .62) !important;
   border-radius: 28px !important;
+  overflow: hidden !important;
+  clip-path: inset(0 round 28px) !important;
+  isolation: isolate;
   box-shadow: 0 6px 20px rgb(0 0 0 / .14) !important;
   backdrop-filter: blur(24px) !important;
   -webkit-backdrop-filter: blur(24px) !important;
