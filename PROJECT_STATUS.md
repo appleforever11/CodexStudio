@@ -1,5 +1,29 @@
 # Codex Studio handoff
 
+## 2026-09-30 — Softer Dot palette and visible viewport artwork, local
+
+User screenshot showed saturated bubbles, opaque black message viewport and
+floating identity overlapping top text. Moved artwork paint from embedded host
+to conversation-viewport, keeping workspace/scroll backgrounds clear. Muted
+blue #315A89 / slate #414955 now replace the vivid blue defaults; dimming is
+55%, ambient gradients and highlights reduced, blur saturation neutral.
+Scroll surface reserves 112px and fades its upper 72–108px beneath the floating
+identity. Native footer geometry remains; textarea backing is transparent.
+
+Applied CSS/preferences with backup runtime-backups/before-dot-polish-20260930-113902
+beneath CodexDreamSkinStudio. Restarted only the owned watcher; hot apply and
+one-shot renderer verification pass. Current appearance JSON has the new
+palette/dimming. ChatGPT was not restarted. Actual Dot visual inspection is
+still blocked by app-access policy; the user screenshot is before this change.
+
+Review bundle /tmp/codexstudio-dot-polish/CodexStudio.app, debug 0.1.0,
+review identifier, strict signature passes. Visually inspected Your dot:
+muted bubble colors, dimmed wallpaper and composer preview. Build used the
+compiled isolated Swift test product after the source-workspace build stalled
+before output. Swift suite passes 42 cases with 2 skips; all 22 runtime tests
+pass, including viewport background and header-clearance assertions. No
+production Studio replacement, publication or library changes.
+
 ## 2026-09-30 — Dot wallpaper and glass redesign, local
 
 Replaced the native messaging host's opaque fill with active-theme artwork,

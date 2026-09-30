@@ -3,8 +3,8 @@ import path from 'node:path';
 
 export const workspaceDefaults = Object.freeze({
   schemaVersion: 1, enabled: true,
-  dotEnabled: true, dotBubbleColor: "#2563EB", dotUserBubbleColor: "#4B5563",
-  dotSpacing: 14, dotRadius: 18, dotBackdropDim: .32, dotGlassBlur: 18,
+  dotEnabled: true, dotBubbleColor: "#315A89", dotUserBubbleColor: "#414955",
+  dotSpacing: 14, dotRadius: 18, dotBackdropDim: .55, dotGlassBlur: 18,
   sidebarOpacity: 0.06, sidebarDim: 0.02, sidebarBlur: 36,
   chatOpacity: 0.14, chatDim: 0.08, chatBlur: 10,
   rowSpacing: 6, wrapTitles: true, groupResponses: true,

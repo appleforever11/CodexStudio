@@ -28,11 +28,11 @@ struct DotAppearancePage: View {
                         Button("Undo last appearance change") { store.applyWorkspaceAppearance(undo: true) }
                         Button("Blue & grey") {
                             store.workspaceAppearance.dotEnabled = true
-                            store.workspaceAppearance.dotBubbleColor = "#2563EB"
-                            store.workspaceAppearance.dotUserBubbleColor = "#4B5563"
+                            store.workspaceAppearance.dotBubbleColor = "#315A89"
+                            store.workspaceAppearance.dotUserBubbleColor = "#414955"
                             store.workspaceAppearance.dotSpacing = 14
                             store.workspaceAppearance.dotRadius = 18
-                            store.workspaceAppearance.dotBackdropDim = 0.32
+                            store.workspaceAppearance.dotBackdropDim = 0.55
                             store.workspaceAppearance.dotGlassBlur = 18
                         }
                     }.disabled(!store.canApply || !store.workspaceAppearance.enabled)

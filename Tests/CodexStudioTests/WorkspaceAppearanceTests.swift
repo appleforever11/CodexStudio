@@ -4,8 +4,8 @@ import XCTest
 final class WorkspaceAppearanceTests: XCTestCase {
     func testOlderAppearanceGetsDotDefaults() throws {
         let old = try JSONDecoder().decode(WorkspaceAppearance.self, from: Data("{\"chatBlur\":12}".utf8))
-        XCTAssertEqual(old.dotBubbleColor, "#2563EB")
-        XCTAssertEqual(old.dotUserBubbleColor, "#4B5563")
+        XCTAssertEqual(old.dotBubbleColor, "#315A89")
+        XCTAssertEqual(old.dotUserBubbleColor, "#414955")
         var custom = old
         custom.dotSpacing = 24
         custom.dotBubbleColor = "#334455"

@@ -24,8 +24,8 @@ test('workspace preferences reject invalid values and preserve independent surfa
 
 test('Dot preferences migrate older settings and validate colors and geometry', () => {
   const older = normalizeWorkspacePreferences({chatBlur: 12});
-  assert.equal(older.dotBubbleColor, '#2563EB');
-  assert.equal(older.dotUserBubbleColor, '#4B5563');
+  assert.equal(older.dotBubbleColor, '#315A89');
+  assert.equal(older.dotUserBubbleColor, '#414955');
   assert.equal(normalizeWorkspacePreferences({dotSpacing: 24, dotEnabled: false}).dotSpacing, 24);
   for (const value of [{dotBubbleColor: 'red'}, {dotUserBubbleColor: '#fff;display:none'}, {dotSpacing: 99}, {dotRadius: -1}, {dotBackdropDim: 1}, {dotGlassBlur: 100}]) {
     assert.throws(() => normalizeWorkspacePreferences(value));

@@ -16,17 +16,17 @@ html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root .messag
   max-width: min(84%, 680px) !important;
 }
 html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root .message-row:not(.self) .message-bubble:not(:has([data-orbit-message-parts])) {
-  background: var(--ds-dot-color, #2563EB) !important;
+  background: var(--ds-dot-color, #315A89) !important;
   color: var(--ds-dot-text, white) !important;
 }
 html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root .message-row.self .message-bubble {
-  background: var(--ds-dot-user-color, #4B5563) !important;
+  background: var(--ds-dot-user-color, #414955) !important;
   color: var(--ds-dot-user-text, white) !important;
 }
 html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root .message-row :is(.message-bubble:not(:has([data-orbit-message-parts])), [data-orbit-message-text-part]) {
   border-radius: var(--ds-dot-radius, 18px) !important;
   padding: 12px 18px !important;
-  border: 1px solid rgb(255 255 255 / .16) !important;
+  border: 1px solid rgb(255 255 255 / .10) !important;
   box-shadow: 0 3px 10px rgb(0 0 0 / .12) !important;
 }
 html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root [data-orbit-message-parts] {
@@ -39,32 +39,32 @@ html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root .messag
 }
 
 /* Paint the existing messaging host, leaving its native scroll and footer geometry intact. */
-html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root.messaging-embedded {
+html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root .conversation-viewport {
   --messaging-send-background: rgb(24 33 51 / .76);
   --messaging-send-foreground: #F5F7FF;
   background:
-    radial-gradient(ellipse at 12% 8%, rgb(55 115 255 / .24), transparent 56%),
-    radial-gradient(ellipse at 90% 88%, rgb(var(--ds-accent-rgb, 156 199 255) / .18), transparent 52%),
-    linear-gradient(rgb(10 17 30 / var(--ds-dot-backdrop-dim, .32)), rgb(10 17 30 / var(--ds-dot-backdrop-dim, .32))),
+    radial-gradient(ellipse at 12% 8%, rgb(94 137 188 / .08), transparent 56%),
+    radial-gradient(ellipse at 90% 88%, rgb(var(--ds-accent-rgb, 156 199 255) / .06), transparent 52%),
+    linear-gradient(rgb(10 17 30 / var(--ds-dot-backdrop-dim, .55)), rgb(10 17 30 / var(--ds-dot-backdrop-dim, .55))),
     var(--dream-skin-art, linear-gradient(135deg, #253653, #171e2f)) !important;
   background-position: center, center, center, var(--ds-art-position, center) !important;
   background-size: cover !important;
   background-repeat: no-repeat !important;
 }
-html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root.messaging-embedded :is(.workspace, .conversation-viewport, .messages-scroll) {
+html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root.messaging-embedded :is(.workspace, .messages-scroll) {
   background: transparent !important;
 }
 html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root .message-row:not(.self) .message-bubble:not(:has([data-orbit-message-parts])) {
-  background: linear-gradient(145deg, rgb(255 255 255 / .10), transparent 55%),
-    color-mix(in srgb, var(--ds-dot-color, #2563EB) 88%, transparent) !important;
+  background: linear-gradient(145deg, rgb(255 255 255 / .04), transparent 55%),
+    color-mix(in srgb, var(--ds-dot-color, #315A89) 90%, transparent) !important;
 }
 html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root .message-row.self .message-bubble:not(:has([data-orbit-message-parts])) {
-  background: linear-gradient(145deg, rgb(255 255 255 / .10), transparent 55%),
-    color-mix(in srgb, var(--ds-dot-user-color, #4B5563) 88%, transparent) !important;
+  background: linear-gradient(145deg, rgb(255 255 255 / .04), transparent 55%),
+    color-mix(in srgb, var(--ds-dot-user-color, #414955) 90%, transparent) !important;
 }
 html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root .message-bubble:not(:has([data-orbit-message-parts])) {
-  backdrop-filter: blur(var(--ds-dot-glass-blur, 18px)) saturate(125%) !important;
-  -webkit-backdrop-filter: blur(var(--ds-dot-glass-blur, 18px)) saturate(125%) !important;
+  backdrop-filter: blur(var(--ds-dot-glass-blur, 18px)) saturate(100%) !important;
+  -webkit-backdrop-filter: blur(var(--ds-dot-glass-blur, 18px)) saturate(100%) !important;
   box-shadow: 0 8px 22px rgb(5 12 25 / .22), inset 0 1px rgb(255 255 255 / .10) !important;
 }
 html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root .message-bubble .message-text {
@@ -85,11 +85,24 @@ html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root :is([da
 }
 @media (prefers-reduced-transparency: reduce) {
   html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root .message-row:not(.self) .message-bubble:not(:has([data-orbit-message-parts])) {
-    background: var(--ds-dot-color, #2563EB) !important;
+    background: var(--ds-dot-color, #315A89) !important;
     backdrop-filter: none !important;
   }
   html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root .message-row.self .message-bubble:not(:has([data-orbit-message-parts])) {
-    background: var(--ds-dot-user-color, #4B5563) !important;
+    background: var(--ds-dot-user-color, #414955) !important;
     backdrop-filter: none !important;
   }
+}
+
+/* Reserve breathing room under the native floating Dot identity. Its fade is
+   on the scroll surface only, so the avatar and composer remain sharp. */
+html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root .messages-scroll {
+  padding-top: max(var(--messaging-header-inset, 0px), 112px) !important;
+  scroll-padding-top: 112px;
+  mask-image: linear-gradient(to bottom, transparent 0, transparent 72px, black 108px, black 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, transparent 72px, black 108px, black 100%);
+}
+html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root :is(textarea, [contenteditable="true"]) {
+  background: transparent !important;
+  box-shadow: none !important;
 }

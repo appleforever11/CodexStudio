@@ -15,22 +15,23 @@ test('Dot bubbles separate roles, clear wrappers, retain rich content and disabl
       body{background:#17191e;color:white;font:16px system-ui;padding:40px}.message-list{width:800px;margin:auto}
       .message-row{display:flex;background:#302820;border:1px solid brown;margin-bottom:0}.message-row.self{justify-content:flex-end}
       .message-bubble-wrap{width:100%}.message-bubble{background:#333;width:fit-content}.message-surface{background:#302820;border:1px solid brown}
-      ${css}</style><div class="messaging-root messaging-embedded"><div class="message-list">
+      ${css}</style><div class="messaging-root messaging-embedded"><div class="conversation-viewport"><div class="messages-scroll"><div class="message-list">
       <div class="message-row grouped-next"><div class="message-bubble-wrap"><div class="message-body"><div class="message-surface"><div class="message-bubble assistant-bubble">Hey! I’m your dot.</div></div></div></div></div>
       <div class="message-row self"><div class="message-surface"><div class="message-bubble">Thanks! Keep me posted.</div></div></div>
       <div class="message-row assistant"><div class="message-bubble-wrap"><div class="message-surface"><div class="message-bubble"><div data-orbit-message-parts><div class="message-bubble" data-orbit-message-text-part>Here’s your update.</div><div data-orbit-message-writing-block>Native writing block</div></div></div></div></div></div>
-      </div></div><div class="ordinary-chat"><div class="message-bubble">Ordinary chat</div></div><pre id="report"></pre><script>
+      </div></div></div></div><div class="ordinary-chat"><div class="message-bubble">Ordinary chat</div></div><pre id="report"></pre><script>
       let checkIndex=0;const check=(v)=>{checkIndex++;if(!v)throw Error('Dot layout assertion failed '+checkIndex)};
       try {
         const dot=document.querySelector('.assistant-bubble'), mine=document.querySelector('.self .message-bubble');
-        const expected=(hex)=>{const e=document.createElement('div');e.style.backgroundColor='color-mix(in srgb, '+hex+' 88%, transparent)';document.body.append(e);const c=getComputedStyle(e).backgroundColor;e.remove();return c};
-        check(getComputedStyle(dot).backgroundColor===expected('#2563EB')); check(getComputedStyle(mine).backgroundColor===expected('#4B5563'));
-        const host=document.querySelector('.messaging-root');check(getComputedStyle(host).backgroundImage.includes('radial-gradient'));
+        const expected=(hex)=>{const e=document.createElement('div');e.style.backgroundColor='color-mix(in srgb, '+hex+' 90%, transparent)';document.body.append(e);const c=getComputedStyle(e).backgroundColor;e.remove();return c};
+        check(getComputedStyle(dot).backgroundColor===expected('#315A89')); check(getComputedStyle(mine).backgroundColor===expected('#414955'));
+        const host=document.querySelector('.conversation-viewport');check(getComputedStyle(host).backgroundImage.includes('radial-gradient'));
+        check(getComputedStyle(document.querySelector('.messages-scroll')).paddingTop==='112px');
         check(getComputedStyle(dot).backdropFilter.includes('18px'));
         check(getComputedStyle(dot.closest('.message-row')).marginBottom==='14px');
         check(dot.closest('.message-bubble-wrap').getBoundingClientRect().width<680);
         check(getComputedStyle(dot.closest('.message-surface')).backgroundColor==='rgba(0, 0, 0, 0)');
-        check(getComputedStyle(document.querySelector('[data-orbit-message-text-part]')).backgroundColor===expected('#2563EB'));
+        check(getComputedStyle(document.querySelector('[data-orbit-message-text-part]')).backgroundColor===expected('#315A89'));
         check(getComputedStyle(document.querySelector('[data-orbit-message-parts]').parentElement).backgroundColor==='rgba(0, 0, 0, 0)');
         check(getComputedStyle(document.querySelector('.ordinary-chat .message-bubble')).backgroundColor==='rgb(51, 51, 51)');
         document.documentElement.dataset.dreamDotUi='false';check(getComputedStyle(dot).backgroundColor==='rgb(51, 51, 51)');

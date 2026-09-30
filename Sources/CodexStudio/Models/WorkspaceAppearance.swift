@@ -22,11 +22,11 @@ struct WorkspaceAppearance: Codable, Equatable, Sendable {
     var autoHideSidebarScrollbar = true
 
     var dotEnabled = true
-    var dotBubbleColor = "#2563EB"
-    var dotUserBubbleColor = "#4B5563"
+    var dotBubbleColor = "#315A89"
+    var dotUserBubbleColor = "#414955"
     var dotSpacing = 14.0
     var dotRadius = 18.0
-    var dotBackdropDim = 0.32
+    var dotBackdropDim = 0.55
     var dotGlassBlur = 18.0
 
     init() {}
@@ -41,11 +41,11 @@ struct WorkspaceAppearance: Codable, Equatable, Sendable {
 
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        dotBackdropDim = try values.decodeIfPresent(Double.self, forKey: .dotBackdropDim) ?? 0.32
+        dotBackdropDim = try values.decodeIfPresent(Double.self, forKey: .dotBackdropDim) ?? 0.55
         dotGlassBlur = try values.decodeIfPresent(Double.self, forKey: .dotGlassBlur) ?? 18
         dotEnabled = try values.decodeIfPresent(Bool.self, forKey: .dotEnabled) ?? true
-        dotBubbleColor = try values.decodeIfPresent(String.self, forKey: .dotBubbleColor) ?? "#2563EB"
-        dotUserBubbleColor = try values.decodeIfPresent(String.self, forKey: .dotUserBubbleColor) ?? "#4B5563"
+        dotBubbleColor = try values.decodeIfPresent(String.self, forKey: .dotBubbleColor) ?? "#315A89"
+        dotUserBubbleColor = try values.decodeIfPresent(String.self, forKey: .dotUserBubbleColor) ?? "#414955"
         dotSpacing = try values.decodeIfPresent(Double.self, forKey: .dotSpacing) ?? 14
         dotRadius = try values.decodeIfPresent(Double.self, forKey: .dotRadius) ?? 18
         schemaVersion = try values.decodeIfPresent(Int.self, forKey: .schemaVersion) ?? 1
