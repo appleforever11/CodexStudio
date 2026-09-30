@@ -1,5 +1,19 @@
 # Codex Studio handoff
 
+## 2026-09-30 — Bound Dot composer to chat column
+
+Latest user screenshot exposed that composer-wrap is a viewport-wide native
+wrapper, and its data-role=composer child retained dark theme fill. Constrained
+the outer glass to the native chat maximum width with 16px minimum side gutters
+and 12px bottom margin; cleared the data-role layer, native solid-background
+tokens and composer pseudo layers. Consolidated duplicate composer overrides.
+Browser regression passes with width, bottom border, transparent footer and
+inline dark data-role wrapper assertions. Installed CSS has a timestamped
+before-dot-bounded-composer backup. One-shot apply passed payload, structure,
+viewport and visible-window fallback checks (revision 84fcf2955f95072ca435).
+Direct visual inspection of ChatGPT remains blocked; these are runtime and
+fixture checks, not a claim of visual approval. No native app replacement.
+
 ## 2026-09-30 — Dot single composer surface correction, local
 
 User screenshot after smoothing still showed a nested bordered pill and a

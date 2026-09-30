@@ -19,7 +19,7 @@ test('Dot bubbles separate roles, clear wrappers, retain rich content and disabl
       <div class="message-row grouped-next"><div class="message-bubble-wrap"><div class="message-body"><div class="message-surface"><div class="message-bubble assistant-bubble">Hey! I’m your dot.</div></div></div></div></div>
       <div class="message-row self"><div class="message-surface"><div class="message-bubble">Thanks! Keep me posted.</div></div></div>
       <div class="message-row assistant"><div class="message-bubble-wrap"><div class="message-surface"><div class="message-bubble"><div data-orbit-message-parts><div class="message-bubble" data-orbit-message-text-part>Here’s your update.</div><div data-orbit-message-writing-block>Native writing block</div></div></div></div></div></div>
-      </div></div><div class="conversation-footer"><div class="composer-wrap"><div class="_ComposerLayoutRoot_fixture" data-composer-surface-variant="default"><textarea placeholder="Send a message"></textarea></div></div></div></div></div><div class="ordinary-chat"><div class="message-bubble">Ordinary chat</div></div><pre id="report"></pre><script>
+      </div></div><div class="conversation-footer"><div class="composer-wrap"><div data-role="composer" style="background:#150f0a"><div class="_ComposerLayoutRoot_fixture" data-composer-surface-variant="default"><textarea placeholder="Send a message"></textarea></div></div></div></div></div></div><div class="ordinary-chat"><div class="message-bubble">Ordinary chat</div></div><pre id="report"></pre><script>
       let checkIndex=0;const check=(v)=>{checkIndex++;if(!v)throw Error('Dot layout assertion failed '+checkIndex)};
       try {
         const dot=document.querySelector('.assistant-bubble'), mine=document.querySelector('.self .message-bubble');
@@ -35,6 +35,11 @@ test('Dot bubbles separate roles, clear wrappers, retain rich content and disabl
         check(getComputedStyle(document.querySelector('[data-orbit-message-parts]').parentElement).backgroundColor==='rgba(0, 0, 0, 0)');
         check(getComputedStyle(document.querySelector('.ordinary-chat .message-bubble')).backgroundColor==='rgb(51, 51, 51)');
         check(getComputedStyle(document.querySelector('.composer-wrap')).backgroundImage.includes('linear-gradient'));
+        const wrap=document.querySelector('.composer-wrap'), footer=document.querySelector('.conversation-footer');
+        check(wrap.getBoundingClientRect().width<=770);
+        check(wrap.getBoundingClientRect().width<footer.getBoundingClientRect().width-30);
+        check(getComputedStyle(wrap).borderBottomWidth==='1px');
+        check(getComputedStyle(footer).backgroundColor==='rgba(0, 0, 0, 0)');check(getComputedStyle(document.querySelector('[data-role="composer"]')).backgroundColor==='rgba(0, 0, 0, 0)');
         check(getComputedStyle(document.querySelector('textarea')).borderTopWidth==='0px');
         check(getComputedStyle(document.querySelector('._ComposerLayoutRoot_fixture')).backgroundColor==='rgba(0, 0, 0, 0)');
         document.documentElement.dataset.dreamDotUi='false';check(getComputedStyle(dot).backgroundColor==='rgb(51, 51, 51)');

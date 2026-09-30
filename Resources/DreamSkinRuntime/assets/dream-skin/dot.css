@@ -107,46 +107,29 @@ html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root :is(tex
   box-shadow: none !important;
 }
 
-/* One continuous Dot input surface: native controls and growth stay intact. */
+/* The footer spans the viewport; only its bounded composer is a surface. */
 html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root .conversation-footer {
-  --color-background-primary: transparent;
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
 }
-html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root :is(.conversation-footer, .composer-wrap)::before,
-html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root :is(.conversation-footer, .composer-wrap)::after {
-  content: none !important;
-}
-html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root .conversation-footer
-  :is(.composer-surface-chrome, [class*="_ComposerLayoutRoot_"], [data-composer-surface-variant], [data-ds-part="composer"], [class*="_composer_"]) {
-  background: linear-gradient(135deg, rgb(255 255 255 / .07), rgb(255 255 255 / .02)), rgb(38 44 55 / .62) !important;
-  border: 1px solid rgb(211 222 239 / .20) !important;
-  border-radius: 26px !important;
-  box-shadow: 0 6px 22px rgb(0 0 0 / .16), inset 0 1px rgb(255 255 255 / .08) !important;
-  backdrop-filter: blur(24px) saturate(105%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(105%) !important;
-}
-html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root .conversation-footer
-  :is([class*="_ComposerLayoutBody_"], [class*="_ComposerInputLayout_"], [class*="_ComposerLayoutFooter_"], [data-composer-body], [data-composer-footer-responsive], textarea, [contenteditable="true"], .composer-disclaimer) {
-  background: transparent !important;
-  background-image: none !important;
-  border-color: transparent !important;
-  box-shadow: none !important;
-}
-
-/* The messaging composer wrapper owns the single visible capsule. The native
-   input component nested inside it must not paint a second rounded field. */
 html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root .composer-wrap {
+  --color-background-primary: transparent !important;
+  --color-background-primary-solid: transparent !important;
+  --color-background-composer-primary: transparent !important;
+  --messaging-send-background: transparent !important;
+  width: calc(100% - 32px) !important;
+  max-width: var(--thread-content-responsive-max-width, var(--thread-content-max-width, 48rem)) !important;
+  margin: 0 auto 12px !important;
+  border: 1px solid rgb(211 222 239 / .20) !important;
   background: linear-gradient(135deg, rgb(255 255 255 / .07), rgb(255 255 255 / .02)), rgb(38 44 55 / .62) !important;
-  background-clip: padding-box !important;
   border-radius: 28px !important;
   box-shadow: 0 6px 20px rgb(0 0 0 / .14) !important;
   backdrop-filter: blur(24px) !important;
   -webkit-backdrop-filter: blur(24px) !important;
 }
 html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root .composer-wrap
-  :is(.composer-surface-chrome, [class*="_ComposerLayoutRoot_"], [data-composer-surface-variant], [data-ds-part="composer"], [class*="_composer_"], textarea, [contenteditable="true"]) {
+  :is([data-role="composer"], .composer-surface-chrome, [class*="_ComposerLayoutRoot_"], [data-composer-surface-variant], [data-ds-part="composer"], [class*="_composer_"], [class*="_ComposerLayoutBody_"], [class*="_ComposerInputLayout_"], [class*="_ComposerLayoutFooter_"], textarea, [contenteditable="true"], .composer-disclaimer) {
   background: transparent !important;
   background-image: none !important;
   border: 0 !important;
@@ -155,7 +138,13 @@ html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root .compos
   -webkit-backdrop-filter: none !important;
 }
 html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root .composer-wrap:focus-within {
-  box-shadow: 0 0 0 1px rgb(190 211 255 / .25), 0 6px 20px rgb(0 0 0 / .14) !important;
+  border-color: rgb(190 211 255 / .36) !important;
+}
+html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root
+  :is(.conversation-footer, .composer-wrap, .composer-surface-chrome, [class*="_ComposerLayoutRoot_"], [class*="_composer_"])::before,
+html[data-dream-skin="active"][data-dream-dot-ui="true"] .messaging-root
+  :is(.conversation-footer, .composer-wrap, .composer-surface-chrome, [class*="_ComposerLayoutRoot_"], [class*="_composer_"])::after {
+  content: none !important;
 }
 html[data-dream-skin="active"][data-dream-dot-ui="true"] main:has(.messaging-root)
   :is([class*="_stickyFooter"], [class*="_StickyFooter"], [data-composer-footer]) {
