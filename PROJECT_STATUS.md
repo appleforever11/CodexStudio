@@ -1,5 +1,15 @@
 # Codex Studio handoff
 
+## 2026-09-30 — Dot customization 0.1.29 release preparation
+
+User approved the final live Dot appearance in the supplied screenshot and
+authorized GitHub and Sparkle publication. Release bundles runtime 1.9.24.
+Swift tests passed: 42 executed, 2 optional tests skipped, no failures. All 22
+runtime tests passed. Your dot Studio screen was previously inspected in
+/tmp/codexstudio-dot-polish/CodexStudio.app; final composer appearance is
+confirmed by the user. Publishing through the existing signed/notarized tag
+workflow; hosted artifact verification follows publication.
+
 ## 2026-09-30 — Clip Dot input backing to rounded corners
 
 User screenshot still showed a square dark backing beyond the rounded composer
