@@ -26,11 +26,13 @@ struct WorkspaceAppearance: Codable, Equatable, Sendable {
     var dotUserBubbleColor = "#4B5563"
     var dotSpacing = 14.0
     var dotRadius = 18.0
+    var dotBackdropDim = 0.32
+    var dotGlassBlur = 18.0
 
     init() {}
 
     private enum CodingKeys: String, CodingKey {
-        case dotEnabled, dotBubbleColor, dotUserBubbleColor, dotSpacing, dotRadius
+        case dotEnabled, dotBubbleColor, dotUserBubbleColor, dotSpacing, dotRadius, dotBackdropDim, dotGlassBlur
         case schemaVersion, enabled, sidebarOpacity, sidebarDim, sidebarBlur
         case chatOpacity, chatDim, chatBlur, rowSpacing, wrapTitles, groupResponses
         case preserveReading, showLatest, searchContext, readingWidth, focusByDefault
@@ -39,6 +41,8 @@ struct WorkspaceAppearance: Codable, Equatable, Sendable {
 
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
+        dotBackdropDim = try values.decodeIfPresent(Double.self, forKey: .dotBackdropDim) ?? 0.32
+        dotGlassBlur = try values.decodeIfPresent(Double.self, forKey: .dotGlassBlur) ?? 18
         dotEnabled = try values.decodeIfPresent(Bool.self, forKey: .dotEnabled) ?? true
         dotBubbleColor = try values.decodeIfPresent(String.self, forKey: .dotBubbleColor) ?? "#2563EB"
         dotUserBubbleColor = try values.decodeIfPresent(String.self, forKey: .dotUserBubbleColor) ?? "#4B5563"

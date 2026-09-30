@@ -28,7 +28,9 @@ Workspace appearance checks (1.9.14+):
 
 Dot appearance checks:
 - Open Your dot; verify blue left bubbles, grey right replies and readable text.
-- Change colors, spacing and corners; inspect preview at a narrow window width.
+- Change colors, wallpaper dimming, glass softness, spacing and corners;
+  inspect preview at a narrow window width. Confirm active artwork replaces
+  the opaque Dot background and both incoming role forms appear blue.
 - Apply, reopen Studio and verify persistence; Undo restores the prior appearance.
 - On the actual Dot page check separate text bubbles, replies, reactions, writing
   blocks and Page previews; ordinary task chats must retain their own styling.

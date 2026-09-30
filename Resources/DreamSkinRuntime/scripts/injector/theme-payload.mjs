@@ -31,6 +31,7 @@ const STATIC_CSS_FILES = [
   "dream-skin/accessibility.css",
   "dream-skin/workspace.css",
   "dream-skin/direct-workspace.css",
+  "dream-skin/dot.css",
 ];
 const STATIC_RENDERER_FILES = [
   "renderer/bootstrap.js",

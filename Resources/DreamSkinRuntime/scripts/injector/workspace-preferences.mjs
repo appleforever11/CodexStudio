@@ -4,7 +4,7 @@ import path from 'node:path';
 export const workspaceDefaults = Object.freeze({
   schemaVersion: 1, enabled: true,
   dotEnabled: true, dotBubbleColor: "#2563EB", dotUserBubbleColor: "#4B5563",
-  dotSpacing: 14, dotRadius: 18,
+  dotSpacing: 14, dotRadius: 18, dotBackdropDim: .32, dotGlassBlur: 18,
   sidebarOpacity: 0.06, sidebarDim: 0.02, sidebarBlur: 36,
   chatOpacity: 0.14, chatDim: 0.08, chatBlur: 10,
   rowSpacing: 6, wrapTitles: true, groupResponses: true,
@@ -13,7 +13,7 @@ export const workspaceDefaults = Object.freeze({
   showTimestamps: true, autoHideSidebarScrollbar: true,
 });
 const ranges = {
-  dotSpacing: [6, 32], dotRadius: [4, 28],
+  dotSpacing: [6, 32], dotRadius: [4, 28], dotBackdropDim: [0, .8], dotGlassBlur: [0, 32],
   sidebarOpacity: [0, 1], sidebarDim: [0, 0.8], sidebarBlur: [0, 48],
   chatOpacity: [0, 1], chatDim: [0, 0.8], chatBlur: [0, 32],
   rowSpacing: [2, 12], readingWidth: [560, 1120], summaryWidth: [300, 480],

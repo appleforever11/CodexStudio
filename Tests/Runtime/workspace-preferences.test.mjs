@@ -27,7 +27,7 @@ test('Dot preferences migrate older settings and validate colors and geometry', 
   assert.equal(older.dotBubbleColor, '#2563EB');
   assert.equal(older.dotUserBubbleColor, '#4B5563');
   assert.equal(normalizeWorkspacePreferences({dotSpacing: 24, dotEnabled: false}).dotSpacing, 24);
-  for (const value of [{dotBubbleColor: 'red'}, {dotUserBubbleColor: '#fff;display:none'}, {dotSpacing: 99}, {dotRadius: -1}]) {
+  for (const value of [{dotBubbleColor: 'red'}, {dotUserBubbleColor: '#fff;display:none'}, {dotSpacing: 99}, {dotRadius: -1}, {dotBackdropDim: 1}, {dotGlassBlur: 100}]) {
     assert.throws(() => normalizeWorkspacePreferences(value));
   }
 });

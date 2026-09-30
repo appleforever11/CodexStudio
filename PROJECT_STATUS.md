@@ -1,5 +1,45 @@
 # Codex Studio handoff
 
+## 2026-09-30 — Dot wallpaper and glass redesign, local
+
+Replaced the native messaging host's opaque fill with active-theme artwork,
+a dimmed navy veil, blue ambient glow and a subtle wallpaper-accent glow.
+Cleared workspace/viewport/scroll backing without changing native geometry.
+Text bubbles now have translucent blue/grey gradients, blur, edge highlights
+and deeper shadows; the native composer has a matching glass surface.
+Extracted the Dot rules into dream-skin/dot.css and added it to payload loading.
+Corrected incoming role selection: Dot messages can lack the assistant class,
+so both ordinary incoming and assistant rows now receive the blue treatment.
+Images, writing blocks and Page previews retain their native content surfaces.
+
+Studio now exposes Wallpaper dimming and Glass softness. Preview paints the
+selected artwork in a finite clipped host with a sample glass composer.
+Older appearance files get defaults of 32% dimming / 18px blur. New Swift view
+is 111 lines. No library, theme, favorite or native app installation changes.
+
+Rebuilt /tmp/codexstudio-dot-redesign/CodexStudio.app, debug 0.1.0 / 1000000,
+review identifier; strict ad-hoc signature passes. Native Your dot preview
+visually inspected; wallpaper, both bubble styles, composer and sidebar fit.
+Dimming increment verified at 33%, then restored and confirmed at 32%.
+Lower-control scrolling again encountered noWindowsAvailable; prior Apply/Undo
+UI limitation remains. Actual Dot page visual inspection remains blocked by
+computer-use app policy. User screenshot is pre-redesign evidence only.
+
+Five runtime files hot-applied with backup at
+~/Library/Application Support/CodexDreamSkinStudio/runtime-backups/before-dot-redesign-20260930-102434;
+new-files.txt records dot.css as newly created. Source, installed runtime and
+review-bundle files match. Refresh entrypoint passes; active watcher 57878.
+ChatGPT PID 6029 stayed unchanged. One-shot renderer verification passes,
+including visible composer and zero document overflow. Installed runtime stays
+1.9.23 plus local patch; no app restart, release or publication.
+
+Validation: Swift build passes; isolated Swift tests 42 cases / 2 existing
+skips; all 22 runtime tests pass. Dot browser regression covers incoming rows
+without assistant class, gradient backdrop, translucent colors, blur, bounded
+bubbles, rich-text parts, ordinary-chat isolation and disabling. An initial
+fixture syntax error and missing fallback accent variable were fixed before
+the final passing run. Whitespace checks pass. Local milestone only.
+
 ## 2026-09-30 — Your dot appearance section, local
 
 Added a dedicated Your dot sidebar destination with blue Dot / grey self

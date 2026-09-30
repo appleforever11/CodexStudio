@@ -8,6 +8,7 @@
       summaryWidth: '--ds-ui-summary-width',
       dotBubbleColor: '--ds-dot-color', dotUserBubbleColor: '--ds-dot-user-color',
       dotSpacing: '--ds-dot-spacing', dotRadius: '--ds-dot-radius',
+      dotBackdropDim: '--ds-dot-backdrop-dim', dotGlassBlur: '--ds-dot-glass-blur',
     };
     const focus = () => {
       const active = workspaceSession.focus ?? workspaceSettings.focusByDefault;
