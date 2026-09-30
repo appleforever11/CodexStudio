@@ -1,5 +1,16 @@
 # Codex Studio handoff
 
+## 2026-09-30 — Codex Studio 0.1.29 published
+
+Published tag v0.1.29 at b0592f1 to GitHub and Sparkle through successful release
+run 36742733912. Hosted ZIP, DMG and appcast hashes match GitHub asset digests;
+latest-download feed matches release feed and advertises 0.1.29 / 1029000.
+Downloaded app passed strict nested signing and Gatekeeper as Notarized
+Developer ID; DMG stapling validates. Sparkle Ed25519 ZIP signature verified
+against the bundled public key. Bundle version is 0.1.29, runtime 1.9.24,
+and packaged dot.css exactly matches approved source. Validation artifacts:
+/tmp/codexstudio-0.1.29-verify. No local production app replacement.
+
 ## 2026-09-30 — Dot customization 0.1.29 release preparation
 
 User approved the final live Dot appearance in the supplied screenshot and
