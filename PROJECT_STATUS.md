@@ -1,5 +1,17 @@
 # Codex Studio handoff
 
+## 2026-09-30 — Dot composer smoothing, local
+
+User confirmed the page looks better and requested only a smoother bottom
+text box. Scoped composer changes remove the footer's solid backing and
+pseudo layers, unify the native chrome into a 26px rounded translucent surface,
+soften border/shadow and clear the inner body/input/footer fills. Native sizing,
+growth, attachment/send controls and page/bubble styling remain intact.
+Hot-applied dot.css with an exact before-dot-composer timestamped CSS backup
+under runtime-backups. Dot browser regression passes. Actual composer visual
+inspection remains unavailable under the existing ChatGPT app-access policy;
+the user's screenshot is pre-change evidence. No Swift changes or app restart.
+
 ## 2026-09-30 — Softer Dot palette and visible viewport artwork, local
 
 User screenshot showed saturated bubbles, opaque black message viewport and
