@@ -1,5 +1,16 @@
 # Codex Studio handoff
 
+## 2026-10-01 — Remove duplicated mode switcher label
+
+User screenshot shows overlapping Codex labels. Removed the legacy generated
+mode label and font suppression from accessibility.css so the current native
+label and chevron render once. Patched source and installed runtime stylesheet;
+prior installed CSS is preserved in runtime-backups/before-switcher-label-*.
+All 22 runtime tests passed; diff whitespace checks passed.
+No hot reapply was performed: computer use denies inspection of com.openai.codex,
+and no alternate UI route was used. Live appearance needs user verification
+after their normal theme reapply or app reopen. No publication.
+
 ## 2026-09-30 — Codex Studio 0.1.29 published
 
 Published tag v0.1.29 at b0592f1 to GitHub and Sparkle through successful release

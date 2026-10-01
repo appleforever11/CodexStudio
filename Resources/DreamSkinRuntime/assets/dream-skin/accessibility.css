@@ -32,47 +32,8 @@ html[data-dream-skin="active"] [data-ds-part="sidebar"] {
   overflow-x: clip !important;
 }
 
-/* The native mode switch keeps its current mode in aria-label but renders the
-   generic "New chat" copy in the visible label. Mirror the accessible state
-   visually so the sidebar identifies the active ChatGPT or Codex mode. */
-html[data-dream-skin="active"] aside.app-shell-left-panel
-  button[aria-label*="current mode: ChatGPT" i],
-html[data-dream-skin="active"] aside.app-shell-left-panel
-  button[aria-label*="current mode: Codex" i] {
-  font-size: 0 !important;
-  white-space: nowrap !important;
-}
-
-html[data-dream-skin="active"] aside.app-shell-left-panel
-  button[aria-label*="current mode: ChatGPT" i]::before {
-  content: "ChatGPT";
-}
-
-html[data-dream-skin="active"] aside.app-shell-left-panel
-  button[aria-label*="current mode: Codex" i]::before {
-  content: "Codex";
-}
-
-html[data-dream-skin="active"] aside.app-shell-left-panel
-  button[aria-label*="current mode:" i]::before {
-  display: inline-block;
-  color: var(--ds-accent) !important;
-  font: inherit !important;
-  font-size: 19px !important;
-  font-weight: 800 !important;
-  line-height: 1.25 !important;
-}
-
-html[data-dream-skin="active"] aside.app-shell-left-panel
-  button[aria-label*="current mode:" i] > span[class~="truncate"] {
-  display: none !important;
-}
-
-html[data-dream-skin="active"] aside.app-shell-left-panel
-  button[aria-label*="current mode:" i]::after {
-  font-size: 19px !important;
-}
-
+/* The app now renders the active mode itself. Keep its native label and
+   chevron; generating another label duplicates the text on current builds. */
 /* Codex owns the sidebar's live width while the user drags its resize rail.
    Native builds expose that width as an inline style; overriding it with the
    editor's fixed design token leaves the inner navigation header wider than
