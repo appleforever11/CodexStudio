@@ -152,6 +152,7 @@ html[data-dream-skin="active"] [data-codex-composer-root][data-composer-placemen
   border-radius: 16px !important;
   overflow: clip !important;
   padding-inline: 10px !important;
+  background: transparent !important;
 }
 
 /* Leave the project pill border and focus ring clear of the scroll viewport. */

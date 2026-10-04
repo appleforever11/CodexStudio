@@ -901,3 +901,5 @@ The Sparkle appcast was generated from that exact notarized ZIP with the configu
 ## Home project pill clipping follow-up — 2026-10-04
 
 Inset the attached Home rail controls and removed the utility scroll mask and negative margin that clipped the project pill border. Added vertical clearance inside the scroll viewport. Applied to the installed runtime and verified live with mask-image none; composer regression tests passed. Local change only.
+
+The Home rail backing is now transparent, removing the residual cut-off patch beside the project pill. Verified in the live renderer on 2026-10-04.
