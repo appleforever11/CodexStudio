@@ -143,3 +143,22 @@ html[data-dream-skin="active"][data-dream-art-wide="true"]:not(:has(main:is(.mai
   :not(:has([data-ds-part="main"])) > [data-ds-part="home"]::before {
   content: none;
 }
+
+/* The native project/computer bar now uses an attached rail. Round and clip
+   its own backing instead of letting square lower corners protrude behind
+   the separately rounded composer. Keep its horizontal controls scrollable. */
+html[data-dream-skin="active"] [data-codex-composer-root][data-composer-placement="home"]
+  [data-composer-rail-item][data-composer-rail-placement="above"] {
+  border-radius: 16px !important;
+  overflow: clip !important;
+  padding-inline: 10px !important;
+}
+
+/* Leave the project pill border and focus ring clear of the scroll viewport. */
+html[data-dream-skin="active"] [data-codex-composer-root][data-composer-placement="home"]
+  [data-composer-rail-placement="above"] [data-composer-utility-bar-scroll-area] {
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
+  margin: 0 !important;
+  padding-block: 3px !important;
+}

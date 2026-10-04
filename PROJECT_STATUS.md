@@ -1,5 +1,16 @@
 # Codex Studio handoff
 
+## 2026-10-04 — Smooth Home project rail corners, local
+
+The above-composer project/computer rail had square lower corners and allowed
+its backing to overflow beside the rounded input. Scoped a 16px radius and
+clip to the Home above-rail item. Native utility scroll area and controls stay
+intact. Hot-applied composer.css to managed runtime with backup
+runtime-backups/before-home-rail-20261004.css. Live Home renderer screenshot
+shows clean rounded edges; computed radius 16px and overflow clip. Composer
+regression tests passed. Returned to the original chat. Local only.
+
+
 ## 2026-10-01 — Remove duplicated mode switcher label
 
 User screenshot shows overlapping Codex labels. Removed the legacy generated
@@ -886,3 +897,7 @@ Verification in `/tmp/codex-studio-abstract-sort-review/CodexStudio.app`: sort m
 Published commit `33eb910` as tag `v0.1.19` at https://github.com/appleforever11/CodexStudio/releases/tag/v0.1.19. The local release build used the Developer ID Application identity `Kevin Howe (6TYPWRK7SN)`, produced an 11 MiB arm64 ZIP and DMG, passed strict nested code-signature verification, and was accepted, stapled, and validated by Apple notarization. Gatekeeper reported `source=Notarized Developer ID` for the staged app.
 
 The Sparkle appcast was generated from that exact notarized ZIP with the configured Ed25519 key, committed to `appcast.xml`, and uploaded with the ZIP and DMG. The live latest appcast is valid XML, retains the recent 0.1.19/0.1.18/0.1.17 history, and advertises `0.1.19` / build `1019000`; its hosted SHA-256 matches the committed signed feed (`4be0944902a2607875a8157631c81c72979dc7281431d73778bcc2d3cb2706da`). Hosted ZIP and DMG digests match the notarized local artifacts. The GitHub Actions tag workflow was attempted but stopped at its configured distribution-secret validation; manual publication used the verified local artifacts instead.
+
+## Home project pill clipping follow-up — 2026-10-04
+
+Inset the attached Home rail controls and removed the utility scroll mask and negative margin that clipped the project pill border. Added vertical clearance inside the scroll viewport. Applied to the installed runtime and verified live with mask-image none; composer regression tests passed. Local change only.
