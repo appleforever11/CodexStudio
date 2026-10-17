@@ -50,7 +50,15 @@ HELPER_PID="$(/bin/cat "$STATE_ROOT/native-theme-helper.pid" 2>/dev/null || true
 case "$HELPER_PID" in
   ''|*[!0-9]*) ;;
   *)
-    HELPER_EXEC="$(/bin/ps -p "$HELPER_PID" -o comm= 2>/dev/null || true)"
+    # ServiceManagement can expose the signing identifier in ps instead
+    # of the executable path. Verify launchd's PID and the mapped binary.
+    SERVICE_PID="$(/bin/launchctl print "$USER_DOMAIN/local.kevinhowe.CodexStudio.ThemeHelper" 2>/dev/null \
+      | /usr/bin/awk '$1 == "pid" && $2 == "=" { print $3; exit }' || true)"
+    HELPER_EXEC=""
+    if [ "$SERVICE_PID" = "$HELPER_PID" ]; then
+      HELPER_EXEC="$(/usr/sbin/lsof -a -p "$HELPER_PID" -d txt -Fn 2>/dev/null \
+        | /usr/bin/awk '/^n.*\/Contents\/Library\/LoginItems\/CodexStudioThemeHelper.app\/Contents\/MacOS\/CodexStudioThemeHelper$/ { print substr($0, 2); exit }' || true)"
+    fi
     case "$HELPER_EXEC" in
       */Contents/Library/LoginItems/CodexStudioThemeHelper.app/Contents/MacOS/CodexStudioThemeHelper)
         NATIVE_HELPER="true" ;;

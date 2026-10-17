@@ -205,9 +205,18 @@ theme_runtime_state_ready() {
   expected_id="$(/usr/bin/plutil -extract id raw -o - "$THEME_DIR/theme.json" 2>/dev/null || true)"
   recorded_pid="$(/usr/bin/plutil -extract codexPid raw -o - "$STATE_PATH" 2>/dev/null || true)"
   current_pid="$(codex_main_pids | /usr/bin/head -n 1)"
-  [ "$session" = "active" ]
-  [ -n "$active_id" ] && [ "$active_id" = "$expected_id" ]
-  [ -n "$recorded_pid" ] && [ "$recorded_pid" != "0" ] && [ "$recorded_pid" = "$current_pid" ]
+  [ "$session" = "active" ] || return 1
+  [ -n "$active_id" ] && [ "$active_id" = "$expected_id" ] || return 1
+  [ -n "$recorded_pid" ] && [ "$recorded_pid" != "0" ] && [ "$recorded_pid" = "$current_pid" ] || return 1
+  [ "$(state_field skinVersion 2>/dev/null || true)" = "$SKIN_VERSION" ] || return 1
+  # A healthy renderer is not enough if the watcher has died: reconnect it
+  # without restarting the app, and retain PID/start-time/path identity checks.
+  recorded_injector_process_matches \
+    "$(state_field injectorPid 2>/dev/null || true)" \
+    "$(state_field injectorStartedAt 2>/dev/null || true)" \
+    "$(state_field nodePath 2>/dev/null || true)" \
+    "$(state_field injectorPath 2>/dev/null || true)" \
+    "$(state_field port 2>/dev/null || true)"
 }
 
 select_available_port() {

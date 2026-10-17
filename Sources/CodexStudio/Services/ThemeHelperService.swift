@@ -35,7 +35,7 @@ enum ThemeHelperService {
         else { return nil }
         let service = SMAppService.loginItem(identifier: identifier)
         do {
-            if service.status == .notRegistered { try service.register() }
+            if service.status == .notRegistered || service.status == .notFound { try service.register() }
             guard service.status == .enabled else {
                 return "Automatic recovery is using the existing monitor until the Studio helper is allowed in Login Items."
             }
@@ -45,7 +45,7 @@ enum ThemeHelperService {
             try Data(identifier.utf8).write(to: state.appendingPathComponent("native-theme-helper"), options: .atomic)
             return nil
         } catch {
-            return "The theme can still apply; the existing recovery monitor will be used because the Studio helper could not register."
+            return "The theme can still apply; the existing recovery monitor will be used because the Studio helper could not register: \(error.localizedDescription)"
         }
     }
 }

@@ -1,0 +1,69 @@
+{
+  "finalApply": {
+    "activeThemeID": "macos-golden-gate-amber-bridge",
+    "bundlePath": "/Applications/CodexStudio.app",
+    "connection": "connected",
+    "elapsedSeconds": 2.336560010910034,
+    "finished": true,
+    "helper": "Ready",
+    "message": "Theme verified on port 9341. Relaunch recovery is armed.",
+    "notice": "Applied Golden Gate to Codex and verified the live runtime.",
+    "phase": "idle",
+    "restoring": false,
+    "themeID": "macos-golden-gate-amber-bridge",
+    "windowCount": 1
+  },
+  "alternateApply": {
+    "activeThemeID": "claude-warm-paper",
+    "bundlePath": "/Applications/CodexStudio.app",
+    "connection": "connected",
+    "elapsedSeconds": 10.240139961242676,
+    "finished": true,
+    "helper": "Ready",
+    "message": "Theme verified on port 9341. Relaunch recovery is armed.",
+    "notice": "Applied Claude \u539f\u751f to Codex and verified the live runtime.",
+    "phase": "idle",
+    "themeID": "claude-warm-paper",
+    "windowCount": 1
+  },
+  "restore": {
+    "activeThemeID": "",
+    "bundlePath": "/Applications/CodexStudio.app",
+    "connection": "offline",
+    "elapsedSeconds": 5.012090086936951,
+    "finished": true,
+    "helper": "Enabled on the next theme apply",
+    "message": "The theme runtime is installed; no theme session is active.",
+    "notice": "Restored the original Codex appearance.",
+    "phase": "idle",
+    "restoring": true,
+    "themeID": "macos-golden-gate-amber-bridge",
+    "windowCount": 1
+  },
+  "watcherRecovery": {
+    "recovered": true,
+    "seconds": 23.11,
+    "sameCodexPid": true,
+    "oldInjector": 56670,
+    "newInjector": 58469,
+    "theme": "macos-golden-gate-amber-bridge"
+  },
+  "relaunchRecovery": {
+    "recovered": true,
+    "oldCodexPid": 82967,
+    "newCodexPid": 60437,
+    "theme": "macos-golden-gate-amber-bridge",
+    "version": "1.9.28",
+    "verifiedAt": "2026-10-17T16:22:36.823Z"
+  },
+  "invalidContentRejected": true,
+  "runtimeTests": {
+    "passed": 34,
+    "failed": 0
+  },
+  "swiftTests": {
+    "executed": 42,
+    "skipped": 2,
+    "failed": 0
+  }
+}

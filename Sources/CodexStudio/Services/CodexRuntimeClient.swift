@@ -112,8 +112,9 @@ struct CodexRuntimeClient: Sendable {
         guard let data = try? Data(contentsOf: stateURL),
               let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
         else {
+            let installed = FileManager.default.isReadableFile(atPath: runtimeRoot.appendingPathComponent("scripts/switch-theme-macos.sh").path)
             return RuntimeStatus(
-                connection: .unavailable,
+                connection: installed ? .offline : .unavailable,
                 activeThemeID: nil,
                 activeThemeName: nil,
                 codexVersion: nil,
@@ -121,7 +122,7 @@ struct CodexRuntimeClient: Sendable {
                 persistenceEnabled: false,
                 lastVerifiedAt: nil,
                 diagnosticLogPath: diagnosticLogURL.path,
-                message: "No managed Codex theme runtime was found."
+                message: installed ? "The theme runtime is installed; no theme session is active." : "No managed Codex theme runtime was found."
             )
         }
 

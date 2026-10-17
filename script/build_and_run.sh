@@ -75,6 +75,9 @@ require_app_stopped "$APP_BINARY"
 
 cd "$ROOT_DIR"
 SWIFT_BUILD=(swift build)
+if [[ -n "${CODEX_STUDIO_SWIFT_PACKAGE_PATH:-}" ]]; then
+  SWIFT_BUILD+=(--package-path "$CODEX_STUDIO_SWIFT_PACKAGE_PATH")
+fi
 if [[ -n "${CODEX_STUDIO_SWIFT_SCRATCH_PATH:-}" ]]; then
   SWIFT_BUILD+=(--scratch-path "$CODEX_STUDIO_SWIFT_SCRATCH_PATH")
 fi

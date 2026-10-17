@@ -87,6 +87,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.regular)
         NSApp.activate(ignoringOtherApps: true)
+        if ProcessInfo.processInfo.arguments.contains("--verify-local-theme-process") || ProcessInfo.processInfo.arguments.contains("--verify-local-restore-process") {
+            Task {
+                let verificationStore = StudioStore()
+                await verificationStore.bootstrap()
+                await LocalThemeVerification.runIfRequested(store: verificationStore)
+            }
+        }
 
         // WindowGroup creates its NSWindow just after the application launch
         // callback. Apply the titlebar treatment again on the next run-loop
