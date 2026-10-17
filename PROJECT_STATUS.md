@@ -1,5 +1,28 @@
 # Codex Studio handoff
 
+## 2026-10-16 — Codex Studio 0.1.30 release preparation
+
+User requested a broader compatibility review and GitHub/Sparkle publication.
+Release includes commits 16e8c70, dd1a9be, 6af858a and 542f2df: native mode label,
+Home rail clipping/backing and ChatGPT 26.1013 footer fade. Static packaged-asset
+review is recorded in docs/compatibility/chatgpt-26.1013.31256.md; no further
+visual regression was established without access to the protected host UI.
+
+Advanced DreamSkin manifest to 1.9.25 so the build mirror refreshes and Studio's
+newer-version installer delivers all CSS changes. Release CI now runs Swift and
+Node runtime tests and requires Chrome so browser checks cannot silently skip.
+Added narrow Home rail scrolling/border-clearance and native-label regression.
+Swift tests pass: 42 executed, 2 optional skips, no failures, using clean scratch
+/tmp/codexstudio-0130-build after the existing Sparkle checkout status stalled.
+The active production Studio process at /Applications/CodexStudio.app is retained.
+All 23 runtime tests pass. Review bundle /tmp/codexstudio-0130-review/CodexStudio.app
+is 0.1.30 / 1030000, strict signature passes, packaged runtime is 1.9.25 and
+task.css matches source exactly. Review app opened on Canvas and recognized
+ChatGPT 26.1013; screenshot/Settings inspection failed when the native UI pipe
+closed. This does not verify the protected ChatGPT conversation surface.
+Version 0.1.30 / build 1030000 is the requested publication target. Hosted release
+verification will be recorded after the signed/notarized workflow completes.
+
 ## 2026-10-16 — ChatGPT 26.1013 composer fade compatibility, local
 
 The supplied screenshot shows a dark horizontal strip above the composer.

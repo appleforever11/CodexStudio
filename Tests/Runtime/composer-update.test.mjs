@@ -57,3 +57,37 @@ test('verification selects the active page after hidden cached home and thread p
     for(const key of ['shell','composer','genericMain','genericInput'])assert.equal(report[key].visible,true,key);
   }finally{await fs.rm(dir,{recursive:true,force:true});}
 });
+
+test('Home rail keeps a narrow project pill reachable and native mode labels visible', {skip: !hasBrowser, timeout:30000}, async () => {
+  const dir=await fs.mkdtemp(path.join(os.tmpdir(),'dreamskin-home-rail-'));
+  try {
+    const accessibility=await fs.readFile(new URL('../../Resources/DreamSkinRuntime/assets/dream-skin/accessibility.css',import.meta.url),'utf8');
+    const page=path.join(dir,'fixture.html');
+    await fs.writeFile(page, `<html data-dream-skin="active"><style>
+body{font:16px system-ui} [data-codex-composer-root]{width:280px}
+[data-composer-rail-item]{background:#333;border-radius:0}
+[data-composer-utility-bar-scroll-area]{overflow-x:auto;margin-inline:-8px;mask-image:linear-gradient(to right,transparent,black 10%);white-space:nowrap}
+button{font:inherit}#project{width:400px;height:32px;border:1px solid orange}
+</style><style>${css}\n${accessibility}</style><body>
+<aside class="app-shell-left-panel"><button id="mode" aria-label="Switch mode, current mode: ChatGPT"><span class="truncate">ChatGPT</span></button></aside>
+<div data-codex-composer-root data-composer-placement="home"><div id="rail" data-composer-rail-item data-composer-rail-placement="above"><div id="scroll" data-composer-utility-bar-scroll-area><button id="project">A long project name that needs horizontal scrolling</button></div></div></div>
+<pre id="report"></pre><script>
+const style=id=>getComputedStyle(document.getElementById(id));
+const scroll=document.getElementById('scroll');scroll.scrollLeft=100;
+const rail=document.getElementById('rail').getBoundingClientRect(),pill=document.getElementById('project').getBoundingClientRect();
+document.getElementById('report').textContent=JSON.stringify({radius:style('rail').borderRadius,overflow:style('rail').overflowX,background:style('rail').backgroundColor,mask:style('scroll').maskImage,margin:style('scroll').marginLeft,scroll:scroll.scrollLeft,topClearance:pill.top-rail.top,bottomClearance:rail.bottom-pill.bottom,label:getComputedStyle(document.querySelector('#mode span')).display,font:style('mode').fontSize,generated:getComputedStyle(document.getElementById('mode'),'::before').content});
+</script></body></html>`);
+    const result=await dumpDOM(browser,['--headless','--disable-gpu','--no-first-run','--disable-background-networking',`--user-data-dir=${dir}/profile`,'--dump-dom',pathToFileURL(page).href]);
+    const report=JSON.parse(result.match(/<pre id="report">([^<]+)<\/pre>/)[1]);
+    assert.equal(report.radius,'16px');
+    assert.equal(report.overflow,'clip');
+    assert.equal(report.background,'rgba(0, 0, 0, 0)');
+    assert.equal(report.mask,'none');
+    assert.equal(report.margin,'0px');
+    assert.ok(report.scroll>0);
+    assert.ok(report.topClearance>=3 && report.bottomClearance>=3);
+    assert.notEqual(report.label,'none');
+    assert.notEqual(report.font,'0px');
+    assert.equal(report.generated,'none');
+  }finally{await fs.rm(dir,{recursive:true,force:true});}
+});

@@ -90,6 +90,9 @@ jobs:
           xcrun swift --version
           xcrun swift package resolve
           swift build --configuration debug
+          swift test
+          test -x "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+          node --test Tests/Runtime/*.test.mjs
           swift build --configuration release
 
       - name: Build signed release archives
