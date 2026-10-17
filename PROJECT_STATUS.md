@@ -1,5 +1,27 @@
 # Codex Studio handoff
 
+## 2026-10-16 — ChatGPT 26.1013 composer fade compatibility, local
+
+The supplied screenshot shows a dark horizontal strip above the composer.
+Read-only inspection of /Applications/ChatGPT.app (26.1013.31256) packaged
+thread-scroll-layout and app-initial assets confirms the decorative footer
+fade now uses CSS-module _background_ / _fade_ classes without the old
+bg-gradient-to-t or bottom-0 selectors. Added a scoped transparent background
+override for the inert module layer within group/thread-scroll-layout. Native
+composer paint, controls, and geometry remain intact.
+
+All 22 runtime tests pass, including the actual new module-class structure,
+combined fade, unchanged fade height and an unrelated fade left intact.
+Installed task.css exactly matches source (SHA256
+ d9c2d806377bddee6bdff2394b468f124372535487637a241c85cd13a606ccb4).
+Previous file saved under CodexDreamSkinStudio/runtime-backups as
+before-thread-fade-20261016-212026.css. Installed runtime remains 1.9.24 plus
+local patches. No Studio rebuild, app replacement, restart, push or release.
+Computer Use denied com.openai.codex inspection; no alternate live UI route
+was used. Existing watcher may reload the saved CSS, but live application and
+visual acceptance are unverified. User should reapply the theme if necessary
+and check the strip in the same chat.
+
 ## 2026-10-04 — Smooth Home project rail corners, local
 
 The above-composer project/computer rail had square lower corners and allowed
