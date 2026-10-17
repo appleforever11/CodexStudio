@@ -23,6 +23,9 @@ struct RuntimeSettingsCard: View {
             SettingsLine(label: "Loopback port", value: store.runtime.port.map(String.init) ?? "—")
             SettingsLine(label: "Studio operation", value: store.runtimePhase.label)
             SettingsLine(label: "Relaunch recovery", value: store.runtime.persistenceEnabled ? "Armed" : "Not armed")
+            SettingsLine(label: "Background helper", value: ThemeHelperService.statusLabel)
+            Button("Manage background activity") { ThemeHelperService.openSettings() }
+                .buttonStyle(.link)
             if let lastVerifiedAt = store.runtime.lastVerifiedAt {
                 SettingsLine(label: "Last verification", value: lastVerifiedAt)
             }

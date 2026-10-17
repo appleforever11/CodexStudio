@@ -74,6 +74,10 @@ source "$ROOT_DIR/script/app_instance.sh"
 require_app_stopped "$APP_BINARY"
 
 cd "$ROOT_DIR"
+SWIFT_BUILD=(swift build)
+if [[ -n "${CODEX_STUDIO_SWIFT_SCRATCH_PATH:-}" ]]; then
+  SWIFT_BUILD+=(--scratch-path "$CODEX_STUDIO_SWIFT_SCRATCH_PATH")
+fi
 if [[ "${CODEX_STUDIO_SKIP_BUILD:-false}" == "true" ]]; then
   BUILD_BINARY="${CODEX_STUDIO_BUILD_BINARY:-$ROOT_DIR/.build/out/Products/Debug/$APP_NAME}"
   [[ -x "$BUILD_BINARY" ]] || {
@@ -81,8 +85,8 @@ if [[ "${CODEX_STUDIO_SKIP_BUILD:-false}" == "true" ]]; then
     exit 1
   }
 else
-  swift build --product "$APP_NAME" --configuration "$BUILD_CONFIGURATION"
-  BUILD_BINARY="$(swift build --show-bin-path --configuration "$BUILD_CONFIGURATION")/$APP_NAME"
+  "${SWIFT_BUILD[@]}" --product "$APP_NAME" --configuration "$BUILD_CONFIGURATION"
+  BUILD_BINARY="$("${SWIFT_BUILD[@]}" --show-bin-path --configuration "$BUILD_CONFIGURATION")/$APP_NAME"
 fi
 
 SPARKLE_FRAMEWORK="${SPARKLE_FRAMEWORK_PATH:-$ROOT_DIR/.build/artifacts/sparkle/Sparkle/Sparkle.xcframework/macos-arm64_x86_64/Sparkle.framework}"
@@ -316,6 +320,35 @@ COPYFILE_DISABLE=1 ditto --norsrc --noextattr --noqtn "$THEMED_LAUNCHER_ICON_FIL
 COPYFILE_DISABLE=1 ditto --norsrc --noextattr --noqtn "$DOCKDOOR_ICON_FILE" "$APP_RESOURCES/CodexThemedLauncherTemplate/Contents/Resources/CodexDarkDockDoor.icns"
 chmod +x "$APP_RESOURCES/CodexThemedLauncherTemplate/Contents/MacOS/CodexThemedLauncher"
 chmod +x "$APP_BINARY"
+
+# Bundle the native event-driven recovery helper before signing the outer app.
+"${SWIFT_BUILD[@]}" --product CodexStudioThemeHelper --configuration "$BUILD_CONFIGURATION"
+HELPER_BINARY="$("${SWIFT_BUILD[@]}" --show-bin-path --configuration "$BUILD_CONFIGURATION")/CodexStudioThemeHelper"
+HELPER_APP="$APP_CONTENTS/Library/LoginItems/CodexStudioThemeHelper.app"
+mkdir -p "$HELPER_APP/Contents/MacOS" "$HELPER_APP/Contents/Resources"
+cp "$HELPER_BINARY" "$HELPER_APP/Contents/MacOS/CodexStudioThemeHelper"
+cp "$ICON_FILE" "$HELPER_APP/Contents/Resources/CodexStudio.icns"
+cat > "$HELPER_APP/Contents/Info.plist" <<'HELPER_PLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>CFBundleIdentifier</key><string>local.kevinhowe.CodexStudio.ThemeHelper</string>
+<key>CFBundleExecutable</key><string>CodexStudioThemeHelper</string>
+<key>CFBundleName</key><string>Codex Studio Theme Helper</string>
+<key>CFBundleDisplayName</key><string>Codex Studio Theme Helper</string>
+<key>CFBundleIconFile</key><string>CodexStudio.icns</string>
+<key>CFBundlePackageType</key><string>APPL</string>
+<key>CFBundleVersion</key><string>1</string>
+<key>LSMinimumSystemVersion</key><string>14.0</string>
+<key>LSBackgroundOnly</key><true/>
+</dict></plist>
+HELPER_PLIST
+if [[ "$SIGNING_IDENTITY" == "-" ]]; then
+  codesign --force --sign - "$HELPER_APP"
+else
+  codesign --force --options runtime --timestamp --sign "$SIGNING_IDENTITY" "$HELPER_APP"
+fi
+
 
 install_name_tool \
   -change "@rpath/Sparkle.framework/Versions/B/Sparkle" \

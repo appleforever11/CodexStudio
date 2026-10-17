@@ -61,7 +61,7 @@ struct CodexRuntimeClient: Sendable {
         // A cold start can spend up to 45 seconds waiting for the official
         // Codex renderer after an update. Keep the UI operation bounded, but
         // do not cut the verified recovery loop off before it can finish.
-        let output = run(script: script, arguments: ["--id", themeID], timeout: 90)
+        let output = run(script: script, arguments: ["--id", themeID], timeout: 150)
         guard output.completed, output.exitCode == 0 else {
             let detail = output.detail.isEmpty ? "The theme switch did not complete." : output.detail
             return ApplyResult(verified: false, message: detail, runtime: readStatus())

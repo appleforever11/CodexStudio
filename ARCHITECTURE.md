@@ -7,7 +7,8 @@
 - **Services** own file access, imports, runtime installation, and process execution. RuntimeProcessRunner uses nonblocking output reads, bounded diagnostic retention, and a termination grace period.
 - **Models** own catalog/release semantics. Filtering is shared across Canvas, Explore, Favorites, and the local library.
 - **Support** owns common visual styles, image caching, diagnostics, and the narrow native-window integration.
-- **DreamSkinRuntime** is a separate Node/shell runtime. Operation tokens prevent stale completion from completing a newer operation.
+- **DreamSkinRuntime** is a separate Node/shell runtime. Operation tokens prevent stale completion from completing a newer operation. Theme switches hold a cross-process lock and retain the previous theme until live verification succeeds.
+- **CodexStudioThemeHelper** is a bundled, signed login item managed through SMAppService. Workspace launch/wake events trigger serialized, bounded recovery probes; a 30-second timer checks health only while Codex is open. The existing shell monitor remains the fallback until native registration and its running process are confirmed. Theme changes update configuration without re-registering the service. Review builds never register the helper.
 
 ## Visual contract
 

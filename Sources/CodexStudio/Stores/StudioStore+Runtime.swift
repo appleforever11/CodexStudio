@@ -5,6 +5,7 @@ import OSLog
 extension StudioStore {
     func applySelectedTheme() {
         guard canApply, let selectedTheme else { return }
+        let helperNotice = ThemeHelperService.prepare()
         let generation = UUID()
         applyGeneration = generation
         let requestedThemeID = selectedTheme.id
@@ -17,13 +18,24 @@ extension StudioStore {
         applyTask?.cancel()
         applyTask = Task { [weak self] in
             guard let self else { return }
+            let progressStarted = Date()
+            let progressTask = Task { [weak self] in
+                while !Task.isCancelled {
+                    if let message = ThemeApplyProgress.message(since: progressStarted) {
+                        guard let self, generation == self.applyGeneration else { return }
+                        self.runtime.message = message
+                    }
+                    try? await Task.sleep(for: .milliseconds(350))
+                }
+            }
             let result = await runtimeClient.apply(themeID: requestedThemeID)
+            progressTask.cancel()
             guard !Task.isCancelled, generation == applyGeneration else { return }
             isApplying = false
             runtime = result.runtime
             runtimePhase = result.verified ? .idle : .failed
             logger.info("Theme apply finished: \(requestedThemeID, privacy: .public), verified=\(result.verified, privacy: .public)")
-            showNotice(result.message)
+            showNotice([result.message, helperNotice].compactMap { $0 }.joined(separator: " "))
         }
     }
 
@@ -69,6 +81,7 @@ extension StudioStore {
             isApplying = false
             runtime = result.runtime
             runtimePhase = result.verified ? .idle : .failed
+            if result.verified { ThemeHelperService.disable() }
             showNotice(result.message)
         }
     }

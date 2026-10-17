@@ -7,12 +7,14 @@ let package = Package(
         .macOS(.v14)
     ],
     products: [
-        .executable(name: "CodexStudio", targets: ["CodexStudio"])
+        .executable(name: "CodexStudio", targets: ["CodexStudio"]),
+        .executable(name: "CodexStudioThemeHelper", targets: ["CodexStudioThemeHelper"])
     ],
     dependencies: [
         .package(url: "https://github.com/sparkle-project/Sparkle.git", exact: "2.9.6")
     ],
     targets: [
+        .executableTarget(name: "CodexStudioThemeHelper", path: "Sources/CodexStudioThemeHelper"),
         .executableTarget(
             name: "CodexStudio",
             dependencies: [

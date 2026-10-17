@@ -1,3 +1,13 @@
+## Theme application lifecycle overhaul — 2026-10-17
+
+Local implementation, runtime 1.9.26. Added a signed, bundled Codex Studio Theme Helper login item registered with SMAppService when applying from the production app. The helper observes Codex launches and system wake, serializes recovery, and checks health every 30 seconds while Codex is open. A verified endpoint reconnects without an app restart; a short startup grace precedes the missing-endpoint restart fallback. Disabled, healthy, closed, busy and failed sessions are left alone. Registration approval is respected; the legacy monitor remains the fallback until registration and the helper process are both confirmed. Theme switches update configuration without re-registering a healthy background service. Restore Original unregisters the native helper.
+
+Theme switches publish progress to Studio rather than sending a macOS notification for each stage. A prior theme snapshot is retained until verification; failed connected applies restore and verify the previous theme without restarting Codex. Failure snapshots remain for diagnosis. The UI operation budget includes time for cold-start recovery. Settings exposes helper status and a Login Items shortcut.
+
+Validation: Swift tests ran 42 tests, two existing opt-in skips, zero failures. All 28 runtime tests passed, plus three new helper recovery tests; after adding startup grace the five apply/helper behavioral tests passed again. The signed review app and nested helper passed strict code-signature verification. Review build: /tmp/codex-studio-helper-review/CodexStudio.app, app version 0.1.29, bundled runtime 1.9.26, review identifier local.kevinhowe.CodexStudio.review. Built with the existing script using an isolated SwiftPM scratch directory because the original dependency checkout's git status stalled. Cached catalog staging is debug-only; this review uses the existing managed theme library.
+
+The review app launched, but native computer-use inspection failed with “Sky Computer Use native pipe closed before response.” Settings visual verification, production SMAppService approval/migration, real apply timing, and launch/wake recovery remain unverified. No installed app/runtime replacement, registration, push, Sparkle change or publication was performed. Do not treat this as a release-ready live acceptance result.
+
 # Codex Studio handoff
 
 ## 2026-10-16 — Codex Studio 0.1.31 published and verified

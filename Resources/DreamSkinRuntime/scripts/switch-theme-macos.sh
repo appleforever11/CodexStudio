@@ -13,10 +13,24 @@ LOCK_TOKEN=""
 APPLY_NOW="true"
 OPERATION_TOKEN=""
 stage=""
+ROLLBACK_DIR=""
+THEME_PUBLISHED="false"
 
 finish_switch() {
   local code="$1"
   [ -z "${stage:-}" ] || /bin/rm -rf "$stage"
+  if [ "$code" -ne 0 ] && [ "$THEME_PUBLISHED" = "true" ] && [ -n "$ROLLBACK_DIR" ]; then
+    printf 'Restoring the previous theme after an unverified switch…\n' >&2
+    # Keep the failed payload for diagnosis. Rename the complete previous
+    # directory back into place before explicitly reinjecting it.
+    /bin/mv "$THEME_DIR" "$ROLLBACK_DIR/failed-theme" &&
+      /bin/mv "$ROLLBACK_DIR/previous" "$THEME_DIR" &&
+      hot_reapply_theme "${PORT:-9341}" 8000 "$OPERATION_TOKEN" &&
+      "$NODE" "$INJECTOR" --verify --port "${PORT:-9341}" --theme-dir "$THEME_DIR" --timeout-ms 10000 >/dev/null &&
+      printf 'Previous theme restored and verified.\n' >&2 ||
+      printf 'Previous theme recovery needs attention; snapshot retained at %s\n' "$ROLLBACK_DIR" >&2
+  fi
+  if [ "$code" -eq 0 ] && [ -n "$ROLLBACK_DIR" ]; then /bin/rm -rf "$ROLLBACK_DIR"; fi
   release_theme_switch_lock
   if [ "$code" -ne 0 ] && [ -n "${OPERATION_TOKEN:-}" ]; then
     write_operation_state failed "$(dreamskin_text theme_switch_unconfirmed)" "$OPERATION_TOKEN" 2>/dev/null || true
@@ -25,6 +39,9 @@ finish_switch() {
   fi
 }
 trap 'finish_switch "$?"' EXIT
+trap 'exit 129' HUP
+trap 'exit 130' INT
+trap 'exit 143' TERM
 
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -102,7 +119,9 @@ fi
 
 progress() {
   printf '%s\n' "$*" >&2
-  notify_user "$*"
+  if [ -n "$OPERATION_TOKEN" ]; then
+    write_operation_state applying "$*" "$OPERATION_TOKEN" || true
+  fi
 }
 
 enable_theme_persistence() {
@@ -169,7 +188,13 @@ THEME_BYTES="$(/usr/bin/stat -f '%z' "$stage/$THEME_IMAGE")"
 SAFE_CSS_NAME=""
 [ ! -f "$stage/theme.css" ] || SAFE_CSS_NAME="theme.css"
 /bin/chmod 600 "$stage/"*
+if [ "$APPLY_NOW" = "true" ] && [ -f "$THEME_DIR/theme.json" ]; then
+  ROLLBACK_DIR="$(/usr/bin/mktemp -d "$STATE_ROOT/.switch-recovery.XXXXXX")"
+  /bin/chmod 700 "$ROLLBACK_DIR"
+  /bin/cp -R "$THEME_DIR" "$ROLLBACK_DIR/previous"
+fi
 progress "$(dreamskin_text publishing_validated_theme)"
+THEME_PUBLISHED="true"
 for entry in "$stage/"*; do
   [ -f "$entry" ] || continue
   [ "$(/usr/bin/basename "$entry")" = "theme.json" ] && continue
@@ -206,15 +231,23 @@ if hot_reapply_theme "$PORT" 8000 "$OPERATION_TOKEN"; then
   "$NODE" "$INJECTOR" --verify --port "$PORT" --theme-dir "$THEME_DIR" --timeout-ms 10000 >/dev/null \
     || fail "Theme injection completed but the visible renderer did not verify the exact active theme."
   enable_theme_persistence
-  progress "$(dreamskin_text skin_applied): ${THEME_NAME}"
+  printf '%s\n' "$(dreamskin_text skin_applied): ${THEME_NAME}" >&2
+  write_operation_state success "$(dreamskin_text skin_applied)" "$OPERATION_TOKEN" || true
   exit 0
+fi
+
+# A live connection with a failed payload is not a reason to restart Codex.
+# Let the EXIT handler restore the previous theme instead.
+if verified_cdp_endpoint "$PORT"; then
+  fail "The connected renderer could not apply the theme; restoring the previous theme."
 fi
 
 # Cold path only when debug port is missing
 progress "$(dreamskin_text restarting_chatgpt_for_apply)"
 if "$SCRIPT_DIR/start-dream-skin-macos.sh" --port "$PORT" --restart-existing; then
   enable_theme_persistence
-  progress "$(dreamskin_text skin_applied): ${THEME_NAME}"
+  printf '%s\n' "$(dreamskin_text skin_applied): ${THEME_NAME}" >&2
+  write_operation_state success "$(dreamskin_text skin_applied)" "$OPERATION_TOKEN" || true
   exit 0
 fi
 

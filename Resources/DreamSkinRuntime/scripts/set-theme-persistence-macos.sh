@@ -42,7 +42,32 @@ trap cleanup_persistence_stage EXIT
 /bin/mv -f "$CONFIG_TEMP" "$THEME_PERSISTENCE_PATH"
 
 USER_DOMAIN="gui/$(/usr/bin/id -u)"
-/bin/launchctl bootout "$USER_DOMAIN/$THEME_PERSISTENCE_JOB_LABEL" >/dev/null 2>&1 || true
+# Native registration owns its lifecycle; theme changes only update config.
+# A marker alone is insufficient: confirm the login item is actually loaded.
+NATIVE_HELPER="false"
+HELPER_PID="$(/bin/cat "$STATE_ROOT/native-theme-helper.pid" 2>/dev/null || true)"
+[ -f "$STATE_ROOT/native-theme-helper" ] || HELPER_PID=""
+case "$HELPER_PID" in
+  ''|*[!0-9]*) ;;
+  *)
+    HELPER_EXEC="$(/bin/ps -p "$HELPER_PID" -o comm= 2>/dev/null || true)"
+    case "$HELPER_EXEC" in
+      */Contents/Library/LoginItems/CodexStudioThemeHelper.app/Contents/MacOS/CodexStudioThemeHelper)
+        NATIVE_HELPER="true" ;;
+    esac ;;
+esac
+if [ "$ENABLED" = "false" ] || [ "$NATIVE_HELPER" = "true" ]; then
+  /bin/launchctl bootout "$USER_DOMAIN/$THEME_PERSISTENCE_JOB_LABEL" >/dev/null 2>&1 || true
+fi
+if [ "$ENABLED" = "true" ] && [ "$NATIVE_HELPER" = "true" ]; then
+  /bin/rm -f "$THEME_PERSISTENCE_AGENT"
+  exit 0
+fi
+# Preserve a healthy legacy job instead of registering it on every switch.
+if [ "$ENABLED" = "true" ] &&
+   /bin/launchctl print "$USER_DOMAIN/$THEME_PERSISTENCE_JOB_LABEL" >/dev/null 2>&1; then
+  exit 0
+fi
 
 if [ "$ENABLED" = "true" ]; then
   [ "$PROJECT_ROOT" = "$INSTALL_ROOT" ] || fail "Install the managed theme runtime before enabling persistence."
