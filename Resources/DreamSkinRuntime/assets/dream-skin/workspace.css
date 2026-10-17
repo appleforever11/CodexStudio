@@ -121,8 +121,11 @@ html[data-dream-skin="active"][data-dream-reading="true"] [data-thread-user-mess
   max-width: min(100%, var(--ds-ui-reading-width)) !important;
 }
 @media (prefers-reduced-transparency: reduce) {
+  html[data-dream-skin="active"][data-dream-workspace-ui="true"] aside.app-shell-left-panel::before,
+  html[data-dream-skin="active"][data-dream-workspace-ui="true"] aside.app-shell-left-panel .sidebar-navigation[class*="_ConversationSidebar_"]::before,
   html[data-dream-skin="active"][data-dream-workspace-ui="true"] :is([data-summary-panel-variant], [data-dream-response]) {
-    background: var(--ds-panel) !important;
+    background: var(--ds-panel, rgb(var(--ds-panel-rgb))) !important;
+    -webkit-backdrop-filter: none !important;
     backdrop-filter: none !important;
   }
 }

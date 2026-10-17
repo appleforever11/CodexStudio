@@ -19,7 +19,6 @@ html[data-dream-workspace-ui="true"] [data-dream-output-card] [data-slot="thread
 html[data-dream-workspace-ui="true"] [data-dream-output-card] img{width:32px!important;height:32px!important;object-fit:cover;border-radius:7px}
 html[data-dream-workspace-ui="true"] [data-dream-output-open]::after{content:'Open';position:static!important;inset:auto!important;background:none!important;font-size:10px;color:var(--ds-muted);flex-shrink:0}
 @media(hover:none){html[data-dream-workspace-ui="true"] [data-app-action-sidebar-thread-row] button[aria-haspopup="menu"]{opacity:1}}
-@media(prefers-reduced-transparency:reduce){html[data-dream-workspace-ui="true"] :is([role="menu"],[cmdk-root],[data-dream-response]){background:var(--ds-panel)!important;backdrop-filter:none!important}}
 
 html[data-dream-workspace-ui="true"] [data-dream-output-reveal]{font:11px system-ui;align-self:flex-end;color:var(--ds-muted);padding:4px 8px;margin-bottom:5px;border-radius:8px;cursor:pointer;background:rgb(var(--ds-text-rgb)/.06)}
 
@@ -29,3 +28,13 @@ html[data-dream-workspace-ui="true"] .thread-scroll-container [data-dream-final-
 /* Keep the native draggable scrollbar, but hide its paint while idle. */
 html[data-dream-auto-hide-sidebar-scrollbar="true"] [data-app-action-sidebar-scroll]{scrollbar-color:transparent transparent!important}
 html[data-dream-auto-hide-sidebar-scrollbar="true"] [data-app-action-sidebar-scroll][data-dream-sidebar-scrolling]{scrollbar-color:rgb(var(--ds-accent-rgb)/.38) transparent!important}
+
+/* Keep direct response backing and search overlays opaque with Reduce Transparency. */
+@media (prefers-reduced-transparency: reduce) {
+  html[data-dream-workspace-ui="true"] :is([role="menu"], [cmdk-root], [role="dialog"]:has(input[placeholder="Search chats"]), [data-dream-response]),
+  html[data-dream-workspace-ui="true"] .thread-scroll-container [data-dream-final-backing] {
+    background: var(--ds-panel, rgb(var(--ds-panel-rgb))) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}

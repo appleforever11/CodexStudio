@@ -28,6 +28,11 @@ const right=document.querySelector('[data-summary-panel-variant]');
 const left=document.querySelector('.sidebar-navigation');
 check(getComputedStyle(right).backgroundImage===getComputedStyle(left,'::before').backgroundImage,'matched glass gradients');
 check(getComputedStyle(right).backdropFilter===getComputedStyle(left,'::before').backdropFilter,'matched glass blur');
+if(reducedTransparency){
+check(getComputedStyle(right).backgroundImage==='none','reduced transparency removes panel gradients');
+check(getComputedStyle(right).backgroundColor==='rgb(55, 45, 35)','reduced transparency uses opaque panel');
+check(getComputedStyle(left,'::before').backdropFilter==='none','reduced transparency removes sidebar blur');
+}
 check(getComputedStyle(right.querySelector('header')).backgroundColor==='rgba(0, 0, 0, 0)','header: '+getComputedStyle(right.querySelector('header')).backgroundColor+' rules '+document.styleSheets.length+' '+[...document.styleSheets].map(s=>s.cssRules.length));
 check(document.querySelectorAll('[data-dream-response]').length===12,'group responses without moving users');
 check(!document.querySelector('[data-dream-response] [data-local-conversation-user-anchor]'),'users outside response backing');

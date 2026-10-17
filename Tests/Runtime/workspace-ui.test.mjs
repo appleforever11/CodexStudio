@@ -8,15 +8,15 @@ import {dumpDOM} from './support/headless-html.mjs';
 import {workspaceDefaults} from '../../Resources/DreamSkinRuntime/scripts/injector/workspace-preferences.mjs';
 const browser=process.env.DREAM_SKIN_TEST_CHROMIUM || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const available=await fs.access(browser).then(()=>true,()=>false);
-test('workspace glass, reading position, navigation and cleanup in Chromium', {skip:!available,timeout:30000},async()=>{
+for (const reduced of [false,true]) test('workspace glass, reading position, navigation and cleanup in Chromium' + (reduced ? ' with reduced transparency' : ''), {skip:!available,timeout:30000},async()=>{
  const root=await fs.mkdtemp(path.join(os.tmpdir(),'workspace-ui-'));
  try {
   const base=new URL('../../Resources/DreamSkinRuntime/assets/',import.meta.url);
   const scripts=await Promise.all(['workspace-controls','workspace-reading','workspace-navigation','workspace'].map(n=>fs.readFile(new URL(`renderer/${n}.js`,base),'utf8')));
-  const css=(await Promise.all(['task','workspace'].map(name=>fs.readFile(new URL(`dream-skin/${name}.css`,base),'utf8')))).join('\n');
+  const css=(await Promise.all(['task','workspace'].map(name=>fs.readFile(new URL(`dream-skin/${name}.css`,base),'utf8')))).join('\n').replace(/@media\s*\(prefers-reduced-transparency:\s*reduce\)/g, reduced ? '@media all' : '@media not all');
   const fixture=await fs.readFile(new URL('./fixtures/workspace.html',import.meta.url),'utf8');
   const file=path.join(root,'fixture.html');
-  await fs.writeFile(file,fixture.replace('<!-- CSS -->',`<style>${css}</style>`).replace('/* SETTINGS */',JSON.stringify(workspaceDefaults)).replace('/* MODULES */',scripts.join('\n')));
+  await fs.writeFile(file,fixture.replace('<!-- CSS -->',`<style>${css}</style>`).replace('/* SETTINGS */',JSON.stringify(workspaceDefaults)).replace('/* MODULES */',scripts.join('\n')+`\nconst reducedTransparency=${reduced};`));
   const output=await dumpDOM(browser,['--headless','--disable-gpu','--no-first-run','--no-default-browser-check','--disable-background-networking',`--user-data-dir=${root}/profile`,'--window-size=1440,900','--virtual-time-budget=2000','--dump-dom',pathToFileURL(file).href]);
   const report=output.match(/<pre id="report">([^<]+)<\/pre>/)?.[1];
   assert.ok(report);assert.deepEqual(JSON.parse(report),{pass:true});

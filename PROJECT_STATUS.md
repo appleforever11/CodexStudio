@@ -1,5 +1,22 @@
 # Codex Studio handoff
 
+## 2026-10-16 — Release gate found reduced-transparency inconsistency
+
+The v0.1.30 workflow 38990941419 failed its newly added browser tests before
+packaging or publication. Workspace equality and Dot translucent-color checks
+assumed normal transparency. Explicitly running both media branches reproduced
+the workspace mismatch locally: summary used an opaque fallback while sidebar
+pseudo-layers retained glass. Extended reduced-transparency rules to both
+sidebar layers, added an RGB fallback, disabled both blur properties, and covered
+late direct response backing and search-dialog surfaces. Dot checks now validate
+the intentionally opaque colors and no blur in the reduced branch.
+
+Tests explicitly activate both media branches in fixture CSS, leaving the host's
+accessibility preferences unchanged. All 26 runtime checks pass, including both modes. The 0.1.31 review bundle
+passes strict signing; version/build and all five changed CSS files match source.
+The failed v0.1.30 tag remains as history; no release/assets/feed were published.
+Final publication target advances to 0.1.31 / 1031000 with runtime 1.9.25.
+
 ## 2026-10-16 — Codex Studio 0.1.30 release preparation
 
 User requested a broader compatibility review and GitHub/Sparkle publication.

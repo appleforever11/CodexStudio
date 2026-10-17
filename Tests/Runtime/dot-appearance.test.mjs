@@ -7,10 +7,10 @@ import {pathToFileURL} from 'node:url';
 import {dumpDOM} from './support/headless-html.mjs';
 const browser = process.env.DREAM_SKIN_TEST_CHROMIUM || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const available = await fs.access(browser).then(() => true, () => false);
-test('Dot bubbles separate roles, clear wrappers, retain rich content and disable cleanly', {skip: !available, timeout: 30000}, async () => {
+for (const reduced of [false,true]) test('Dot bubbles separate roles, clear wrappers, retain rich content and disable cleanly' + (reduced ? ' with reduced transparency' : ''), {skip: !available, timeout: 30000}, async () => {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'dot-appearance-'));
   try {
-    const css = await fs.readFile(new URL('../../Resources/DreamSkinRuntime/assets/dream-skin/dot.css', import.meta.url), 'utf8');
+    const css = await fs.readFile(new URL('../../Resources/DreamSkinRuntime/assets/dream-skin/dot.css', import.meta.url), 'utf8').then(value=>value.replace(/@media\s*\(prefers-reduced-transparency:\s*reduce\)/g, reduced ? '@media all' : '@media not all'));
     const html = `<!doctype html><html data-dream-skin="active" data-dream-workspace-ui="true" data-dream-dot-ui="true"><style>
       body{background:#17191e;color:white;font:16px system-ui;padding:40px}.message-list{width:800px;margin:auto}
       .message-row{display:flex;background:#302820;border:1px solid brown;margin-bottom:0}.message-row.self{justify-content:flex-end}
@@ -23,11 +23,11 @@ test('Dot bubbles separate roles, clear wrappers, retain rich content and disabl
       let checkIndex=0;const check=(v)=>{checkIndex++;if(!v)throw Error('Dot layout assertion failed '+checkIndex)};
       try {
         const dot=document.querySelector('.assistant-bubble'), mine=document.querySelector('.self .message-bubble');
-        const expected=(hex)=>{const e=document.createElement('div');e.style.backgroundColor='color-mix(in srgb, '+hex+' 90%, transparent)';document.body.append(e);const c=getComputedStyle(e).backgroundColor;e.remove();return c};
+        const expected=(hex)=>{const e=document.createElement('div');e.style.backgroundColor=${reduced} ? hex : 'color-mix(in srgb, '+hex+' 90%, transparent)';document.body.append(e);const c=getComputedStyle(e).backgroundColor;e.remove();return c};
         check(getComputedStyle(dot).backgroundColor===expected('#315A89')); check(getComputedStyle(mine).backgroundColor===expected('#414955'));
         const host=document.querySelector('.conversation-viewport');check(getComputedStyle(host).backgroundImage.includes('radial-gradient'));
         check(getComputedStyle(document.querySelector('.messages-scroll')).paddingTop==='112px');
-        check(getComputedStyle(dot).backdropFilter.includes('18px'));
+        check(${reduced} ? getComputedStyle(dot).backdropFilter==='none' : getComputedStyle(dot).backdropFilter.includes('18px'));
         check(getComputedStyle(dot.closest('.message-row')).marginBottom==='14px');
         check(dot.closest('.message-bubble-wrap').getBoundingClientRect().width<680);
         check(getComputedStyle(dot.closest('.message-surface')).backgroundColor==='rgba(0, 0, 0, 0)');

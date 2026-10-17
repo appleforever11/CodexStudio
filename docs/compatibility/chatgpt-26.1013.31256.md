@@ -25,3 +25,9 @@ that manifest changes. Keeping 1.9.24 would strand published CSS changes.
 
 Computer Use denied live inspection of `com.openai.codex`; no alternate UI
 access route was used. The actual ChatGPT window still needs user verification.
+
+The first CI run also exposed a reduced-transparency inconsistency: the summary
+fallback disabled glass while the sidebar retained it. The corrected stylesheet
+makes both side panels opaque, and covers response backing and search overlays.
+Browser tests now exercise both CSS media branches explicitly. Dot expectations
+also distinguish opaque reduced-transparency colors from normal glass colors.
