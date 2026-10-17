@@ -1,5 +1,31 @@
 # Codex Studio handoff
 
+## 2026-10-16 — Codex Studio 0.1.31 published and verified
+
+Published commit a510513 as v0.1.31 through successful release workflow
+38991269997. GitHub latest release and Sparkle latest-download feed both advertise
+0.1.31 / 1031000. Runtime 1.9.25 contains black-strip, mode-label, Home rail and
+reduced-transparency surface corrections. CI ran 42 Swift tests with two optional
+skips and all 26 runtime tests, then built signed arm64 archives, notarized and
+stapled both app and DMG, and generated the signed Sparkle feed.
+
+Independent hosted-download verification in /tmp/codexstudio-0.1.31-verify:
+GitHub asset SHA256 digests match all three downloads; latest and release appcasts
+are byte-identical; enclosure version/build, URL and length match the ZIP. The
+archive's Ed25519 signature verifies against the downloaded app's bundled public
+key. Strict nested signing passes, Gatekeeper accepts as Notarized Developer ID,
+and stapling validates for app and DMG. Executable is arm64 only. Runtime VERSION
+and task.css, composer.css, accessibility.css, workspace.css and direct-workspace.css
+all match the reviewed source. The signed hosted appcast is mirrored in Git.
+
+ZIP SHA256: 80a19f683d971985ecb4b76c2658acf00069a024b8318be989d5fd76234b052a
+DMG SHA256: 2fc5d5c1a766637f95885a3164d4263081ed99d8ae1dfb55c021a66f14d4e837
+Feed SHA256: 8ab892257cc82a31189e69a9a098ac2e8c9b2af8a7e32cf4fee757478fc1aa87
+
+No local production Studio replacement or ChatGPT restart was performed. Live
+ChatGPT visual verification remains blocked by app-access policy; browser fixtures
+and packaged-runtime evidence do not constitute user visual acceptance.
+
 ## 2026-10-16 — Release gate found reduced-transparency inconsistency
 
 The v0.1.30 workflow 38990941419 failed its newly added browser tests before

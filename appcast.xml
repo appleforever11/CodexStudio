@@ -3,25 +3,27 @@
     <channel>
         <title>CodexStudio</title>
         <item>
-            <title>0.1.29</title>
-            <pubDate>Wed, 30 Sep 2026 16:18:54 +0000</pubDate>
+            <title>0.1.31</title>
+            <pubDate>Sat, 17 Oct 2026 01:35:16 +0000</pubDate>
             <link>https://github.com/appleforever11/CodexStudio</link>
-            <sparkle:version>1029000</sparkle:version>
-            <sparkle:shortVersionString>0.1.29</sparkle:shortVersionString>
+            <sparkle:version>1031000</sparkle:version>
+            <sparkle:shortVersionString>0.1.31</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
             <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.29
+            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.31
 
-Customize Your dot with a new dedicated appearance section.
+Compatibility fixes for the latest ChatGPT desktop update.
 
-- Distinct blue Dot bubbles and grey replies, with adjustable colors, spacing and corners.
-- Active wallpaper backgrounds with adjustable dimming and glass softness.
-- A smooth, centered message composer with rounded clipping and clear separation from the conversation.
-- Persistent appearance settings and a live preview in Studio.
+- Remove the dark decorative strip above the conversation composer in ChatGPT 26.1013.
+- Keep the native sidebar mode label from appearing twice.
+- Smooth Home project rail corners and preserve the project pill border and focus ring without a cut-off backing.
+- Respect Reduce Transparency consistently in sidebar, summary, response backing and search surfaces.
+- Update DreamSkin to 1.9.25 so Studio refreshes older installed runtimes and cached build assets.
+- Run Swift and browser runtime regression tests before signed release packaging.
 
-Includes DreamSkin runtime 1.9.24 and preserves existing themes and appearance preferences.
+Existing themes, drafts, favorites and appearance settings are preserved.
 ]]></description>
-            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.29/CodexStudio-0.1.29-arm64.zip" length="11902614" type="application/octet-stream" sparkle:edSignature="M2gkFEmqQvjVQeYhsUTOk58D0X6dh0YW7WhExh/aCvSY2gemWBVh8VtGYLFAGKvCm3zj5cnwETlEXVtJoUOZDA=="/>
+            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.31/CodexStudio-0.1.31-arm64.zip" length="11902928" type="application/octet-stream" sparkle:edSignature="6PjGk5gW23fH9M5/hrwhyU8vm/Rv09eFIFeau/ebxYSBqwkvyLLY0H3EqvRizz1tDhwVEtjY+gH/1W50pO+dBw=="/>
         </item>
     </channel>
 </rss>
