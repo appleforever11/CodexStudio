@@ -10,3 +10,8 @@ Resources/CodexStudio.iconset/
 Resources/ThemePacks/macos-*/background.jpg
 Resources/ThemePacks/ios-*/background.jpg
 Resources/ThemePacks/ipados-*/background.jpg
+
+# Generated Windows transfer bundles contain the user's local-only artwork and
+# a pinned third-party installer. Keep them out of Git; the reproducible recipe
+# and validation tests live in WindowsPort/.
+WindowsPort/output/

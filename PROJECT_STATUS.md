@@ -1,3 +1,39 @@
+## Golden Gate Windows port — 2026-10-20
+
+Built and installed a reproducible Windows port that keeps the Store-signed
+`OpenAI.Codex` package untouched. The port combines the reviewed Codex Dream
+Skin v1.5.21 Windows launch/restore layer with Codex Studio renderer 1.9.28,
+the active Golden Gate theme, and the exact workspace/Dot preferences. The
+builder pins and verifies the upstream installer, keeps local Apple artwork out
+of Git, generates a 19-file hash manifest, and stages timestamped backups.
+
+The Windows PowerShell 5.1 run exposed two upstream StrictMode collection
+unwrapping defects. The generated compatibility copy now wraps free-port,
+process and CDP-target collections before reading `.Count`. Both zero/one CDP
+target cases pass under StrictMode 2.0 on the PC. All 36 local runtime tests pass.
+
+Installed on `DESKTOP-D1E0SMI`: official Codex PID 7720 owns loopback-only
+127.0.0.1:9335 using the managed CDP profile. Installation result reports
+success and verification passed; a separate verifier also exited 0 immediately
+after install. Renderer 1.9.28, theme id
+`preset-macos-golden-gate-amber-bridge`, workspace/Dot settings, and all 16
+installed files match the Final2 manifest. Golden Gate background SHA-256 is
+06767398a8ba5edaa160bffc9b8d78b3c8959d1bae55f6b31501f860eabe2755.
+Rollback backup is under
+`%LOCALAPPDATA%\CodexDreamSkin\golden-gate-backups\20261021-010935` and the
+installed restore shortcut remains available. Temporary scheduled tasks and the
+Mac transfer server were removed/stopped.
+
+Visual inspection through Windows App confirms the Golden Gate artwork, amber
+glass sidebar/chat surfaces, themed messages and composer are visible in the
+Windows Codex window. Compact evidence:
+`~/.codex/visualizations/2026/10/21/01a15be6-6bfd-7bc1-9fa6-b6e41313d228/remote-pc/windows-golden-gate-preview.jpg`.
+A later verifier run on the active non-Home task returned exit 2 because Home
+and suggestion anchors were absent, while renderer/styles and document,
+viewport and structure readiness remained present. Treat the successful
+install-time verification plus visual inspection as current acceptance; a
+fresh Home-route verifier pass remains a useful follow-up, not completed proof.
+
 ## Installed native helper acceptance — 2026-10-17
 
 Installed the signed 0.1.29 local build at /Applications/CodexStudio.app and upgraded the injector to 1.9.28. Registration, warm theme switching, legacy monitor retirement, dead-watcher recovery without a ChatGPT restart, normal-launch theme recovery, Restore Original/unregister, re-register/reapply, invalid-content rejection and final renderer verification passed. Golden Gate is active; final warm reapply took 2.34 seconds. Fixed registration's notFound path, ServiceManagement process identification, incomplete health predicates/dead-watcher detection, and inactive-runtime status text based on the live checks. Strict signing passed. Tests: 34 runtime passed; Swift 42 executed, two existing skips, zero failures.
