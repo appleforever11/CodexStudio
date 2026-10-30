@@ -243,6 +243,10 @@ if [ -z "$INJECTOR_PID" ]; then
 fi
 /bin/sleep 0.15
 /bin/kill -0 "$INJECTOR_PID" 2>/dev/null || fail "The injector exited during startup. See $INJECTOR_ERROR_LOG"
+# The warm endpoint path launches its watcher here rather than in the cold
+# branch. Always record its identity before publishing state used by Pause.
+INJECTOR_STARTED_AT="$(process_started_at "$INJECTOR_PID")"
+[ -n "$INJECTOR_STARTED_AT" ] || fail "Could not record the injector process start time."
 CODEX_PID="$(codex_main_pids | /usr/bin/head -n 1)"
 write_state "$PORT" "$INJECTOR_PID" "$INJECTOR_STARTED_AT" "$CODEX_PID"
 

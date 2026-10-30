@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-29",
+  "baseline": "336a7f88d43a39c45104bdb71d7f16f56ff51994",
+  "runtime": "1.9.29",
+  "bundle": "/tmp/codex-studio-injection-review/CodexStudio.app",
+  "bundleVersion": "0.1.31",
+  "runtimeFilesMatchSourcePackageAndInstalled": {
+    "VERSION": "7ce4ef468e778485c3616d0997d4975fec3f5ad67b3ce1e659a44d83594e01de",
+    "scripts/injector/cdp-session.mjs": "f7910c15eb4699df56521ca02a87c4c798a6d5b73b419b173a44d6a849a42d57",
+    "scripts/injector/watch-runner.mjs": "519fa8318e9e2ff4b05bce1f3565d7e5f0d70aa9d1f595472614e45a753a1a21",
+    "scripts/injector/discovery-signal.mjs": "4f51f1e0d30c6dc42b4f3dd0adc22db01e8f510f18cee02365bff5071237c860",
+    "scripts/start-dream-skin-macos.sh": "611298cb854464ac1bb61e6b16929a5b592ab376fc238abb3cb68c5ab248253d"
+  },
+  "nodeTests": {
+    "passed": 45,
+    "failed": 0
+  },
+  "swiftTests": {
+    "executed": 42,
+    "skipped": 2,
+    "failed": 0
+  },
+  "lifecycle": [
+    {
+      "step": "pause",
+      "exitCode": 0,
+      "seconds": 2.083
+    },
+    {
+      "step": "reapply",
+      "exitCode": 0,
+      "seconds": 2.073
+    },
+    {
+      "step": "verify",
+      "exitCode": 0,
+      "seconds": 1.311
+    }
+  ],
+  "renderers": [
+    {
+      "pass": true,
+      "version": "1.9.29",
+      "themeId": "macos-golden-gate-amber-bridge",
+      "visibility": "visible",
+      "checks": {
+        "documentVisible": true,
+        "fallbackWindowPass": true,
+        "nativeWindowPass": false,
+        "payloadPass": true,
+        "structurePass": true,
+        "viewportPass": true,
+        "windowPass": true
+      }
+    }
+  ],
+  "chatgptVersion": "26.1027.30824",
+  "sameChatgptProcess": true,
+  "activeTheme": "macos-golden-gate-amber-bridge",
+  "watcherIdentityComplete": true,
+  "rollback": "/Users/kevinhowe/.codex/codex-dream-skin-studio.before-injection-20261029",
+  "limits": [
+    "No new-window timing benchmark; Owl rejects Target.createTarget",
+    "No sleep, logout, reboot, or host-update test",
+    "Native computer-use visual access to ChatGPT blocked; live renderer verifier used",
+    "Idle inventory reduction is calculated from timer intervals, not CPU profiling"
+  ]
+}

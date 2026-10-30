@@ -1,3 +1,4 @@
+import { createDiscoverySignal, ensureTargetDiscovery } from "./discovery-signal.mjs";
 import { installOutputActions } from "./output-actions.mjs";
 import { connectTarget, listVerifiedTargets, waitForCodexProbe } from "./cdp-session.mjs";
 import {
@@ -44,8 +45,10 @@ export async function runWatch(options) {
   let wakeControlWait = null;
   const targetSetup = createTargetSetupTracker();
   const early = createEarlyScriptManager();
+  const discovery = createDiscoverySignal();
 
   const wakeControlLoop = () => {
+    discovery.wake();
     const wake = wakeControlWait;
     wakeControlWait = null;
     wake?.();
@@ -245,6 +248,7 @@ export async function runWatch(options) {
         continue;
       }
 
+      const discoveryRevision = discovery.revision;
       let targets = [];
       try {
         targets = await listVerifiedTargets(options.port);
@@ -254,7 +258,7 @@ export async function runWatch(options) {
           console.error(`[dream-skin] ${new Date().toISOString()} ${error.message}`);
           lastListErrorAt = Date.now();
         }
-        await new Promise((resolve) => setTimeout(resolve, discoveryDelayMs));
+        await discovery.wait(discoveryDelayMs, discoveryRevision);
         discoveryDelayMs = Math.min(500, Math.round(discoveryDelayMs * 1.6));
         continue;
       }
@@ -417,8 +421,11 @@ export async function runWatch(options) {
         await writeModeAck(options.operationAck, cycleRecovery.token, "full");
         pauseRecovery = null;
       }
-      const pollDelay = sessions.size ? 800 : (targets.length ? 250 : 100);
-      await new Promise((resolve) => setTimeout(resolve, pollDelay));
+      const eventDiscovery = !controlOnly && await ensureTargetDiscovery(
+        sessions.values(), () => discovery.wake(),
+      );
+      const pollDelay = eventDiscovery ? 4000 : sessions.size ? 800 : (targets.length ? 250 : 100);
+      await discovery.wait(pollDelay, discoveryRevision);
     }
   } finally {
     if (reloadTimer) clearTimeout(reloadTimer);

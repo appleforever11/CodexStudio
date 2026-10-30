@@ -1,3 +1,13 @@
+## Runtime discovery and warm-launch reliability — 2026-10-29
+
+Implemented and installed external runtime 1.9.29 after a source comparison with Codex Styler and CC Theme. Added event-triggered target discovery with leader handoff and four-second recovery polling (800 ms fallback on unsupported hosts), concurrent CDP domain setup, prompt handshake cleanup, bounded navigation-context retries, and complete watcher identity on the warm-launch path. Existing operation tokens, rollback, semantic target admission, and verification gates remain in force.
+
+Validation: 45 runtime tests passed. Swift compiled and ran 42 tests with two existing optional skips and zero failures using an isolated copy of local revision 336a7f8 because iCloud-backed Git/artifact reads stalled. Staged signed review bundle: /tmp/codex-studio-injection-review/CodexStudio.app, version 0.1.31, review identifier local.kevinhowe.CodexStudio.review. Source, packaged and installed runtime files match; the review app's Canvas showed the current Golden Gate selection and connected host before it was closed.
+
+Live final acceptance: pause 2.083 s, reapply 2.073 s, independent visible-renderer verification 1.311 s, all successful. Golden Gate remains active on ChatGPT 26.1027.30824; watcher identity is complete and discovery events are enabled. An initial hidden-main-window failure was resolved by showing the main window; verification checks were not weakened. Warm launch exposed and now fixes a missing watcher start time that prevented safe pause. Official ChatGPT PID 6902 stayed running; executable/asar hashes match before and after and strict signature checks passed. The installed Studio app was not replaced. Full previous runtime: ~/.codex/codex-dream-skin-studio.before-injection-20261029.
+
+Comparison and evidence: [runtime comparison](docs/qa/injection-runtime-comparison-2026-10-29.md), [acceptance JSON](docs/qa/injection-runtime-2026-10-29.json). Idle polling reduction is a timer calculation (75 to 15 requests/minute), not a CPU/battery or end-to-end speed benchmark. New-window timing, sleep/reboot/login and host-update recovery remain untested. No push, release, or Sparkle publication.
+
 ## Golden Gate Windows port — 2026-10-20
 
 Built and installed a reproducible Windows port that keeps the Store-signed

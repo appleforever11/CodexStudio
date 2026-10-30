@@ -44,15 +44,24 @@ export class CdpSession {
 
   async open() {
     await new Promise((resolve, reject) => {
-      const timeout = setTimeout(() => {
-        try { this.ws.close(); } catch {}
-        reject(new Error("CDP WebSocket open timed out"));
-      }, 5000);
-      this.ws.addEventListener("open", () => { clearTimeout(timeout); resolve(); }, { once: true });
-      this.ws.addEventListener("error", () => {
+      const cleanup = () => {
         clearTimeout(timeout);
-        reject(new Error("CDP WebSocket open failed"));
-      }, { once: true });
+        this.ws.removeEventListener("open", opened);
+        this.ws.removeEventListener("error", failed);
+        this.ws.removeEventListener("close", closed);
+      };
+      const opened = () => { cleanup(); resolve(); };
+      const fail = (message) => {
+        cleanup();
+        this.close();
+        reject(new Error(message));
+      };
+      const failed = () => fail("CDP WebSocket open failed");
+      const closed = () => fail("CDP WebSocket closed before opening");
+      const timeout = setTimeout(() => fail("CDP WebSocket open timed out"), 5000);
+      this.ws.addEventListener("open", opened, { once: true });
+      this.ws.addEventListener("error", failed, { once: true });
+      this.ws.addEventListener("close", closed, { once: true });
     });
     this.ws.addEventListener("message", (event) => this.onMessage(event));
     this.ws.addEventListener("error", () => this.close());
@@ -64,8 +73,12 @@ export class CdpSession {
       }
       this.pending.clear();
     });
-    await this.send("Runtime.enable");
-    await this.send("Page.enable");
+    try {
+      await Promise.all([this.send("Runtime.enable"), this.send("Page.enable")]);
+    } catch (error) {
+      this.close();
+      throw error;
+    }
     return this;
   }
 
@@ -162,7 +175,7 @@ async function listAppTargets(port) {
   return targets.filter((item) => isValidCdpPageTarget(item, port));
 }
 
-async function probeSession(session) {
+async function probeSession(session, timeoutMs = 10000) {
   return session.evaluate(`(() => {
     const initialRoute = new URLSearchParams(String(location.search || '')).get('initialRoute') || '';
     const pathname = String(location.pathname || '');
@@ -192,16 +205,21 @@ async function probeSession(session) {
       codex: !excludedPetSurface && location.protocol === 'app:' &&
         ((markers.shell && markers.sidebar) || settings || markers.main || markers.generic),
     };
-  })()`);
+  })()`, timeoutMs);
 }
 
 export async function waitForCodexProbe(session, timeoutMs = 1800) {
   const deadline = Date.now() + timeoutMs;
   let probe = null;
   while (Date.now() < deadline) {
-    probe = await probeSession(session);
+    try {
+      probe = await probeSession(session, Math.max(1, deadline - Date.now()));
+    } catch (error) {
+      const transient = /execution context.*(destroyed|not found)|cannot find context|inspected target navigated/i.test(error.message);
+      if (session.closed || !transient) throw error;
+    }
     if (probe?.codex) return probe;
-    await new Promise((resolve) => setTimeout(resolve, 50));
+    await new Promise((resolve) => setTimeout(resolve, Math.min(50, Math.max(0, deadline - Date.now()))));
   }
   return probe;
 }
