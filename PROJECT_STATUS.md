@@ -1,3 +1,17 @@
+## Thread footer fade compatibility — 2026-11-03
+
+Read-only inspection of the running ChatGPT renderer confirmed a visible inert
+`background-uNUrfY fade-AcMqqj` layer still drawing a dark gradient above the
+composer. Runtime 1.9.30 extends the existing scoped footer override to the new
+`background-HASH` module naming while retaining legacy support, thread scope,
+aria-hidden, positioning and surface constraints. Added the actual new class
+shape to the composer browser regression fixture. Installed runtime remains
+1.9.29; no installation replacement or live style mutation was performed.
+
+Validation: all 45 runtime tests passed with no skips or failures, including
+the Chromium composer checks. No rebuilt app or live visual acceptance is
+claimed; the installed layer has not changed.
+
 ## Runtime discovery and warm-launch reliability — 2026-10-29
 
 Implemented and installed external runtime 1.9.29 after a source comparison with Codex Styler and CC Theme. Added event-triggered target discovery with leader handoff and four-second recovery polling (800 ms fallback on unsupported hosts), concurrent CDP domain setup, prompt handshake cleanup, bounded navigation-context retries, and complete watcher identity on the warm-launch path. Existing operation tokens, rollback, semantic target admission, and verification gates remain in force.

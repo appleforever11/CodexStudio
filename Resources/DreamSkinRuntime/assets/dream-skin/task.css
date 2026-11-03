@@ -781,10 +781,11 @@ html[data-dream-skin="active"][data-dream-art-wide="true"] aside.app-shell-left-
 
 /* ChatGPT 26.1013 moved the thread footer fade into a CSS module. Its fade
    has neither bottom-0 nor bg-gradient-to-t; match the inert module layer
-   inside the thread layout, including the combined legacy variant. */
+   inside the thread layout, including the combined legacy variant. Newer builds use background-HASH
+   instead of _background_HASH; retain the inert-layer and thread scopes. */
 html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface, [data-app-shell-main-surface], [class*="_MainContentSurface_"])
   [class~="group/thread-scroll-layout"]
-  [aria-hidden="true"][class~="pointer-events-none"][class~="absolute"][class~="z-0"][class*="_background_"]:is([class~="from-surface"], [class~="bg-surface"]) {
+  [aria-hidden="true"][class~="pointer-events-none"][class~="absolute"][class~="z-0"]:is([class*="_background_"], [class^="background-"], [class*=" background-"]):is([class~="from-surface"], [class~="bg-surface"]) {
   background: transparent !important;
   background-image: none !important;
 }
