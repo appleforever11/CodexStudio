@@ -1,3 +1,18 @@
+## Installed footer fade fix verified — 2026-11-03
+
+Installed runtime 1.9.30 from the reviewed source with every staged file
+hash-checked before replacement. Retained the full previous runtime at
+`~/.codex/codex-dream-skin-studio.before-border-20261103-175932`.
+Hot reapply completed without restarting ChatGPT. Independent renderer
+verification passed on the visible thread with runtime 1.9.30, Golden Gate
+`macos-golden-gate-amber-bridge`, revision `aeb5fc029a15c8f94297`.
+The actual `background-uNUrfY fade-AcMqqj` layer now has transparent background
+and no background image, retaining its original 35.195px height. Composer and
+sidebar remain visible; no viewport overflow was reported. Visual inspection
+of `/tmp/codex-studio-border-after.jpg` confirms the black strip above the
+composer is gone; original capture `/tmp/codex-studio-border-after.png`.
+No Studio application replacement, official app modification, or publication.
+
 ## Thread footer fade compatibility — 2026-11-03
 
 Read-only inspection of the running ChatGPT renderer confirmed a visible inert
