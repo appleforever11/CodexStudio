@@ -3,27 +3,22 @@
     <channel>
         <title>CodexStudio</title>
         <item>
-            <title>0.1.31</title>
-            <pubDate>Sat, 17 Oct 2026 01:35:16 +0000</pubDate>
+            <title>0.1.32</title>
+            <pubDate>Thu, 05 Nov 2026 14:52:01 +0000</pubDate>
             <link>https://github.com/appleforever11/CodexStudio</link>
-            <sparkle:version>1031000</sparkle:version>
-            <sparkle:shortVersionString>0.1.31</sparkle:shortVersionString>
+            <sparkle:version>1032000</sparkle:version>
+            <sparkle:shortVersionString>0.1.32</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
             <sparkle:hardwareRequirements>arm64</sparkle:hardwareRequirements>
-            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.31
+            <description sparkle:format="markdown"><![CDATA[# Codex Studio 0.1.32
 
-Compatibility fixes for the latest ChatGPT desktop update.
+I fixed the dark horizontal strip above the chat composer after recent ChatGPT updates. The theme now recognizes both the older and newer footer fade classes while preserving the composer layout and controls.
 
-- Remove the dark decorative strip above the conversation composer in ChatGPT 26.1013.
-- Keep the native sidebar mode label from appearing twice.
-- Smooth Home project rail corners and preserve the project pill border and focus ring without a cut-off backing.
-- Respect Reduce Transparency consistently in sidebar, summary, response backing and search surfaces.
-- Update DreamSkin to 1.9.25 so Studio refreshes older installed runtimes and cached build assets.
-- Run Swift and browser runtime regression tests before signed release packaging.
+This release includes runtime 1.9.30, with theme recovery and window discovery improvements. The black-strip fix passed all 45 runtime tests and was verified in the live ChatGPT window with Golden Gate active.
 
-Existing themes, drafts, favorites and appearance settings are preserved.
+After updating Codex Studio, apply your current theme to refresh ChatGPT. Existing themes and library content are preserved.
 ]]></description>
-            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.31/CodexStudio-0.1.31-arm64.zip" length="11902928" type="application/octet-stream" sparkle:edSignature="6PjGk5gW23fH9M5/hrwhyU8vm/Rv09eFIFeau/ebxYSBqwkvyLLY0H3EqvRizz1tDhwVEtjY+gH/1W50pO+dBw=="/>
+            <enclosure url="https://github.com/appleforever11/CodexStudio/releases/download/v0.1.32/CodexStudio-0.1.32-arm64.zip" length="14367561" type="application/octet-stream" sparkle:edSignature="y+3M11x7sdwrCw0A3dAMS5zWlHvYWDeOZ99E8EPziOr8faz+Xmoufigx9mqbP9FfCLROM/BmKPrIB8Jj5AlZAQ=="/>
         </item>
     </channel>
 </rss>

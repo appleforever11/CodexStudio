@@ -1,3 +1,24 @@
+## Codex Studio 0.1.32 published and verified — 2026-11-05
+
+Published source 96631ad as v0.1.32 through successful release workflow
+42048454562. GitHub latest release and the installed app's latest-download
+Sparkle endpoint advertise 0.1.32 / 1032000. Includes runtime 1.9.30 and the
+verified footer fade compatibility fix. CI ran 42 Swift tests with two existing
+skips and no failures, and all 45 runtime tests passed.
+
+Independent hosted-download checks in `/tmp/codexstudio-0132-verify` verified
+GitHub SHA-256 asset digests for ZIP, DMG and appcast; latest and release feeds
+are byte-identical. Feed version/build and enclosure length match the download.
+The archive Ed25519 signature verifies against the downloaded app's bundled
+public key. Strict nested signing passes; Gatekeeper accepts the app as
+Notarized Developer ID, and app/DMG stapling validates. Downloaded runtime is
+1.9.30 and task.css is byte-identical to the reviewed source fix. The signed
+hosted feed is mirrored in appcast.xml.
+
+Release: https://github.com/appleforever11/CodexStudio/releases/tag/v0.1.32
+No Mac mini installation or remote launch was performed. On that Mac, update
+Codex Studio through Check for Updates, open it, then apply the current theme.
+
 ## Installed footer fade fix verified — 2026-11-03
 
 Installed runtime 1.9.30 from the reviewed source with every staged file
