@@ -1,3 +1,13 @@
+## ChatGPT 26.1111.21308 footer fix confirmed — 2026-11-14
+
+The live renderer reported both the gradient and solid band on the
+transcript-aligned footer pseudo-elements. The scoped stylesheet override
+clears both paints while retaining the footer layout. Kevin confirmed the
+strip disappeared in the affected chat after applying the updated stylesheet.
+Runtime 1.9.31 and release notes for 0.1.33 are prepared. The installed
+runtime still reports 1.9.30 with the verified CSS copied in. Git staging
+in this workspace fails because the Git index lock cannot be created.
+
 ## Codex Studio 0.1.32 published and verified — 2026-11-05
 
 Published source 96631ad as v0.1.32 through successful release workflow

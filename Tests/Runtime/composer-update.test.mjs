@@ -14,24 +14,30 @@ test('26.928 home wrappers and solid thread backdrop retain one composer surface
     const page = path.join(dir, 'fixture.html');
     await fs.writeFile(page, `<html data-dream-skin="active" data-dream-art-wide="true"><style>
 ._fade_106nk_2,._combined_106nk_2,.fade-AcMqqj {height:32px;background-image:linear-gradient(to top,black,transparent)}
+.footer-A8ZvKV::before {content:"";background-image:linear-gradient(transparent,black)}
+.footer-A8ZvKV::after {content:"";background-color:black}
+.footer-GAkOsO:has([data-thread-focus-mode]) {background-color:rgb(54,54,54)}
 [data-composer-body],.bg-surface {background:rgb(54,54,54)}
 [data-composer-body]{height:98px}[data-thread-scroll-footer]{position:relative;height:114px}
 </style><style>${css}</style><body><main data-app-shell-main-surface="default"><div class="group/thread-scroll-layout"><div id="modern-module-fade" aria-hidden="true" class="background-uNUrfY fade-AcMqqj pointer-events-none absolute z-0 inset-x-0 from-surface"></div><div id="module-fade" aria-hidden="true" class="_background_106nk_2 _fade_106nk_2 pointer-events-none absolute inset-x-0 z-0 from-surface"></div><div id="module-combined" aria-hidden="true" class="_background_106nk_2 _combined_106nk_2 pointer-events-none absolute inset-x-0 z-0 bottom-0 from-surface"></div></div><div id="outside-module" aria-hidden="true" class="_background_106nk_2 _fade_106nk_2 pointer-events-none absolute z-0 from-surface"></div><div class="thread-scroll-container"><div class="pointer-events-none sticky bottom-0"><div id="fade" class="pointer-events-none absolute z-0 bg-gradient-to-t from-surface" style="background-image:linear-gradient(black,transparent)"></div></div></div>
 <div id="legacy" class="_ComposerLayoutRoot_old" data-composer-utility-bar-variant="home"><div data-composer-body class="_ComposerLayoutBody_old"></div></div>
 <div id="modern" class="_ComposerLayoutRoot_new" data-composer-utility-bar-variant="home"><div class="relative"><div class="relative"><div data-composer-body class="_ComposerLayoutBody_new"><textarea></textarea><button id="home-control" class="bg-surface">Model</button></div></div></div></div>
-<div data-thread-scroll-footer><div id="backdrop" class="pointer-events-none absolute inset-x-0 -top-8 z-0 bottom-0 mt-8 bg-surface"></div><div class="relative z-10"><div id="thread" class="_ComposerLayoutRoot_new"><div data-composer-body><button id="thread-control" class="bg-surface">Send</button></div></div></div></div>
+<div id="focus-footer" data-thread-scroll-footer class="footer-GAkOsO"><div id="backdrop" class="pointer-events-none absolute inset-x-0 -top-8 z-0 bottom-0 mt-8 bg-surface"></div><div class="relative z-10"><div id="thread" class="_ComposerLayoutRoot_new" data-thread-focus-mode><div data-composer-body><button id="thread-control" class="bg-surface">Send</button></div></div></div></div>
+<div id="transcript-footer" class="footer-A8ZvKV shiftWithTranscript-HwFV6s pointer-events-none absolute inset-x-0 z-20 bottom-0"></div>
 <div id="unrelated" class="pointer-events-none absolute z-0 bg-surface"></div>
 </main><pre id="report"></pre><script>
 const bg=id=>getComputedStyle(document.getElementById(id)).backgroundColor;
 const body=id=>getComputedStyle(document.querySelector('#'+id+' [data-composer-body]')).backgroundColor;
-document.getElementById('report').textContent=JSON.stringify({legacy:body('legacy'),modern:body('modern'),backdrop:bg('backdrop'),homeControl:bg('home-control'),threadControl:bg('thread-control'),unrelated:bg('unrelated'),fade:getComputedStyle(document.getElementById('fade')).backgroundImage,modernModuleFade:getComputedStyle(document.getElementById("modern-module-fade")).backgroundImage,moduleFade:getComputedStyle(document.getElementById("module-fade")).backgroundImage,moduleCombined:getComputedStyle(document.getElementById("module-combined")).backgroundImage,outsideModule:getComputedStyle(document.getElementById("outside-module")).backgroundImage,moduleHeight:document.getElementById("module-fade").getBoundingClientRect().height,surface:bg('modern'),height:document.querySelector('#modern [data-composer-body]').getBoundingClientRect().height});
+document.getElementById('report').textContent=JSON.stringify({legacy:body('legacy'),modern:body('modern'),backdrop:bg('backdrop'),focusFooter:bg('focus-footer'),footerGradient:getComputedStyle(document.getElementById('transcript-footer'),'::before').backgroundImage,footerBand:getComputedStyle(document.getElementById('transcript-footer'),'::after').backgroundColor,homeControl:bg('home-control'),threadControl:bg('thread-control'),unrelated:bg('unrelated'),fade:getComputedStyle(document.getElementById('fade')).backgroundImage,modernModuleFade:getComputedStyle(document.getElementById("modern-module-fade")).backgroundImage,moduleFade:getComputedStyle(document.getElementById("module-fade")).backgroundImage,moduleCombined:getComputedStyle(document.getElementById("module-combined")).backgroundImage,outsideModule:getComputedStyle(document.getElementById("outside-module")).backgroundImage,moduleHeight:document.getElementById("module-fade").getBoundingClientRect().height,surface:bg('modern'),height:document.querySelector('#modern [data-composer-body]').getBoundingClientRect().height});
 </script></body></html>`);
     const result = await dumpDOM(browser, ['--headless','--disable-gpu','--no-first-run','--disable-background-networking',`--user-data-dir=${dir}/profile`,'--dump-dom',pathToFileURL(page).href]);
     const report = JSON.parse(result.match(/<pre id="report">([^<]+)<\/pre>/)[1]);
-    for (const name of ['legacy','modern','backdrop']) assert.equal(report[name], 'rgba(0, 0, 0, 0)', name);
+    for (const name of ['legacy','modern','backdrop','focusFooter']) assert.equal(report[name], 'rgba(0, 0, 0, 0)', name);
     for (const name of ['homeControl','threadControl','unrelated']) assert.equal(report[name], 'rgb(54, 54, 54)', name);
     assert.notEqual(report.surface, 'rgba(0, 0, 0, 0)');
     assert.equal(report.height, 98);
+    assert.equal(report.footerGradient, 'none');
+    assert.equal(report.footerBand, 'rgba(0, 0, 0, 0)');
     assert.equal(report.fade, 'none');
     assert.equal(report.moduleFade, 'none');
     assert.equal(report.modernModuleFade, 'none');
