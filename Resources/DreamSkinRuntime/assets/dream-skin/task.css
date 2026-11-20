@@ -856,3 +856,10 @@ html[data-dream-skin="active"][data-dream-art-wide="true"]:not([dir="rtl"]) asid
   right: -28px !important;
   mask-image: linear-gradient(to right, black calc(100% - 48px), transparent) !important;
 }
+
+/* Fade only the decorative top shading where it meets the sidebar. */
+html[data-dream-skin="active"][data-dream-art-wide="true"]
+  [data-app-shell-sidebar-open="true"] main[data-app-shell-main-surface]
+  [class~="pointer-events-none"][class~="inset-x-0"][class*="--app-shell-content-fade-height"] {
+  mask-image: linear-gradient(to right, transparent, black 52px);
+}
