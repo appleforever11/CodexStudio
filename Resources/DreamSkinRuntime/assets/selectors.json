@@ -18,7 +18,7 @@
     },
     {
       "key": "header-tint",
-      "selector": "header:is(.app-header-tint, [data-app-shell-header-edge-scroll], [class*=\"_Header_\"])",
+      "selector": ":is(header:is(.app-header-tint, [data-app-shell-header-edge-scroll], [class*=\"_Header_\"]), [data-app-shell-main-titlebar])",
       "tier": "L1",
       "scope": "all",
       "required": true

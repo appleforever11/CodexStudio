@@ -1,3 +1,7 @@
+## ChatGPT 26.1117.31558 theme compatibility verified — 2026-11-20
+
+Golden Gate applied on the local Mac with runtime 1.9.32. The main title bar matched the updated selector, the renderer passed verification, and the artwork was visible behind the conversation and sidebar after clearing the new shell backing. All 45 runtime tests passed.
+
 ## ChatGPT 26.1111.21308 footer fix confirmed — 2026-11-14
 
 The live renderer reported both the gradient and solid band on the

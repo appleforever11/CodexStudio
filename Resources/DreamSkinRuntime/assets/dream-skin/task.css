@@ -803,3 +803,15 @@ html[data-dream-skin="active"][data-dream-art-wide="true"] main:is(.main-surface
   background: transparent !important;
   background-image: none !important;
 }
+
+/* ChatGPT 26.1117 paints a window-sized frame above the body artwork. */
+html[data-dream-skin="active"][data-dream-art-wide="true"]:is(
+  :has(main[data-app-shell-main-surface] [role="main"]),
+  [data-dream-task-mode="full"], [data-dream-task-mode="ambient"], [data-dream-task-mode="banner"]
+) :is(
+  [data-app-shell-frame]:has(main[data-app-shell-main-surface]),
+  [data-app-shell-workspace] > [data-app-shell-surface-backing],
+  .macos-window-backdrop[inert]
+) {
+  background: transparent !important;
+}
