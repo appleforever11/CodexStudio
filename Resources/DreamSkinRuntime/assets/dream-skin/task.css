@@ -844,3 +844,15 @@ html[data-dream-skin="active"][data-dream-art-wide="true"] header[data-app-shell
   z-index: 41 !important;
   background: transparent !important;
 }
+
+/* The native surface backing draws a rounded inset hairline at the
+   sidebar/title junction even when its background is transparent. */
+html[data-dream-skin="active"][data-dream-art-wide="true"]
+  [data-app-shell-workspace] > [data-app-shell-surface-backing]::after {
+  box-shadow: none !important;
+}
+
+html[data-dream-skin="active"][data-dream-art-wide="true"]:not([dir="rtl"]) aside.app-shell-left-panel[data-ds-part="sidebar"]::before {
+  right: -28px !important;
+  mask-image: linear-gradient(to right, black calc(100% - 48px), transparent) !important;
+}
