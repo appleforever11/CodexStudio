@@ -853,7 +853,9 @@ html[data-dream-skin="active"][data-dream-art-wide="true"]
 }
 
 html[data-dream-skin="active"][data-dream-art-wide="true"]:not([dir="rtl"]) aside.app-shell-left-panel[data-ds-part="sidebar"]::before {
-  right: -28px !important;
+  /* Start the 48px fade 4px beyond the sidebar content. */
+  right: -52px !important;
+  pointer-events: none !important;
   mask-image: linear-gradient(to right, black calc(100% - 48px), transparent) !important;
 }
 
