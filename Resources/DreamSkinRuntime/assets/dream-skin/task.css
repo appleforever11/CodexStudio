@@ -860,6 +860,8 @@ html[data-dream-skin="active"][data-dream-art-wide="true"]
   inset-block: 0;
   inset-inline-start: 0;
   width: 60px;
+  /* The legacy home-screen decoration rotates this same pseudo-element. */
+  transform: none !important;
   pointer-events: none;
   z-index: 0;
   background: rgb(var(--ds-bg-rgb) / max(.78, var(--ds-ui-sidebar-dim, 0)));
