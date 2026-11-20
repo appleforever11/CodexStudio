@@ -837,3 +837,7 @@ html[data-dream-skin="active"][data-dream-art-wide="true"] [data-app-shell-main-
   border: 0 !important;
   box-shadow: none !important;
 }
+
+html[data-dream-skin="active"][data-dream-art-wide="true"] header[data-app-shell-titlebar]:has([data-app-shell-main-titlebar]) {
+  background: linear-gradient(to bottom, rgb(var(--ds-bg-rgb) / .76), rgb(var(--ds-bg-rgb) / .45)) !important;
+}
