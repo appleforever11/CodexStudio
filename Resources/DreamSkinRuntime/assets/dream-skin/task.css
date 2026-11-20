@@ -820,7 +820,7 @@ html[data-dream-skin="active"][data-dream-art-wide="true"]:is(
 html[data-dream-skin="active"][data-dream-art-wide="true"] aside.app-shell-left-panel[data-ds-part="sidebar"]::before {
   background: rgb(var(--ds-bg-rgb) / max(.78, var(--ds-ui-sidebar-dim, 0))) !important;
   mask-image: none !important;
-  inset: 0 !important;
+  inset: calc(-1 * var(--app-shell-titlebar-height, 0px)) 0 0 !important;
   border-radius: 0 !important;
   box-shadow: none !important;
 }
@@ -839,5 +839,8 @@ html[data-dream-skin="active"][data-dream-art-wide="true"] [data-app-shell-main-
 }
 
 html[data-dream-skin="active"][data-dream-art-wide="true"] header[data-app-shell-titlebar]:has([data-app-shell-main-titlebar]) {
-  background: linear-gradient(to bottom, rgb(var(--ds-bg-rgb) / .76), rgb(var(--ds-bg-rgb) / .45)) !important;
+  /* The sidebar glass now continues behind the traffic lights. Place the
+     native controls above it and leave the title row clear. */
+  z-index: 41 !important;
+  background: transparent !important;
 }
