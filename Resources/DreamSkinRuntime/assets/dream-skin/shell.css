@@ -402,3 +402,12 @@ html[data-dream-skin="active"] main:is(.main-surface, [data-app-shell-main-surfa
   background: transparent !important;
   scrollbar-color: rgb(var(--ds-accent-rgb) / .38) transparent;
 }
+
+/* The session row owns the highlight. Its nested title button shares the
+   current-page state and supplies the full-row keyboard focus indicator. */
+html[data-dream-skin="active"] aside.app-shell-left-panel
+  [data-app-action-sidebar-thread-row] button[data-interactive-row-button]:has([data-thread-title]) {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
